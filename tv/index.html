@@ -7110,7 +7110,7 @@ window.joDeacc = function(t){ try { return String(t).normalize('NFD').replace(/[
     root.appendChild(cv); root.appendChild(fl); it.appendChild(root);
     if (!solo){ var vsg = document.createElement('div'); vsg.className = 'vsh-vs'; vsg.innerHTML = '<img alt="VS" src="' + VSG + '"><i></i>'; root.insertBefore(vsg, cv); setTimeout(function(){ vsg.classList.add('on'); }, searching ? 250 : 560); }
     you = mkShield(me, RED); root.insertBefore(you, cv); fitName(you);
-    var ry = restYou(), h = hit();
+    var ry = solo ? { x:W() * 0.5, y:H() * 0.47, r:0 } : restYou(), h = hit();
     var from = { x: -sw(), y: -shh() * .6, r: -40, s: .7 };
     if (!searching){
       anim(you, [ { x:from.x, y:from.y, r:from.r, s:from.s, o:0 }, { x:h.x - sw() * .28, y:h.y - shh() * .06, r:14, s:1.06, o:.42 }, { x:ry.x - 14, y:ry.y - 10, r:ry.r - 6, s:1, o:.72 }, { x:ry.x, y:ry.y, r:ry.r, s:1, o:1 } ], 1250, 'cubic-bezier(.3,.6,.3,1)');
@@ -7119,7 +7119,7 @@ window.joDeacc = function(t){ try { return String(t).normalize('NFD').replace(/[
       anim(you, [ { x:from.x, y:from.y, r:from.r, s:from.s, o:0 }, { x:ry.x + 6, y:ry.y + 8, r:ry.r + 4, s:1.03, o:.6 }, { x:ry.x, y:ry.y, r:ry.r, s:1, o:1 } ], 800, 'cubic-bezier(.25,.8,.3,1.1)');
       setTimeout(function(){ try { if (window.joShImpact) window.joShImpact(); } catch(e){} }, 300);
     }
-    setTimeout(function(){ if (root) caption('y', me, mySub, ry, true); }, 650);
+    setTimeout(function(){ if (root && !solo) caption('y', me, mySub, ry, true); }, 650);
   }
   window.joVsSh = { start:start, reveal:function(){ if (root) bringOpp(false); }, clear:clear };
 })();
