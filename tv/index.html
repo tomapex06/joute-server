@@ -7260,4 +7260,56 @@ html body.tvgame #opts .opt:nth-child(odd){margin-right:3%!important}
 <style id="ptSync">html body.padmode #next,html body.tvgame #next{display:none!important}</style>
 <script id="ptNoSkip">(function(){function blk(e){try{var i=document.getElementById('intro');if(i&&!i.hidden&&i.className.indexOf('pty')>=0&&i.offsetParent!==null){e.stopPropagation();e.preventDefault();}}catch(x){}}['click','mousedown','mouseup','keydown'].forEach(function(t){document.addEventListener(t,blk,true);});})();</script>
 <style id="ptNoLtr">html body.tvgame #duel #opts .opt .ltr{display:none!important}html body.tvgame #duel #opts .opt{-webkit-justify-content:center!important;justify-content:center!important;text-align:center}</style>
+<style id="tvTroCss">
+#tvTro{position:fixed;left:0;top:0;right:0;bottom:0;z-index:2147483646;background:#070402;overflow:hidden;opacity:0;-webkit-transition:opacity .4s ease;transition:opacity .4s ease}
+#tvTro.on{opacity:1}
+#tvTro video{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;background:#070402}
+#tvTro .tt-top{position:absolute;left:0;right:0;top:6vh;text-align:center}
+#tvTro .tt-bot{position:absolute;left:0;right:0;bottom:6vh;text-align:center}
+#tvTro .tt-eb{font:900 2.2vh/1 "Nunito",system-ui,sans-serif;letter-spacing:.4em;text-transform:uppercase;color:#c9ad7c}
+#tvTro .tt-ti{font-family:"Pirata One",Georgia,serif;font-weight:400;font-size:13vh;line-height:1;margin:1vh 0 0;color:#f2c46b;text-shadow:0 .4vh 2vh rgba(0,0,0,.6)}
+#tvTro .tt-nm{font-family:"Pirata One",Georgia,serif;font-size:9vh;line-height:1;color:#fff1c9;text-shadow:0 .4vh 2vh rgba(0,0,0,.7)}
+#tvTro .tt-sc{margin-top:1.4vh;display:inline-block;font:900 2.8vh/1 "Nunito",system-ui,sans-serif;padding:1vh 2.6vh;border-radius:999px;border:.15vh solid rgba(242,196,107,.5);background:rgba(30,18,5,.6);color:#fff1c9}
+#tvTro .rv{opacity:0;-webkit-transform:translateY(2vh);transform:translateY(2vh);-webkit-transition:opacity .6s ease,-webkit-transform .8s ease;transition:opacity .6s ease,transform .8s ease}
+#tvTro.txt .rv{opacity:1;-webkit-transform:none;transform:none}
+#tvTro.txt .tt-bot .rv{-webkit-transition-delay:.35s;transition-delay:.35s}
+</style>
+<script id="tvTroJs">(function(){
+  var SRC='trophy.mp4', pre=null, last='', busy=false;
+  function preload(){ if(pre) return; try{ pre=document.createElement('video'); pre.muted=true; pre.setAttribute('muted',''); pre.setAttribute('playsinline',''); pre.preload='auto'; pre.src=SRC; pre.style.cssText='position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;left:-9px;top:-9px'; document.body.appendChild(pre); try{pre.load();}catch(e){} }catch(e){} }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function play(names, score, tie){
+    busy=true; preload();
+    var o=document.createElement('div'); o.id='tvTro';
+    o.innerHTML='<div class="tt-top"><div class="tt-eb rv">Partie terminée</div><div class="tt-ti rv">'+(tie?'Ex æquo':'Vainqueur')+'</div></div><div class="tt-bot"><div class="rv"><div class="tt-nm">'+esc(names)+'</div>'+(score?'<div class="tt-sc">'+esc(score)+' pts</div>':'')+'</div></div>';
+    var v=pre; pre=null;
+    if(!v){ v=document.createElement('video'); v.src=SRC; }
+    v.removeAttribute('style'); v.muted=true; v.setAttribute('muted',''); v.setAttribute('playsinline',''); v.loop=false;
+    o.insertBefore(v,o.firstChild); document.body.appendChild(o);
+    var done=false, tTxt=null, tEnd=null;
+    function end(){ if(done) return; done=true; clearTimeout(tTxt); clearTimeout(tEnd); o.classList.remove('on'); setTimeout(function(){ try{o.parentNode.removeChild(o);}catch(e){} busy=false; preload(); },450); }
+    try{ v.currentTime=0; }catch(e){}
+    var p; try{ p=v.play(); }catch(e){}
+    if(p&&p.catch) p.catch(function(){});
+    setTimeout(function(){ o.classList.add('on'); },20);
+    tTxt=setTimeout(function(){ o.classList.add('txt'); },1750);
+    v.addEventListener('ended',function(){ tEnd=setTimeout(end,1800); });
+    setTimeout(end,13000);
+    o.addEventListener('click',end);
+  }
+  function check(){
+    if(!document.body) return;
+    var r=document.getElementById('result'), on=document.body.classList.contains('tvgame') && r && !r.hidden;
+    if(!on){ last=''; return; }
+    if(busy) return;
+    var rk=document.getElementById('ptRank'); if(!rk||rk.hidden) return;
+    var rows=rk.querySelectorAll('.rr'); if(!rows.length) return;
+    var key=rk.innerHTML; if(key===last) return; last=key;
+    var top=[], s0=null;
+    for(var i=0;i<rows.length;i++){ var b=rows[i].querySelector('b'), n=rows[i].querySelector('span:nth-child(2)'); var sc=b?b.textContent:''; if(i===0) s0=sc; if(sc!==s0) break; top.push(n?n.textContent:''); }
+    play(top.join(' & '), s0, top.length>1);
+  }
+  setInterval(check,300);
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',preload); else preload();
+})();</script>
 </body></html>
