@@ -7259,4 +7259,5 @@ html body.tvgame #opts .opt:nth-child(odd){margin-right:3%!important}
 <script id="tvOptsRv">setInterval(function(){try{var o=document.getElementById("opts");if(!o)return;var r=!!o.querySelector(".correct");if(r!==(o.className.indexOf("rv")>=0)){if(r)o.className+=" rv";else o.className=o.className.replace(/\s*rv/g,"");}}catch(e){}},200);</script>
 <style id="ptSync">html body.padmode #next,html body.tvgame #next{display:none!important}</style>
 <script id="ptNoSkip">(function(){function blk(e){try{var i=document.getElementById('intro');if(i&&!i.hidden&&i.className.indexOf('pty')>=0&&i.offsetParent!==null){e.stopPropagation();e.preventDefault();}}catch(x){}}['click','mousedown','mouseup','keydown'].forEach(function(t){document.addEventListener(t,blk,true);});})();</script>
+<style id="ptNoLtr">html body.tvgame #duel #opts .opt .ltr{display:none!important}html body.tvgame #duel #opts .opt{-webkit-justify-content:center!important;justify-content:center!important;text-align:center}</style>
 </body></html>
