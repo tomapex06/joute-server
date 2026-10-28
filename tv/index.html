@@ -7275,9 +7275,9 @@ html body.tvgame #opts .opt:nth-child(odd){margin-right:3%!important}
 #tvTro.txt .tt-bot .rv{-webkit-transition-delay:.35s;transition-delay:.35s}
 </style>
 <script id="tvTroJs">(function(){
-  var SRC='trophy.mp4', NF=48, FR=[], last='', busy=false, warmed=false;
+  var SRC='trophy.mp4', NF=60, ISTV=/SmartTV|SMART-TV|Tizen|Web0S|webOS|VIDAA|HbbTV|NetCast|BRAVIA|Hisense|AFT[A-Z]|CrKey|Android TV|GoogleTV|Philips|TPVision|Opera TV|Viera|Roku|Espial|Vewd|Freebox/i.test(navigator.userAgent||''), FR=[], last='', busy=false, warmed=false;
   function warm(){ if(warmed) return; warmed=true;
-    try{ var x=new XMLHttpRequest(); x.open('GET',SRC,true); x.send(); }catch(e){}
+    if(!ISTV){ try{ var x=new XMLHttpRequest(); x.open('GET',SRC,true); x.send(); }catch(e){} }
     var k=0; (function nx(){ if(k>=NF) return; var im=new Image(); im.onload=im.onerror=function(){ k++; nx(); }; im.src='tro/'+(k<10?'0':'')+k+'.jpg'; FR[k]=im; })(); }
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   function play(names, score, tie){
@@ -7295,10 +7295,11 @@ html body.tvgame #opts .opt:nth-child(odd){margin-right:3%!important}
       if(mode==='flip'||done) return; mode='flip';
       try{ v.pause(); }catch(e){} v.style.display='none'; img.style.display='block';
       var t0=Date.now();
-      (function step(){ if(done) return; var k=Math.floor((Date.now()-t0)/83); if(k>=NF){ k=NF-1; img.src=FR[k]?FR[k].src:'tro/'+(NF-1)+'.jpg'; o.classList.add('hold'); T(end,4600); return; }
+      (function step(){ if(done) return; var k=Math.floor((Date.now()-t0)/66.7); if(k>=NF){ k=NF-1; img.src=FR[k]?FR[k].src:'tro/'+(NF-1)+'.jpg'; o.classList.add('hold'); T(end,4600); return; }
         var s='tro/'+(k<10?'0':'')+k+'.jpg'; if(img.getAttribute('src')!==s) img.src=s; T(step,40); })();
       text(1750);
     }
+    if(ISTV){ try{ v.removeAttribute('src'); o.removeChild(v); }catch(e){} T(function(){ o.classList.add('on'); },20); flip(); o.addEventListener('click',end); T(end,14000); return; }
     var p; try{ p=v.play(); }catch(e){} if(p&&p.catch) p.catch(function(){ flip(); });
     v.addEventListener('error',flip);
     v.addEventListener('ended',function(){ if(mode==='video') T(end,1800); });
