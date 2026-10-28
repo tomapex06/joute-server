@@ -7262,8 +7262,8 @@ html body.tvgame #opts .opt:nth-child(odd){margin-right:3%!important}
 <style id="ptNoLtr">html body.tvgame #duel #opts .opt .ltr{display:none!important}html body.tvgame #duel #opts .opt{-webkit-justify-content:center!important;justify-content:center!important;text-align:center}</style>
 <style id="tvTroCss">
 #tvTro{position:fixed;left:0;top:0;right:0;bottom:0;z-index:2147483646;background:#070402;overflow:hidden;opacity:0;-webkit-transition:opacity .4s ease;transition:opacity .4s ease}
-#tvTro.on{opacity:1}
-#tvTro video{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;background:#070402}
+#tvTro.on{opacity:1}html body #tvTro,html body #tvTro *,html body #tvTro img.tt-fb{-webkit-filter:none!important;filter:none!important}
+#tvTro video,#tvTro .tt-fb{position:absolute;left:0;top:0;width:100%;height:100%;background:#070402}#tvTro .tt-fb{display:none;-webkit-transform-origin:50% 45%;transform-origin:50% 45%;-webkit-transition:-webkit-transform 5s linear;transition:transform 5s linear}#tvTro.hold .tt-fb{-webkit-transform:scale(1.04);transform:scale(1.04)}
 #tvTro .tt-top{position:absolute;left:0;right:0;top:6vh;text-align:center}
 #tvTro .tt-bot{position:absolute;left:0;right:0;bottom:6vh;text-align:center}
 #tvTro .tt-eb{font:900 2.2vh/1 "Nunito",system-ui,sans-serif;letter-spacing:.4em;text-transform:uppercase;color:#c9ad7c}
@@ -7275,26 +7275,36 @@ html body.tvgame #opts .opt:nth-child(odd){margin-right:3%!important}
 #tvTro.txt .tt-bot .rv{-webkit-transition-delay:.35s;transition-delay:.35s}
 </style>
 <script id="tvTroJs">(function(){
-  var SRC='trophy.mp4', pre=null, last='', busy=false;
-  function preload(){ if(pre) return; try{ pre=document.createElement('video'); pre.muted=true; pre.setAttribute('muted',''); pre.setAttribute('playsinline',''); pre.preload='auto'; pre.src=SRC; pre.style.cssText='position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;left:-9px;top:-9px'; document.body.appendChild(pre); try{pre.load();}catch(e){} }catch(e){} }
+  var SRC='trophy.mp4', NF=48, FR=[], last='', busy=false, warmed=false;
+  function warm(){ if(warmed) return; warmed=true;
+    try{ var x=new XMLHttpRequest(); x.open('GET',SRC,true); x.send(); }catch(e){}
+    var k=0; (function nx(){ if(k>=NF) return; var im=new Image(); im.onload=im.onerror=function(){ k++; nx(); }; im.src='tro/'+(k<10?'0':'')+k+'.jpg'; FR[k]=im; })(); }
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   function play(names, score, tie){
-    busy=true; preload();
+    busy=true; warm();
     var o=document.createElement('div'); o.id='tvTro';
-    o.innerHTML='<div class="tt-top"><div class="tt-eb rv">Partie terminée</div><div class="tt-ti rv">'+(tie?'Ex æquo':'Vainqueur')+'</div></div><div class="tt-bot"><div class="rv"><div class="tt-nm">'+esc(names)+'</div>'+(score?'<div class="tt-sc">'+esc(score)+' pts</div>':'')+'</div></div>';
-    var v=pre; pre=null;
-    if(!v){ v=document.createElement('video'); v.src=SRC; }
-    v.removeAttribute('style'); v.muted=true; v.setAttribute('muted',''); v.setAttribute('playsinline',''); v.loop=false;
+    o.innerHTML='<img class="tt-fb" alt="" src="tro/00.jpg"><div class="tt-top"><div class="tt-eb rv">Partie terminée</div><div class="tt-ti rv">'+(tie?'Ex æquo':'Vainqueur')+'</div></div><div class="tt-bot"><div class="rv"><div class="tt-nm">'+esc(names)+'</div>'+(score?'<div class="tt-sc">'+esc(score)+' pts</div>':'')+'</div></div>';
+    var img=o.querySelector('.tt-fb');
+    var v=document.createElement('video'); v.muted=true; v.setAttribute('muted',''); v.setAttribute('playsinline',''); v.setAttribute('webkit-playsinline',''); v.setAttribute('autoplay',''); v.preload='auto'; v.src=SRC;
     o.insertBefore(v,o.firstChild); document.body.appendChild(o);
-    var done=false, tTxt=null, tEnd=null;
-    function end(){ if(done) return; done=true; clearTimeout(tTxt); clearTimeout(tEnd); o.classList.remove('on'); setTimeout(function(){ try{o.parentNode.removeChild(o);}catch(e){} busy=false; preload(); },450); }
-    try{ v.currentTime=0; }catch(e){}
-    var p; try{ p=v.play(); }catch(e){}
-    if(p&&p.catch) p.catch(function(){});
-    setTimeout(function(){ o.classList.add('on'); },20);
-    tTxt=setTimeout(function(){ o.classList.add('txt'); },1750);
-    v.addEventListener('ended',function(){ tEnd=setTimeout(end,1800); });
-    setTimeout(end,13000);
+    var done=false, timers=[], mode='video';
+    function T(f,ms){ timers.push(setTimeout(f,ms)); }
+    function end(){ if(done) return; done=true; for(var i=0;i<timers.length;i++) clearTimeout(timers[i]); try{ v.pause(); v.removeAttribute('src'); v.load(); }catch(e){} o.classList.remove('on'); setTimeout(function(){ try{o.parentNode.removeChild(o);}catch(e){} busy=false; },450); }
+    function text(ms){ T(function(){ o.classList.add('txt'); },ms); }
+    function flip(){
+      if(mode==='flip'||done) return; mode='flip';
+      try{ v.pause(); }catch(e){} v.style.display='none'; img.style.display='block';
+      var t0=Date.now();
+      (function step(){ if(done) return; var k=Math.floor((Date.now()-t0)/83); if(k>=NF){ k=NF-1; img.src=FR[k]?FR[k].src:'tro/'+(NF-1)+'.jpg'; o.classList.add('hold'); T(end,4600); return; }
+        var s='tro/'+(k<10?'0':'')+k+'.jpg'; if(img.getAttribute('src')!==s) img.src=s; T(step,40); })();
+      text(1750);
+    }
+    var p; try{ p=v.play(); }catch(e){} if(p&&p.catch) p.catch(function(){ flip(); });
+    v.addEventListener('error',flip);
+    v.addEventListener('ended',function(){ if(mode==='video') T(end,1800); });
+    T(function(){ o.classList.add('on'); },20);
+    T(function(){ if(mode==='video'){ if(v.currentTime>0.15) text(Math.max(0,1750-v.currentTime*1000)); else flip(); } },1000);
+    T(end,14000);
     o.addEventListener('click',end);
   }
   function check(){
@@ -7310,6 +7320,6 @@ html body.tvgame #opts .opt:nth-child(odd){margin-right:3%!important}
     play(top.join(' & '), s0, top.length>1);
   }
   setInterval(check,300);
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',preload); else preload();
+  setTimeout(warm,1500);
 })();</script>
 </body></html>
