@@ -1,0 +1,16 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.joute.quiz",
+      "sha256_cert_fingerprints": [
+        "94:23:2E:46:CC:0B:7F:6C:E5:37:9E:61:66:C1:F0:E5:5D:32:AC:44:8C:C0:2F:F9:58:D9:39:C4:46:AB:7A:37",
+        "B6:C4:02:49:18:3F:67:12:00:36:3F:EA:33:77:07:C9:4F:CB:14:18:FD:80:21:EE:73:1C:E8:BB:95:CB:4F:5C",
+        "D4:F4:E9:32:0C:87:46:0A:0B:7B:DC:37:60:58:6E:90:66:79:4B:8F:99:88:5E:C5:09:B3:44:F1:4D:D8:8C:A0"
+      ]
+    }
+  }
+]
