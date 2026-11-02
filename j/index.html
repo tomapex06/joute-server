@@ -6761,7 +6761,7 @@ var THEMES = [
     noEmo(['phRank', 'phNext']);
     var loc = [cleanTxt(P.city, 24), cleanTxt(P.country, 24)].filter(Boolean).join(', ');
     var fg = flagOf(P.country); $('phLoc').textContent = loc ? (fg || '📍') + ' ' + loc : ''; $('phLoc').hidden = !loc;
-    var stl = [P.age ? P.age + ' ans' : ''].concat(P.passions || []).filter(Boolean).join(' · '); $('phStudy').textContent = stl; $('phStudy').hidden = !stl;
+    var stl = [P.age ? P.age + ' ans' : ''].filter(Boolean).join(' · '); $('phStudy').textContent = stl; $('phStudy').hidden = !stl;
     var ms = [0, 0, 0]; Object.keys(P.med || {}).forEach(function(k){ for (var i = 0; i < 3; i++) ms[i] += P.med[k][i] | 0; });
     $('pmRow').innerHTML = ['b', 's', 'g'].map(function(k, i){ return '<div class="md ' + k + (ms[i] ? '' : ' off') + '">' + medalSvg(i, 58) + '<b>×' + ms[i] + '</b></div>'; }).join('') + '<div class="md t' + ((P.trophies | 0) ? '' : ' off') + '">' + trophySvg(58) + '<b>×' + (P.trophies | 0) + '</b></div>';
     var rib = $('phRib'), tr = P.trophies | 0, ttl = P.title && P.title.wk === trWeek() ? P.title.txt : ''; rib.hidden = !tr && !ttl; rib.textContent = (ttl ? '👑 ' + ttl + (tr ? ' · ' : '') : '') + (tr ? '🏆 ' + plural(tr, 'trophée') + ' de tournoi' : '');
@@ -15217,7 +15217,8 @@ window.joEngrave = (function(){
   }
   return function(name, face){
     var n = norm(name), id = 'eg' + Math.random().toString(36).slice(2, 8);
-    render(n, face, function(u){ if (!u) return; var el = document.querySelectorAll('img[data-eg="' + id + '"]'); Array.prototype.forEach.call(el, function(i){ i.src = u; i.style.opacity = '1'; }); setTimeout(function(){ var el2 = document.querySelectorAll('img[data-eg="' + id + '"]'); Array.prototype.forEach.call(el2, function(i){ if (!i.src || i.src.length < 30){ i.src = u; i.style.opacity = '1'; } }); }, 60); });
+    if (face){ var ck = cache[n + '|' + face.length]; if (ck) return '<img data-eg="c" alt="" style="position:absolute;inset:0;width:100%;height:100%;opacity:1;filter:none" src="' + ck + '">'; } else return '';
+    render(n, face, function(u){ if (!u) return; var el = document.querySelectorAll('img[data-eg="' + id + '"]'); Array.prototype.forEach.call(el, function(i){ i.src = u; i.style.opacity = '1'; }); setTimeout(function(){ var el2 = document.querySelectorAll('img[data-eg="' + id + '"]'); Array.prototype.forEach.call(el2, function(i){ if (i.src !== u){ i.src = u; i.style.opacity = '1'; } }); }, 60); });
     return '<img data-eg="' + id + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .2s;filter:none" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=">';
   };
 })();
@@ -18672,6 +18673,8 @@ html.tv-end #prBg{image-rendering:auto}
 /* v544 : âge sous le bouclier du profil, en Inquisition */
 #lan3d .shd-age{position:relative;z-index:3;margin:-2px auto 0;text-align:center;font:400 30px/1 "JInqFull","JInquisition",serif;letter-spacing:.04em;color:var(--ink,#111)}
 #lan3d .shd-age[hidden]{display:none}
+/* v547 : passions retirées des paramètres */
+#sPass{display:none!important}
 </style>
 <script id="tvEndJs">(function(){
   /* v533 : écran de fin sur la télé — bannières des joueurs (le gagnant en grand), fond Prism */
