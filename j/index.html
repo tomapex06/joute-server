@@ -2201,6 +2201,22 @@ body[data-skin="topics"] .theme[data-t="pok"]{--tc:#F2C230}body[data-skin="topic
 body[data-skin="topics"] .theme[data-t="liv"]{--tc:#B0573A}body[data-skin="topics"] .theme[data-t="liv"]::before{content:"📚"}
 body[data-skin="topics"] .theme[data-t="mon"]{--tc:#3C9D5D}body[data-skin="topics"] .theme[data-t="mon"]::before{content:"💶"}
 body[data-skin="topics"] .theme[data-t="bio"]{--tc:#46B06A}body[data-skin="topics"] .theme[data-t="bio"]::before{content:"🧬"}
+body[data-skin="topics"] .theme[data-t="ser"]{--tc:#7B3FBF}
+body[data-skin="topics"] .theme[data-t="ser"]::before{content:"📺"}
+body[data-skin="max"] .theme[data-t="ser"]{--tc:#7B3FBF}
+body[data-skin="max"] .theme[data-t="ser"]::before{content:"📺"}
+body[data-skin="topics"] .theme[data-t="mzk"]{--tc:#E0457B}
+body[data-skin="topics"] .theme[data-t="mzk"]::before{content:"🎵"}
+body[data-skin="max"] .theme[data-t="mzk"]{--tc:#E0457B}
+body[data-skin="max"] .theme[data-t="mzk"]::before{content:"🎵"}
+body[data-skin="topics"] .theme[data-t="nat"]{--tc:#2F9E5B}
+body[data-skin="topics"] .theme[data-t="nat"]::before{content:"🌿"}
+body[data-skin="max"] .theme[data-t="nat"]{--tc:#2F9E5B}
+body[data-skin="max"] .theme[data-t="nat"]::before{content:"🌿"}
+body[data-skin="topics"] .theme[data-t="jv"]{--tc:#2B6CD4}
+body[data-skin="topics"] .theme[data-t="jv"]::before{content:"🎮"}
+body[data-skin="max"] .theme[data-t="jv"]{--tc:#2B6CD4}
+body[data-skin="max"] .theme[data-t="jv"]::before{content:"🎮"}
 body[data-skin="topics"] .theme[data-t="a14"]{--tc:#5B6B7B}body[data-skin="topics"] .theme[data-t="a14"]::before{content:"📅"}
 body[data-skin="topics"] .theme[data-t="afr"]::before{content:"🦁"}
 body[data-skin="topics"] .theme[data-t="hp"]::before{content:"🪄"}
@@ -3998,6 +4014,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
       </div>
     </details></div>
     <div><div class="lab">Compte</div><div class="acct" id="acctBox"></div></div>
+    <p class="bank-cred" style="font:500 12px/1.45 var(--grot,system-ui);color:#888;margin:4px 0 0">Questions : <a href="https://www.openquizzdb.org" target="_blank" rel="noopener">OpenQuizzDB</a> (licence CC BY-SA 4.0), adaptées par Joute ; géographie générée à partir de <a href="https://github.com/mledoze/countries" target="_blank" rel="noopener">mledoze/countries</a> (ODbL). Une question te semble fausse ? Touche 🚩 après la réponse.</p>
     <button type="button" class="btn primary" id="setBack">Terminé</button>
   </section>
 
@@ -4802,6 +4819,110 @@ var THEMES = [
       ["Quelle épidémie a touché l’Afrique de l’Ouest en 2014 ?", ["Ebola", "La grippe aviaire", "Le choléra", "La dengue"]],
       ["Qui chantait « Shake It Off » en 2014 ?", ["Taylor Swift", "Katy Perry", "Adele", "Rihanna"]]
     ]},
+    { id:"ser", name:"Séries & sagas", blurb:"Star Wars, Tintin, séries cultes", q:[
+      ["Quel personnage important de « Hunger Games » porte généralement une rose blanche ?",["Snow", "Peeta", "Katniss", "Cinna"]],
+      ["Quel nom porte la version adolescente de « Wonder Woman » ?",["Wonder Girl", "Darna", "Cassandra Cain", "Huntress"]],
+      ["Quels noms les braqueurs de « La Casa de Papel » utilisent-ils ?",["Noms de villes", "Noms de pays", "Noms de fleurs", "Noms de peintres"]],
+      ["Que contrôlent les Jedi qui les rendent très différents des simples humains ?",["La Force", "Le langage droïde", "L’immortalité", "La lumière"]],
+      ["Dans l’univers de « Star Wars », quelle espèce vit sur la lune forestière de la planète Endor ?",["Ewok", "Sarlacc", "Tusken", "Wookiee"]],
+      ["Quelle est la couleur du maillot des sauveteurs de la série « Alerte à Malibu » ?",["Rouge", "Verte", "Bleue", "Jaune"]],
+      ["Qu’est-ce Bob l’éponge aime faire avec Sandy dès qu’il a un peu de temps devant lui ?",["Du karaté", "Du tennis", "Du rugby", "Du foot"]],
+      ["Quel super-héros ne se sépare jamais de son marteau forgé par les nains ?",["Thor", "Bizarro", "Flash", "Venom"]],
+      ["Quelle mutante est également connue pour être la fille de Magnéto ?",["Polaris", "Nocturne", "Cipher", "Darna"]],
+      ["Quel personnage mythique s’introduit dans les maisons par la cheminée ?",["Le père Noël", "Ganelon", "Guillaume Tell", "Belphégor"]],
+      ["Quel personnage est en lévitation sur la couverture des « Sept Boules de cristal » ?",["Tournesol", "Haddock", "Milou", "Tintin"]],
+      ["Avec lequel des garçons de sa bande fait habituellement équipe Scoubidou ?",["Sammy", "Logan", "Roger", "Fred"]],
+      ["Quel est le numéro au village du héros de la série « Le prisonnier » ?",["Six", "Trois", "Deux", "Onze"]],
+      ["Dans quel objet appartenant à Angel les braqueurs ont-il installé un micro ?",["Ses lunettes", "Son ordinateur", "Son stylo", "Son téléphone"]],
+      ["Quelle couleur est associée à Hulk, qui peut être traduit par « mastodonte » ?",["Le vert", "Le jaune", "Le rouge", "Le bleu"]],
+      ["Quel agent secret de l’Intelligence Service est repris dans de nombreux films ?",["James Bond", "Sam Fisher", "Jack Bauer", "John Steed"]],
+      ["Dans quel service de renseignement intérieur travaillent les agents Mulder et Scully ?",["FBI", "NSA", "CIA", "CSI"]],
+      ["Dans quelle série télévisée Wentworth Miller incarne-t-il Michael Scofield ?",["Prison Break", "Lost", "Friends", "Dr House"]],
+      ["Qui accompagne R2-D2, également appelé D2-R2, dans la saga « Star Wars » ?",["C-3PO", "Daryl", "Data", "T-1000"]],
+      ["Lequel de ces noms ne désigne pas un dinosaure pour lequel a pu retrouver des traces ?",["Amitiosaurus", "Iquanodon", "Spinosaurus", "Megalosaurus"]],
+      ["Personnage central de la saga « Star Wars », avec qui Anakin Skywalker se marie-t-il ?",["Sénatrice Padme", "Madpe", "Obiwana", "Leia Organa"]],
+      ["Dans la saga « Bob l’éponge », Sandy, qui vient de la surface, est en fait...",["Un écureuil", "Un lama", "Un hamster", "Un chat"]],
+      ["Qui a remplacé Leonard Nimoy dans les derniers longs-métrages de « Star Trek » ?",["Zachary Quinto", "Chris Pine", "Avery Brooks", "Jonathan Frakes"]],
+      ["Quel est le surnom donné à Fox Mulder par ses collègues dans la série télé « X-Files » ?",["Martien", "Matrix", "Biquet", "Bibou"]]
+    ]},
+    { id:"mzk", name:"Musique", blurb:"Pop, rock, variété et instruments", q:[
+      ["Avec qui Britney Spears a-t-elle chanté en duo « Me Against the Music » ?",["Madonna", "Dido", "Christina Aguilera", "Jennifer Lopez"]],
+      ["Qui incarne sans conteste la figure emblématique du groupe The Cure ?",["Robert Smith", "Reeves Gabrels", "Simon Gallup", "Roger O’Donnell"]],
+      ["Instrument de la famille des violons, dans quelle position joue-t-on du violoncelle ?",["Assise", "Debout", "Couchée", "À genoux"]],
+      ["Qui aurait déclaré à France Gall: « Tu as gagné, mais tu m’as perdu. » ?",["Claude François", "Julien Clerc", "Daniel Balavoine", "Hugues Aufray"]],
+      ["Quel titre d’IAM est devenu un énorme tube avec plus de 500 000 exemplaires vendus ?",["Je danse le mia", "Noble art", "La saga", "Petit frère"]],
+      ["Dans quel film Johnny Hallyday a-t-il découvert Elvis Presley au cinéma ?",["Amour Frénétique", "Musique en tête", "Avril à Paris", "Joyeux Départ"]],
+      ["Qui est l’auteur du morceau electro « Infinity », remixé par le DJ allemand Klaas en 2008 ?",["Guru Josh", "Joe Smooth", "Tristan Garner", "Rick Wade"]],
+      ["Quel chanteur prénommé Mathieu a émergé du succès remporté par les Linkup ?",["M. Pokora", "Corneille", "Raphaël", "Keen’V"]],
+      ["Quel tube disco planétaire du groupe ABBA est sorti en 1979 ?",["Voulez-Vous", "Waterloo", "Mamma Mia", "SOS"]],
+      ["Quel groupe a sorti, en 1976, un premier album intitulé « Ba mwen en ti bo » ?",["La Compagnie créole", "Kassav", "Kazero", "Zouk Machine"]],
+      ["En quelle année le terme « acid jazz » est-il apparu, désignant un label et une série de compilations ?",["1988", "1976", "1992", "2001"]],
+      ["Quel album mythique du groupe Depeche Mode propose une rose rouge sur sa pochette ?",["Violator", "Exciter", "Ultra", "A Broken Frame"]],
+      ["Dans quelle ville Jean Michel Jarre a-t-il donné le son concert « Destination Docklands » ?",["Londres", "Houston", "Lyon", "Paris"]],
+      ["Quel quartet a acquis sa renommée grâce à ses performances live ?",["JTQ", "FJQ", "DSQ", "MJQ"]],
+      ["Quel dessert sert l’abominable homme des neiges dans une chanson de Lio ?",["Un banana split", "Une dame blanche", "Un éclair", "Un merveilleux"]],
+      ["Quel DJ, grand animateur des soirées d’Ibiza, a livré au public « Pop Life » en 2007 ?",["David Guetta", "Claude Challe", "Bob Sinclar", "Quentin Mosimann"]],
+      ["Comment se prénomme la métisse d’Ibiza chantée par Julien Clerc ?",["Mélissa", "Marbella", "Cassandra", "Rosanna"]],
+      ["Quel était le prénom du « Chanteur » de Daniel Balavoine ?",["Henri", "Charlie", "Eddy", "Johnny"]],
+      ["Quel est le surnom de Jean-Paul Maunick, fondateur du talentueux groupe Incognito ?",["Bluey", "Yellow", "Redest", "Greeny"]],
+      ["Dans quelle ville de France Jean Michel Jarre a-t-il donné son méga-concert « Rendez-Vous » ?",["Lyon", "Paris", "Marseille", "Toulouse"]],
+      ["Quel grand concours musical France Gall a-t-elle remporté en 1965 ?",["Eurovision", "Nouvelle Star", "Miss France", "Intervilles"]],
+      ["Quel jeune chanteur a charmé le public avec « Vivo per lei », en duo avec Hélène Ségara ?",["Grégory Lemarchal", "M. Pokora", "Matthieu Chedid", "Pierre Vassiliu"]],
+      ["Dans quelle région habite la dame chantée par Francis Cabrel ?",["En Haute-Savoie", "En Ardèche", "En Gironde", "En Haute-Corse"]],
+      ["Avec lequel de ses époux Britney Spears est-elle apparue dans sa propre télé-réalité ?",["Kevin Federline", "David Lucado", "Charlie Ebersol", "Jason Trawick"]]
+    ]},
+    { id:"nat", name:"Animaux & nature", blurb:"Faune, flore et planète", q:[
+      ["Quelle manifestation sonore du chat aurait selon certains spécialistes un effet relaxant sur l’homme ?",["Le ronronnement", "Le bourdonnement", "Le roucoulement", "Le meuglement"]],
+      ["Quels oiseaux sont parfois surnommés les « mainates du pauvre » ?",["Les étourneaux", "Les vanneaux", "Les rossignols", "Les chardonnerets"]],
+      ["Dans quel film de John Carpenter une expédition est-elle attaquée par une créature protéiforme ?",["The Thing", "Starman", "Christine", "Dark Star"]],
+      ["Quel oiseau pond généralement ses oeufs dans le nid des autres espèces ?",["Le coucou", "La mésange", "Le merle", "Le faisan"]],
+      ["Quel volcan possède vingt-cinq cônes pointant sur ses flancs ?",["Villarrica", "Sundoro", "Pinatubo", "Mahawu"]],
+      ["Quelle partie du corps permet aux hippocampes de nager ?",["Nageoire dorsale", "Queue", "Tête", "Nageoire ventrale"]],
+      ["Quel élément caractéristique de la silhouette du requin fait souvent trembler les hommes ?",["Sa nageoire dorsale", "Ses branchies", "Son nez", "Sa queue"]],
+      ["En Europe, quelle est la première fleur qui pousse généralement à la fin de l’hiver ?",["Crocus", "Dahlia", "Acacia", "Ficus"]],
+      ["Quelle forêt française de 1 200 ha est située à l’est de Rennes ?",["Forêt de Chevré", "Forêt de Lorge", "Forêt de Ferrières", "Forêt de Seillon"]],
+      ["Laquelle de ces propositions ne fait pas partie de la flore associée à l’Antarctique ?",["Arbuste", "Lichen", "Mousse", "Algue"]],
+      ["Que signifie la lettre A sur l’étiquette-énergie d’un réfrigérateur ?",["Économe en énergie", "Anti-poussière", "Auto-nettoyant", "Le plus froid"]],
+      ["À combien de pulsations par minute bat le cœur d’un hérisson en hibernation ?",["18", "8", "38", "28"]],
+      ["Dans le célèbre dessin animé, qui le chat Tom poursuit-il sans cesse ?",["Jerry", "Manny", "Titi", "Grosminet"]],
+      ["Que montre le loup le plus faible après une lutte pour la hiérarchie ?",["Son ventre", "Sa langue", "Sa queue", "Ses dents"]],
+      ["Pour quelle raison ne pouvons-nous pas entendre les cris de la chauve-souris ?",["Trop aigu", "Trop grave", "Trop fort", "Trop faible"]],
+      ["Que fait principalement le chat de ses journées, selon de nombreux proverbes et idiotismes ?",["Il dort", "Il court", "Il boit", "Il mange"]],
+      ["Dans quel bâtiment, généralement de taille modeste, élève-t-on de la volaille ?",["Un poulailler", "Un toril", "Un clapier", "Un manège"]],
+      ["De quelle espèce vivante le requin fait-il partie, avec ses cinq à sept fentes branchiales ?",["Poissons", "Méduses", "Mammifères", "Reptiles"]],
+      ["À quelle classe d’animaux vertébrés regroupant près de 5 400 espèces appartient le chat ?",["Aux mammifères", "Aux poissons", "Aux reptiles", "Aux oiseaux"]],
+      ["Quelle jeune artiste a chanté « Jour de neige » à la télévision en 1988 ?",["Elsa", "Patricia Kaas", "Lio", "Jakie Quartz"]],
+      ["De quelle famille de carnivores féliformes le chat fait-il partie ?",["Les félidés", "Les hominidés", "Les canidés", "Les mustélidés"]],
+      ["Quelle lourde et pénible tâche incombe à la reine des fourmis ?",["Pondre des œufs", "Chercher à manger", "Défendre le nid", "Tuer les mâles"]],
+      ["Quel chien d’attelage originaire de Sibérie possède souvent des yeux bleus ?",["Husky", "Barzoï", "Lévrier", "Épagneul"]],
+      ["À quoi servait la coquille du tridacne géant dans de nombreuses églises ?",["Bénitier", "Tronc", "Chandelier", "Corbeille à pain"]]
+    ]},
+    { id:"jv", name:"Tech & jeux vidéo", blurb:"Consoles, Internet et logiciels", q:[
+      ["Quel est le nom de la tablette conçue par les designers de chez Microsoft ?",["Surface", "Tabsoft", "Hurricane", "Storm"]],
+      ["Quelle application informatique de la société Apple permet de gérer facilement un iPod ?",["iTunes", "FileMaker", "QuickTime", "HyperCard"]],
+      ["Quel nom a été donné à la mascotte du projet libre OpenBSD ?",["Puffy", "Wilber", "Dogcow", "Tux"]],
+      ["Quel réseau social truste la première place des réseaux sociaux professionnels ?",["LinkedIn", "Heeloo", "Movim", "Friendster"]],
+      ["Quel service de stockage en ligne a été inventé par la société Microsoft ?",["OneDrive", "FourDrive", "ThreeDrive", "TwoDrive"]],
+      ["Sur quel point les développeurs d’OpenBSD se concentrent-ils principalement ?",["Sécurité", "Rendement", "Bureautique", "Esthétique"]],
+      ["Comment appelle-t-on généralement une discussion instantanée passée sur Internet ?",["Chat", "Cookie", "Spam", "Hoax"]],
+      ["Sur base de quoi est constitué le principe général de « World of Warcraft » ?",["Quêtes", "Vitesse", "Cadeaux", "Trocs"]],
+      ["Quel symbole typographique est toujours représenté dans les adresses e-mails ?",["Arobase", "Esperluette", "Astérisque", "Croisillon"]],
+      ["Quel plombier de jeu vidéo, vêtu de rouge, est également la mascotte de Nintendo ?",["Mario", "Luigi", "Wario", "Peach"]],
+      ["Que signifie le sigle « DS » de la Nintendo DS, console portable sortie en 2005 en Europe ?",["Dual Screen", "Direct Shot", "Detect System", "Data Super"]],
+      ["Qui gère le désimlockage de chaque iPhone éventuellement lié à un opérateur ?",["Apple", "L’opérateur", "Personne", "L’utilisateur"]],
+      ["Sous Linux, comment appelle-t-on les logiciels assemblés autour du noyau ?",["Distribution", "Logithèque", "Intégré", "Progiciel"]],
+      ["Quel accessoire prévu pour être connecté à la console Wii est associé au jeu « Wii Fit » ?",["Wii Balance Board", "Wii Zapper", "Wii Gun", "Wii Shot"]],
+      ["Sur quelle console de chez Nintendo sont sortis les deux premiers jeux « Pokémon » ?",["Game Boy", "Nintendo DS", "Super Nintendo", "Game Cube"]],
+      ["Quel jeu vidéo de sport développé et édité par Nintendo était offert pour l’achat d’une Wii ?",["Wii Sports", "Wii Play", "Wii Games", "Wii Mix"]],
+      ["Sur Internet, « Google », « Bing » et « Yahoo » sont des exemples de moteurs de...",["Recherche", "Sauvegarde", "Navigation", "Courrier"]],
+      ["Quel célèbre simulateur de vol pour PC a été conçu par Microsoft ?",["Flight Simulator", "Freight Simulator", "Fog Simulator", "Fight Simulator"]],
+      ["Comment désigne-t-on un passionné d’Internet et des nouvelles technologies ?",["Geek", "Hacker", "No life", "Butineur"]],
+      ["Quelle application de « Twitter » héberge des vidéos de 6 secondes tournant en boucle ?",["Vine", "Instagram", "Viber", "SoundCloud"]],
+      ["Quel événement réunit un groupe de développeurs OpenBSD sur plusieurs jours ?",["Hackathon", "CeBIT", "Museomix", "Sicob"]],
+      ["Comment était qualifiée la PS2, acceptant les jeux PlayStation ?",["Rétrocompatible", "Ascensionnelle", "Admissive", "Autopilotée"]],
+      ["Quelles sont les deux factions de personnages du jeu « World of Warcraft » ?",["Alliance et Horde", "Elfes et Gobelins", "Titans et Centaures", "Orcs et Trolls"]],
+      ["Quel système d’exploitation fut commercialisé entre Windows 98 et Windows XP ?",["Windows ME", "Windows VE", "Windows TE", "Windows RE"]]
+    ]},
     { id:'calc', name:'Calcul mental', blurb:'Vite, sans calculatrice' },
     { id:'mec', name:'Mécanique auto', blurb:'Moteur, freins et entretien', q:[
       ["Quels sont les quatre temps d’un moteur à quatre temps ?", ["Admission, compression, combustion, échappement", "Démarrage, accélération, freinage, arrêt", "Admission, refroidissement, allumage, échappement", "Compression, injection, détente, lubrification"]],
@@ -5332,7 +5453,7 @@ var THEMES = [
       }
       return newGame(T, dq, kind, extra);
     }
-    var qs = buildQs(T, mode, seed, diff, kind === 'bot');
+    var qs = (extra && Array.isArray(extra.qx) && extra.qx.length >= N && okQx(extra.qx)) ? extra.qx.map(function(x){ return Object.assign({}, x, { opts:x.opts.slice() }); }) : buildQs(T, mode, seed, diff, kind === 'bot');
     if (kind === 'bot' && !(extra && (extra.tour || extra.daily))) qs = phInject(T, qs);
     extra = Object.assign({ diff: diff || 1 }, extra);
     var isPhoto = (T.id === 'arc' && mode === 'photo') || T.id === 'aut' || (T.id === 'arc' && mode === 'bat');
@@ -5690,8 +5811,45 @@ var THEMES = [
   }
   function hasLevels(T){ return !!(HARD[T.id] || T.id === 'cap' || T.id === 'calc' || (T.id === 'spo' && HARD.foot)); }
   /* Les questions proposées par le joueur passent en priorité : jamais vues d'abord, ses propres questions avant les autres */
+  /* ---------- Banque de questions (Supabase, cache IndexedDB) ---------- */
+  function bankRows(id){
+    var B = window.joBank; if (!B || !B.ready || !B.by) return null;
+    var r = B.by[id]; if (!r || !r.length) return null;
+    var hd = B.hide || {}; return r.filter(function(x){ return !hd[x[0]]; });
+  }
+  function bankHas(id){ var r = bankRows(id); return !!(r && r.length >= 20); }
+  function bankQ(r, rnd){ var o = shuffle([r[3]].concat(r[4]), rnd); return { q:r[2], opts:o, ans:o.indexOf(r[3]), bid:r[0], ctx:r[6] || '', an:r[7] || '' }; }
+  function bankMix(T, mode, seed, diff, res, mark){
+    if (!Array.isArray(res) || !res.length || !Array.isArray(T.q) || !bankHas(T.id)) return res;
+    if (T.modes && !(mode === '' || mode === 'mix' || T.id === 'spo')) return res;
+    if (res.some(function(q){ return !q || q.img || q.art || q.bt || !q.opts || q.opts.length !== 4; })) return res;
+    var rows = bankRows(T.id), rnd = mulberry32((seed | 0) + 4241), d = diff === 2 || diff === 3 ? diff : 1;
+    var nb = Math.min(res.length, Math.max(1, res.length - 2));
+    var pref = rows.filter(function(r){ return d === 1 ? r[5] === 1 : d === 2 ? r[5] <= 2 : r[5] >= 2; }); if (pref.length < nb * 4) pref = rows;
+    var seen = P.bks || {}, un = mark ? pref.filter(function(r){ return !seen[r[0]]; }) : pref; if (un.length < nb) un = pref;
+    var have = {}; res.forEach(function(q){ have[q.q.toLowerCase()] = 1; });
+    var pick = shuffle(un, rnd).filter(function(r){ return !have[r[2].toLowerCase()]; }).slice(0, nb);
+    var keep = shuffle(res, rnd).slice(0, res.length - pick.length);
+    var out = shuffle(keep.concat(pick.map(function(r){ return bankQ(r, rnd); })), rnd);
+    if (mark && pick.length){ var bk = P.bks || (P.bks = {}), ks = Object.keys(bk); if (ks.length > 4000) ks.slice(0, 1500).forEach(function(k){ delete bk[k]; }); pick.forEach(function(r){ bk[r[0]] = 1; }); save(); }
+    return out;
+  }
+  function mkQx(themeId, mode, s, d){
+    try {
+      var T = themeById(themeId); if (!T || !bankHas(T.id)) return undefined;
+      var qs = buildQs(T, mode || '', s, d || 1, false);
+      if (!qs || qs.length < N || qs.some(function(q){ return q.img || q.art || q.bt || !q.opts || q.opts.length !== 4; })) return undefined;
+      return qs.slice(0, N).map(function(q){ var o = { q:q.q, opts:q.opts.slice(), ans:q.ans }; if (q.bid){ o.bid = q.bid; o.ctx = q.ctx || ''; o.an = (q.an || '').slice(0, 180); } return o; });
+    } catch(e){ return undefined; }
+  }
+  function okQx(qx){
+    if (qx === undefined) return true;
+    if (!Array.isArray(qx) || qx.length < 1 || qx.length > 12) return false;
+    return qx.every(function(x){ return x && typeof x.q === 'string' && x.q.length <= 300 && Array.isArray(x.opts) && x.opts.length === 4 && x.opts.every(function(o){ return typeof o === 'string' && o.length <= 90; }) && Number.isInteger(x.ans) && x.ans >= 0 && x.ans < 4 && (x.ctx === undefined || (typeof x.ctx === 'string' && x.ctx.length <= 80)) && (x.an === undefined || (typeof x.an === 'string' && x.an.length <= 300)) && (x.bid === undefined || Number.isInteger(x.bid)); });
+  }
   function buildQs(T, mode, seed, diff, ugc){
     var res = buildQs0(T, mode, seed, diff, ugc);
+    try { res = bankMix(T, mode, seed, diff, res, !!ugc); } catch(e){}
     if (!ugc || !Array.isArray(T.q) || !Array.isArray(res) || !res.length) return res;
     try {
       var seen = P.ugcSeen || (P.ugcSeen = {}), pool = (P.ugc || []).filter(function(u){ return u.t === T.id && !qHid(u); });
@@ -6889,7 +7047,7 @@ var THEMES = [
   var PK = null;
 
   /* ---------- Mode roue : une catégorie tirée au sort par question ---------- */
-  var TEMO = {"bib": "📖", "cor": "🕌", "tor": "✡️", "rmo": "🕉️", "lng": "✍️", "geo": "🌍", "his": "🏺", "sci": "🔬", "cin": "🎬", "spo": "⚽", "cap": "🏙️", "log": "🏷️", "tir": "🎯", "bt": "🎧", "dis": "🏰", "flag": "🏁", "art": "🖼️", "chi": "🧪", "cg": "🧠", "hp": "🪄", "slo": "📢", "afr": "🦁", "sim": "🍩", "gta": "🚗", "clu": "🏟️", "des": "🍰", "sav": "💡", "gas": "🥖", "exp": "💬", "mus": "🎻", "pok": "🔴", "liv": "📚", "mon": "💶", "bio": "🧬", "a14": "📅", "calc": "🧮", "mec": "🔧", "ttt": "❌", "c4": "🔴", "chess": "♟️", "qua": "⚛️", "arc": "🏛️", "mat": "🧮", "bkb": "🏀", "mjf": "👕", "mjb": "🎽", "ast": "🪐", "phy": "🧲", "myt": "🔱", "jus": "⚖️", "aut": "🚗", "san": "🩺", "crp": "🫀", "pnt": "🎨", "spin": "🎡"}, TCOL = {"lng": "#D8567A", "geo": "#3BA7E0", "his": "#C98A3C", "sci": "#3FBF8A", "cin": "#8E6BD8", "spo": "#FF8A3D", "cap": "#F8545A", "log": "#FFB400", "tir": "#4F5B66", "bt": "#8E6BD8", "dis": "#3B6FE0", "flag": "#2FB26B", "art": "#D9534F", "chi": "#F26C8B", "cg": "#FFB400", "hp": "#2E8B57", "slo": "#14B8A6", "afr": "#E58A2B", "sim": "#FFD400", "gta": "#4F8F3A", "clu": "#2F6FE0", "des": "#EC6FA8", "sav": "#8E6BD8", "gas": "#C7773A", "exp": "#E8685A", "mus": "#2D7D6E", "pok": "#F2C230", "liv": "#B0573A", "mon": "#3C9D5D", "bio": "#46B06A", "a14": "#5B6B7B", "calc": "#2BB3C0", "mec": "#6B7A8F", "ttt": "#3BA7E0", "c4": "#3B6FE0", "chess": "#5B4A9E", "qua": "#7A5CFF", "arc": "#B58A5A", "mat": "#2F80ED", "bkb": "#E8742A", "mjf": "#1FA67A", "mjb": "#8E5BD9", "ast": "#3B4CCA", "phy": "#19A7CE", "myt": "#D4A017", "jus": "#2E5A7A", "aut": "#E0452B", "san": "#E04848", "crp": "#E86A8A", "pnt": "#E0589F", "spin": "#FF7A00"};
+  var TEMO = {"ser": "📺", "mzk": "🎵", "nat": "🌿", "jv": "🎮", "bib": "📖", "cor": "🕌", "tor": "✡️", "rmo": "🕉️", "lng": "✍️", "geo": "🌍", "his": "🏺", "sci": "🔬", "cin": "🎬", "spo": "⚽", "cap": "🏙️", "log": "🏷️", "tir": "🎯", "bt": "🎧", "dis": "🏰", "flag": "🏁", "art": "🖼️", "chi": "🧪", "cg": "🧠", "hp": "🪄", "slo": "📢", "afr": "🦁", "sim": "🍩", "gta": "🚗", "clu": "🏟️", "des": "🍰", "sav": "💡", "gas": "🥖", "exp": "💬", "mus": "🎻", "pok": "🔴", "liv": "📚", "mon": "💶", "bio": "🧬", "a14": "📅", "calc": "🧮", "mec": "🔧", "ttt": "❌", "c4": "🔴", "chess": "♟️", "qua": "⚛️", "arc": "🏛️", "mat": "🧮", "bkb": "🏀", "mjf": "👕", "mjb": "🎽", "ast": "🪐", "phy": "🧲", "myt": "🔱", "jus": "⚖️", "aut": "🚗", "san": "🩺", "crp": "🫀", "pnt": "🎨", "spin": "🎡"}, TCOL = {"ser": "#7B3FBF", "mzk": "#E0457B", "nat": "#2F9E5B", "jv": "#2B6CD4", "lng": "#D8567A", "geo": "#3BA7E0", "his": "#C98A3C", "sci": "#3FBF8A", "cin": "#8E6BD8", "spo": "#FF8A3D", "cap": "#F8545A", "log": "#FFB400", "tir": "#4F5B66", "bt": "#8E6BD8", "dis": "#3B6FE0", "flag": "#2FB26B", "art": "#D9534F", "chi": "#F26C8B", "cg": "#FFB400", "hp": "#2E8B57", "slo": "#14B8A6", "afr": "#E58A2B", "sim": "#FFD400", "gta": "#4F8F3A", "clu": "#2F6FE0", "des": "#EC6FA8", "sav": "#8E6BD8", "gas": "#C7773A", "exp": "#E8685A", "mus": "#2D7D6E", "pok": "#F2C230", "liv": "#B0573A", "mon": "#3C9D5D", "bio": "#46B06A", "a14": "#5B6B7B", "calc": "#2BB3C0", "mec": "#6B7A8F", "ttt": "#3BA7E0", "c4": "#3B6FE0", "chess": "#5B4A9E", "qua": "#7A5CFF", "arc": "#B58A5A", "mat": "#2F80ED", "bkb": "#E8742A", "mjf": "#1FA67A", "mjb": "#8E5BD9", "ast": "#3B4CCA", "phy": "#19A7CE", "myt": "#D4A017", "jus": "#2E5A7A", "aut": "#E0452B", "san": "#E04848", "crp": "#E86A8A", "pnt": "#E0589F", "spin": "#FF7A00"};
   function tEmo(id){ return TEMO[id] || '❓'; }
   function tCol(id){ return TCOL[id] || '#F8545A'; }
   function spinQs(seed, d){
@@ -7349,7 +7507,7 @@ var THEMES = [
     if (g.i === N - 1 && g.i > 0 && g.mode === 'bot' && !g.sd && !g.cr) setTimeout(function(){ if (G === g && VOX.vox) voxScene('vox', 'last', 'B', 'A'); }, 900);
     $('qLab').textContent = 'Question ' + (g.i + 1) + ' sur ' + N + (g.i === N - 1 ? ' · compte double' : '');
     $('qText').textContent = q.q;
-    $('thTag').textContent = g.spin && q.cat ? tEmo(q.cat.id) + ' ' + q.cat.name : g.tag;
+    $('thTag').textContent = (g.spin && q.cat ? tEmo(q.cat.id) + ' ' + q.cat.name : g.tag) + (q.ctx ? ' · ' + q.ctx : '');
     var qi = $('qImg'); qi.innerHTML = '';
     if (q.img){
       if (q.img.svg) qi.innerHTML = q.img.svg;
@@ -7505,10 +7663,17 @@ var THEMES = [
         qv.appendChild(b);
       });
     }
+    if (q.bid && qv.hidden){
+      qv.hidden = false; qv.innerHTML = '';
+      if (q.an){ var anE = document.createElement('small'); anE.className = 'q-an'; anE.textContent = q.an; qv.appendChild(anE); }
+      var rpB = document.createElement('button'); rpB.type = 'button'; rpB.className = 'q-rep'; rpB.textContent = '\uD83D\uDEA9'; rpB.title = 'Signaler une erreur dans cette question'; rpB.setAttribute('aria-label', rpB.title);
+      rpB.addEventListener('click', function(e){ e.stopPropagation(); try { window.joBankReport && window.joBankReport(q.bid, 'fausse'); } catch(_){} rpB.disabled = true; rpB.textContent = 'Merci, signalée'; clearTimeout(g.adv); g.adv = setTimeout(advance, 1600); });
+      qv.appendChild(rpB);
+    }
     if (g.sd) sdSettle(g, r);
     $('after').hidden = false;
     g.revealed[g.i] = true;
-    g.adv = setTimeout(advance, qv.hidden ? 2800 : 4500);
+    g.adv = setTimeout(advance, qv.hidden ? 2800 : (q.an ? 5600 : 4500));
   }
 
   function advance(){
@@ -7716,6 +7881,7 @@ var THEMES = [
     var T = themeById(gm.t); if (!T || T.game) return false;
     if (!(Number.isInteger(gm.s) && gm.s > 0 && gm.s < 2147483647)) return false;
     if (gm.d !== undefined && !(gm.d === 1 || gm.d === 2 || gm.d === 3)) return false;
+    if (!okQx(gm.qx)) return false;
     var m = gm.m || '';
     if (typeof m !== 'string') return false;
     if (T.modes) return SUBS[T.id].some(function(x){ return x.id === m; });
@@ -7725,6 +7891,7 @@ var THEMES = [
   function hostStart(themeId, mode){
     if (!V || V.role !== 'host' || !oppPeer()) return;
     var game = { id: Math.random().toString(36).slice(2, 8), t: themeId, m: mode || '', s: newSeed(), d: P.lv + 1 };
+    var qx0 = mkQx(game.t, game.m, game.s, game.d); if (qx0) game.qx = qx0;
     V.game = game; V.gameId = game.id; V.ready = game.id; V.pending = true; V.me.a = [];
     V.rqSent = false; V.rqAcc = null; pres({ game:game, ready:game.id, g:game.id, a:[], rq:null, ra:null });
     $('frStatus').textContent = 'Lancement du duel…';
@@ -7739,7 +7906,7 @@ var THEMES = [
   function beginVs(){
     var gm = V.game, T = themeById(gm.t);
     var mineV = V;
-    launch(T, gm.m, gm.s, 'vs', { lv:{ name:V.oppName }, id:gm.id, sub:gm.m || '' }, function(){ return V === mineV; }, gm.d || 1);
+    launch(T, gm.m, gm.s, 'vs', { lv:{ name:V.oppName }, id:gm.id, sub:gm.m || '', qx:gm.qx }, function(){ return V === mineV; }, gm.d || 1);
   }
 
   function onRoom(){
@@ -8062,6 +8229,7 @@ var THEMES = [
     var p = PT; if (!p || p.role !== 'host' || !p.th) return;
     if (!ptPlayers().length){ toast('Attends qu’au moins un ami ait rejoint le salon.'); return; }
     var game = { id:Math.random().toString(36).slice(2, 8), t:p.th.t, m:p.th.m || '', s:newSeed(), d:P.lv + 1 };
+    var qx1 = mkQx(game.t, game.m, game.s, game.d); if (qx1) game.qx = qx1;
     if (!validGame(game)) return;
     ppres({ game:game });
     ptBegin(game);
@@ -8072,7 +8240,7 @@ var THEMES = [
     ppres({ g:game.id, a:[] });
     var T = themeById(game.t), mine = p;
     $('gone').querySelector('span').textContent = 'Ton adversaire a quitté le duel.';
-    launch(T, game.m, game.s, 'party', { lv:{ name:'Salon' }, id:game.id, sub:game.m || '', pt:{}, tv:!!p.tv, pad:!p.tv && !!p.hostTv }, function(){ return PT === mine; }, game.d || 1);
+    launch(T, game.m, game.s, 'party', { lv:{ name:'Salon' }, id:game.id, sub:game.m || '', qx:game.qx, pt:{}, tv:!!p.tv, pad:!p.tv && !!p.hostTv }, function(){ return PT === mine; }, game.d || 1);
   }
   /* Télé : dès que tous les joueurs ont répondu, on révèle sans attendre la fin du chrono */
   function tvAll(){
@@ -18097,6 +18265,12 @@ html body #result #verdict.vspin .vt-spin span{clip-path:inset(-20% 0 -20% 0)}
 html body #result #verdict.vspin .vt-spin img,html body[data-skin] #result #verdict.vspin .vt-spin img{position:absolute;top:0;height:100%;max-width:none!important;filter:none!important;animation:none!important;display:block}
 @keyframes vtSelfSpin{0%{transform:rotateY(0)}22%{transform:rotateY(360deg)}100%{transform:rotateY(360deg)}}
 @media (prefers-reduced-motion:reduce){html body #result #verdict.vspin .vt-spin span{animation:none}}
+
+/* v516 banque : anecdote + signalement */
+html body #after:has(.q-an){flex-wrap:wrap!important;flex:1 1 100%!important}
+html body #qvote:has(.q-an){display:flex!important;flex:1 1 100%;min-width:0;flex-wrap:nowrap;align-items:flex-start;margin:6px 0 0!important;order:5}
+html body #qvote .q-an{display:block;flex:1 1 auto;min-width:0;white-space:normal;font:500 13px/1.4 var(--grot,system-ui);color:#777;text-align:left}
+html body #qvote .q-rep{flex:none;width:auto!important;min-width:38px;padding:0 10px;font-size:15px!important}
 </style>
 <script id="endScrJs">
 (function(){
@@ -18192,6 +18366,33 @@ html body #result #verdict.vspin .vt-spin img,html body[data-skin] #result #verd
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
 </script>
+<script id="joBankLoader">(function(){
+  var API = 'https://rukvvvtcmirkkykknzio.supabase.co/rest/v1/rpc/', KEY = window.JOUTE_SB_KEY || 'sb_publishable_VviBAmGKmK6F3UuE3yyPZQ_zTcmD--t';
+  var B = window.joBank = { v:'', by:{}, n:0, ready:false, hide:{} };
+  try { B.hide = JSON.parse(localStorage.getItem('joute-bank-hide') || '{}') || {}; } catch(e){}
+  function dev(){ try { var d = localStorage.getItem('joute-dev'); if (!d){ d = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('joute-dev', d); } return d; } catch(e){ return 'anon'; } }
+  function index(d){ if (!d || !Array.isArray(d.rows) || !d.rows.length) return false; var by = {}; d.rows.forEach(function(r){ if (Array.isArray(r) && r.length >= 6) (by[r[1]] || (by[r[1]] = [])).push(r); }); B.by = by; B.v = String(d.v || ''); B.n = d.rows.length; B.ready = true; try { window.dispatchEvent(new Event('jobank')); } catch(e){} return true; }
+  function db(){ return new Promise(function(res, rej){ try { var q = indexedDB.open('joute-bank', 1); q.onupgradeneeded = function(){ q.result.createObjectStore('kv'); }; q.onsuccess = function(){ res(q.result); }; q.onerror = function(){ rej(q.error); }; } catch(e){ rej(e); } }); }
+  function get(k){ return db().then(function(d){ return new Promise(function(res){ var t = d.transaction('kv').objectStore('kv').get(k); t.onsuccess = function(){ res(t.result); }; t.onerror = function(){ res(null); }; }); }); }
+  function put(k, v){ return db().then(function(d){ return new Promise(function(res){ var t = d.transaction('kv', 'readwrite'); t.objectStore('kv').put(v, k); t.oncomplete = function(){ res(true); }; t.onerror = function(){ res(false); }; }); }); }
+  function rpc(fn, body){ return fetch(API + fn, { method:'POST', headers:{ 'apikey':KEY, 'Authorization':'Bearer ' + KEY, 'Content-Type':'application/json' }, body:JSON.stringify(body || {}) }).then(function(r){ if (!r.ok) throw new Error('http ' + r.status); return r.json(); }); }
+  function refresh(force){
+    return get('at').then(function(at){
+      if (!force && B.ready && at && Date.now() - at < 6 * 3600e3) return;
+      return rpc('bank_version').then(function(v){
+        if (B.ready && String(v) === B.v){ put('at', Date.now()); return; }
+        return rpc('get_bank').then(function(d){ if (index(d)){ put('bank', d); put('at', Date.now()); } });
+      });
+    }).catch(function(){});
+  }
+  window.joBankRefresh = refresh;
+  window.joBankReport = function(id, reason){
+    B.hide[id] = 1; try { localStorage.setItem('joute-bank-hide', JSON.stringify(B.hide)); } catch(e){}
+    return rpc('report_bank_question', { p_id:id, p_device:dev(), p_reason:reason || '' }).catch(function(){});
+  };
+  get('bank').then(function(d){ index(d); }).catch(function(){}).then(function(){ refresh(false); });
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden) refresh(false); });
+})();</script>
 <script id="openAppBanner">(function(){try{
 if(window.Capacitor||!/Android/i.test(navigator.userAgent))return;
 var c=(location.hash||'').replace(/[^0-9]/g,'');if(c.length!==5)return;
