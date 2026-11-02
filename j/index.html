@@ -8338,6 +8338,26 @@ var THEMES = [
     }
   }
 
+  /* v522 : abandon en salon → retour au salon (pas à l'accueil) */
+  function ptToLobby(){
+    launchTok++; stopAudio();
+    if (G){ clearInterval(G.timer); clearTimeout(G.adv); clearTimeout(G.ptT); G.locked = true; G.over = true; }
+    try { if (window.joVsSh) window.joVsSh.clear(); } catch(e){}
+    $('gone').hidden = true;
+    if (PT){ try { if (G && G.id) PT.ignore = G.id; PT.gameId = null; ppres({ g:'', a:[], lobby:Date.now() }); } catch(e){} show('party'); try { renderParty(); } catch(e){} } else backHome();
+  }
+  window.joPtToLobby = ptToLobby;
+  /* télé (ou dernier joueur) : si plus aucun joueur n'est dans la partie, tout le monde revient au salon */
+  var ptEmpty = 0;
+  setInterval(function(){
+    try {
+      if (!(G && G.mode === 'party' && PT && !G.over) || ($('duel').hidden && $('intro').hidden)){ ptEmpty = 0; return; }
+      var inGame = ptPlayers().filter(function(x){ return x.presence.g === G.id; }).length;
+      var alone = G.tv ? inGame === 0 : false;
+      ptEmpty = alone ? ptEmpty + 1 : 0;
+      if (ptEmpty >= 2){ ptEmpty = 0; toast('Partie abandonnée : retour au salon'); ptToLobby(); }
+    } catch(e){}
+  }, 1000);
   function backHome(){
     launchTok++; stopAudio();
     leaveVs(); leaveSalon(); leaveParty(); leaveComm();
@@ -10558,6 +10578,7 @@ var THEMES = [
       clearTimeout(quitTimer); b.dataset.armed = '0';
       if (G && G.cr && !G.over){ crEnd(G); return; }
       if (G && G.sd && !G.over){ clearInterval(G.timer); clearTimeout(G.adv); G.locked = true; G.over = true; stopAudio(); sdFinish(G); return; }
+      if (G && G.mode === 'party' && PT){ ptToLobby(); return; }
       backHome();
     } else {
       b.dataset.armed = '1'; b.textContent = 'Confirmer l’abandon';
