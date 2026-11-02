@@ -5453,7 +5453,9 @@ var THEMES = [
       }
       return newGame(T, dq, kind, extra);
     }
-    var qs = (extra && Array.isArray(extra.qx) && extra.qx.length >= N && okQx(extra.qx)) ? extra.qx.map(function(x){ return Object.assign({}, x, { opts:x.opts.slice() }); }) : buildQs(T, mode, seed, diff, kind === 'bot');
+    var qs;
+    if (extra && Array.isArray(extra.qx) && extra.qx.length >= N && okQx(extra.qx)) qs = extra.qx.map(function(x){ return Object.assign({}, x, { opts:x.opts.slice() }); });
+    else { /* multi sans liste envoyée : pas de banque, pour que tous les appareils tirent les mêmes questions */ BANK_OFF = (kind === 'vs' || kind === 'party'); try { qs = buildQs(T, mode, seed, diff, kind === 'bot'); } finally { BANK_OFF = false; } }
     if (kind === 'bot' && !(extra && (extra.tour || extra.daily))) qs = phInject(T, qs);
     extra = Object.assign({ diff: diff || 1 }, extra);
     var isPhoto = (T.id === 'arc' && mode === 'photo') || T.id === 'aut' || (T.id === 'arc' && mode === 'bat');
@@ -5819,7 +5821,9 @@ var THEMES = [
   }
   function bankHas(id){ var r = bankRows(id); return !!(r && r.length >= 20); }
   function bankQ(r, rnd){ var o = shuffle([r[3]].concat(r[4]), rnd); return { q:r[2], opts:o, ans:o.indexOf(r[3]), bid:r[0], ctx:r[6] || '', an:r[7] || '' }; }
+  var BANK_OFF = false;
   function bankMix(T, mode, seed, diff, res, mark){
+    if (BANK_OFF) return res;
     if (!Array.isArray(res) || !res.length || !Array.isArray(T.q) || !bankHas(T.id)) return res;
     if (T.modes && !(mode === '' || mode === 'mix' || T.id === 'spo')) return res;
     if (res.some(function(q){ return !q || q.img || q.art || q.bt || !q.opts || q.opts.length !== 4; })) return res;
