@@ -11355,7 +11355,7 @@ var THEMES = [
   window.shInfo = function(){ var lv = myLevel(), rk = rankOf(lv), B = P.best || {};
     if (!P.inv){ var A = 'ACDEFHJKMNPRTWXY34679', c = ''; for (var i = 0; i < 6; i++) c += A[Math.floor(Math.random() * A.length)]; P.inv = c; save(); }
     var top = []; try { top = THEMES.filter(function(T){ return (B[T.id] | 0) > 0; }).sort(function(a, b){ return B[b.id] - B[a.id]; }).slice(0, 2).map(function(T){ return [T.name, B[T.id] | 0]; }); } catch(e){}
-    return { name:myName(), lv:lv, rank:rk.nm, next:rk.next ? [rk.next[1], rk.next[0]] : null, into:((P.xp | 0) % 200) / 2, xp:P.xp | 0, pl:P.played | 0, w:P.wins | 0, top:top, inv:P.inv, loc:[cleanTxt(P.city, 24), cleanTxt(P.country, 24)].filter(Boolean).join(', ') }; };
+    return { name:myName(), lv:lv, rank:rk.nm, next:rk.next ? [rk.next[1], rk.next[0]] : null, into:((P.xp | 0) % 200) / 2, xp:P.xp | 0, pl:P.played | 0, w:P.wins | 0, top:top, inv:P.inv, age:(P.age | 0) || null, loc:[cleanTxt(P.city, 24), cleanTxt(P.country, 24)].filter(Boolean).join(', ') }; };
   (function(){ var g = $('sProf'); if (!g) return; function pr(){ Array.prototype.forEach.call(g.querySelectorAll(':scope > button'), function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-v') === window.__profMode())); }); } pr();
     Array.prototype.forEach.call(g.querySelectorAll(':scope > button'), function(b){ b.addEventListener('click', function(){ P.set.prof = b.getAttribute('data-v'); save(); pr(); if (g._upd) g._upd(false); try { if (window.joLan) window.joLan.hide(); } catch(e){} if (window.lanSync) window.lanSync(); }); }); })();
   (function(){ var g = $('sPlq'); function pr(){ Array.prototype.forEach.call(g.querySelectorAll(':scope > button'), function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-p') === ((P.set && P.set.plq) || 'auto'))); }); } pr();
@@ -15369,6 +15369,7 @@ window.joEngrave = (function(){
     box.querySelector('.shd-cap b').textContent = window.joDeacc(i.name || 'Joueur');
     var nmEl = box.querySelector('.shd-nm');
     if (nmEl){ window.joNamePng(nmEl, i.name || 'Joueur'); }
+    var agEl = box.querySelector('.shd-age'); if (!agEl){ agEl = document.createElement('div'); agEl.className = 'shd-age'; var cap0 = box.querySelector('.shd-cap'); box.insertBefore(agEl, cap0 || null); } agEl.textContent = i.age ? i.age + ' ans' : ''; agEl.hidden = !i.age;
     var egEl = box.querySelector('.shm-eng'); if (egEl && window.joEngrave){ egEl.innerHTML = window.joEngrave(i.name || 'Joueur', egEl._face); if (document.fonts && document.fonts.load) document.fonts.load('400 40px "JInqFull"').then(function(){ if (egEl.isConnected) egEl.innerHTML = window.joEngrave(i.name || 'Joueur', egEl._face); }, function(){}); }
     var smEl = box.querySelector('.shm-nm'); if (smEl && smEl._cfg && window.joShNameSvg){ smEl.innerHTML = window.joShNameSvg(smEl._cfg, i.name || 'Joueur'); if (document.fonts && document.fonts.load) document.fonts.load('400 40px "JInqFull"').then(function(){ if (smEl.isConnected) smEl.innerHTML = window.joShNameSvg(smEl._cfg, i.name || 'Joueur'); }, function(){}); }
     box.querySelector('.shd-cap span').textContent = ['Niveau ' + (i.lv || 1), i.loc].filter(Boolean).join(' · ');
@@ -18657,6 +18658,10 @@ html.tv-end #prBg{image-rendering:auto}
 #upBody .rp-nm{margin-top:10px;font:600 26px/1.1 var(--disp,system-ui)}
 #upBody .rp-sub{margin-top:6px;opacity:.7;font-size:15px}
 #upBody .rp .upact{margin-top:18px;display:flex;gap:10px}
+
+/* v544 : âge sous le bouclier du profil, en Inquisition */
+#lan3d .shd-age{position:relative;z-index:3;margin:-2px auto 0;text-align:center;font:400 30px/1 "JInqFull","JInquisition",serif;letter-spacing:.04em;color:var(--ink,#111)}
+#lan3d .shd-age[hidden]{display:none}
 </style>
 <script id="tvEndJs">(function(){
   /* v533 : écran de fin sur la télé — bannières des joueurs (le gagnant en grand), fond Prism */
