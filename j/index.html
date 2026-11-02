@@ -6722,7 +6722,7 @@ var THEMES = [
     };
     show('intro');
     snd('blade');
-    try { if (window.joVsSh){ if (g.mode === 'party'){ if (g.vsPair) window.joVsSh.start(false, g.vsPair); else window.joVsSh.start(true, [{ name:nm, sub:(PT && PT.role === 'host') ? 'Toi \u00b7 H\u00f4te' : 'Toi' }], true); } else window.joVsSh.start(!(g.mode === 'vs')); } } catch(e){}
+    try { if (window.joVsSh){ if (g.mode === 'party'){ if (g.tv){ /* télé : boucliers des joueurs du salon, jamais celui de la télé */ var tp = ptPlayers().map(function(x){ return { name:ptName(x), sub:x.presence.host === 1 ? 'H\u00f4te' : 'Joueur' }; }); if (tp.length >= 2) window.joVsSh.start(false, tp.slice(0, 2)); else if (tp.length === 1) window.joVsSh.start(true, tp, true); } else if (g.vsPair) window.joVsSh.start(false, g.vsPair); else window.joVsSh.start(true, [{ name:nm, sub:(PT && PT.role === 'host') ? 'Toi \u00b7 H\u00f4te' : 'Toi' }], true); } else window.joVsSh.start(!(g.mode === 'vs')); } } catch(e){}
     g.introAt = performance.now();
     if (g.mode === 'vs' || g.mode === 'party'){
       bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
