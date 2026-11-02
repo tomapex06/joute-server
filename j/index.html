@@ -18705,7 +18705,7 @@ html.tv-end #prBg{image-rendering:auto}
 
 /* v544 : âge sous le bouclier du profil, en Inquisition */
 #lan3d .shd-age{position:relative;z-index:3;margin:-2px auto 0;text-align:center;font:400 30px/1 "JInqFull","JInquisition",serif;letter-spacing:.04em;color:var(--ink,#111)}
-#lan3d .shd-age[hidden]{display:none}
+#lan3d .shd-age[hidden],#lan3d .shd-age{display:none!important} /* v551 : âge retiré du profil (affiché seulement en partie) */
 /* v547 : passions retirées des paramètres */
 #sPass{display:none!important}
 /* v547 : profil — une seule case Amis */
