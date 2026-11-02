@@ -18626,7 +18626,7 @@ html.tv-end #prBg{image-rendering:auto}
       '<linearGradient id="' + id + 'i" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2a1c"/><stop offset=".55" stop-color="#140d07"/><stop offset="1" stop-color="#000"/></linearGradient>' +
       '<filter id="' + id + 'f" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur in="SourceAlpha" stdDeviation="2.2" result="b"/><feOffset in="b" dy="5" result="o"/><feFlood flood-color="#5a3d1c" flood-opacity=".55"/><feComposite in2="o" operator="in" result="sh"/><feOffset in="SourceAlpha" dy="-2.5" result="h0"/><feFlood flood-color="#fffaf0" flood-opacity=".95"/><feComposite in2="h0" operator="in" result="hl"/><feMerge><feMergeNode in="sh"/><feMergeNode in="hl"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>' +
       '<text class="lab" filter="url(#' + id + 'f)" style="filter:url(#' + id + 'f)!important"><textPath href="#' + id + 'a" startOffset="50%" text-anchor="middle">' + esc(nm.toUpperCase().slice(0, 18)) + '</textPath></text>' +
-      '<text class="num" fill="url(#' + id + 'i)" filter="url(#' + id + 'f)" style="filter:url(#' + id + 'f)!important"><textPath href="#' + id + 'b" startOffset="50%" text-anchor="middle">' + esc(r.score) + '<tspan class="pts" fill="#b3231a" dx="24">pts</tspan></textPath></text></svg>';
+      '<text class="num" fill="url(#' + id + 'i)" filter="url(#' + id + 'f)" style="filter:url(#' + id + 'f)!important"><textPath href="#' + id + 'b" startOffset="50%" text-anchor="middle"><tspan class="pts" fill="none" dx="-24">pts</tspan>' + esc(r.score) + '<tspan class="pts" fill="#b3231a" dx="24">pts</tspan></textPath></text></svg>';
     return d;
   }
   function close(){
