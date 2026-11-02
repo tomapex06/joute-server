@@ -3945,7 +3945,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
           <input type="text" id="sNick" maxlength="16" placeholder="Ton pseudo" autocomplete="off">
           <input type="text" id="sCity" maxlength="24" placeholder="Ta ville" autocomplete="off">
           <select id="sCountry" aria-label="Ton pays"></select>
-          <select id="sStudy" aria-label="Niveau d’études"></select>
+          <select id="sStudy" aria-label="Âge"></select>
           <div id="sPass" class="pass" role="group" aria-label="Passions"><div class="lab pass-l">Passions</div><div class="pass-g" id="sPassG"></div><form class="pass-o" id="sPassO" hidden><input type="text" id="sPassT" maxlength="20" placeholder="Ta passion" autocomplete="off" aria-label="Ta passion"><button type="submit" class="btn" id="sPassAdd">Ajouter</button></form></div>
           <div class="frow"><label class="btn" for="sPhoto">Choisir une photo</label><input type="file" id="sPhoto" accept="image/*" hidden><button type="button" class="btn" id="sPhotoDel">Retirer</button></div>
         </div>
@@ -6761,7 +6761,7 @@ var THEMES = [
     noEmo(['phRank', 'phNext']);
     var loc = [cleanTxt(P.city, 24), cleanTxt(P.country, 24)].filter(Boolean).join(', ');
     var fg = flagOf(P.country); $('phLoc').textContent = loc ? (fg || '📍') + ' ' + loc : ''; $('phLoc').hidden = !loc;
-    var stl = [P.study].concat(P.passions || []).filter(Boolean).join(' · '); $('phStudy').textContent = stl; $('phStudy').hidden = !stl;
+    var stl = [P.age ? P.age + ' ans' : ''].concat(P.passions || []).filter(Boolean).join(' · '); $('phStudy').textContent = stl; $('phStudy').hidden = !stl;
     var ms = [0, 0, 0]; Object.keys(P.med || {}).forEach(function(k){ for (var i = 0; i < 3; i++) ms[i] += P.med[k][i] | 0; });
     $('pmRow').innerHTML = ['b', 's', 'g'].map(function(k, i){ return '<div class="md ' + k + (ms[i] ? '' : ' off') + '">' + medalSvg(i, 58) + '<b>×' + ms[i] + '</b></div>'; }).join('') + '<div class="md t' + ((P.trophies | 0) ? '' : ' off') + '">' + trophySvg(58) + '<b>×' + (P.trophies | 0) + '</b></div>';
     var rib = $('phRib'), tr = P.trophies | 0, ttl = P.title && P.title.wk === trWeek() ? P.title.txt : ''; rib.hidden = !tr && !ttl; rib.textContent = (ttl ? '👑 ' + ttl + (tr ? ' · ' : '') : '') + (tr ? '🏆 ' + plural(tr, 'trophée') + ' de tournoi' : '');
@@ -9039,7 +9039,7 @@ var THEMES = [
   function syncProfLists(){
     var cs = COUNTRIES.filter(function(c){ return !!flagOf(c); }).sort(function(a, b){ return a.localeCompare(b, 'fr'); });
     fillSel($('sCountry'), 'Ton pays', cs, cleanTxt(P.country, 24));
-    fillSel($('sStudy'), 'Niveau d’études', STUDY, P.study || '');
+    var AGES = []; for (var ag = 8; ag <= 99; ag++) AGES.push(ag + ' ans'); fillSel($('sStudy'), 'Âge', AGES, P.age ? P.age + ' ans' : '');
     var g = $('sPassG'), ps = P.passions || [];
     var custom = ps.filter(function(x){ return PASS.indexOf(x) < 0; });
     g.innerHTML = '';
@@ -9070,7 +9070,7 @@ var THEMES = [
     setNick:function(n){ var i = $('sNick'); if (!i || !n) return; i.value = n; i.dispatchEvent(new Event('input')); },
     setCountry:function(c){ var sl = $('sCountry'); if (!sl || !c) return; P.country = cleanTxt(c, 24); save(); try { sl.value = P.country; sl.classList.remove('ph'); } catch(e){} try { lbUpdate(); } catch(e){} }
   };
-  $('sStudy').addEventListener('change', function(){ P.study = this.value; this.classList.remove('ph'); save(); });
+  $('sStudy').addEventListener('change', function(){ var a = parseInt(this.value, 10); P.age = a >= 5 && a <= 120 ? a : null; this.classList.remove('ph'); save(); });
   document.addEventListener('visibilitychange', function(){ if (document.hidden) lbStop(); else if (roomNs) lbStart(); });
 
   /* ---------- Tournoi de la semaine ---------- */
@@ -10727,7 +10727,7 @@ var THEMES = [
   ];
   var WMU = {};
   function muById(id){
-    if (typeof id === 'string' && id.indexOf('q:') === 0){ var qf = P.qf && P.qf[id]; if (!qf) return null; return { id:id, name:qf.n, av:null, co:qf.co || '', ci:'', lv:qf.l || 1, w:0, pl:0, bio:'Ajouté par QR code', fb:0, th:[] }; }
+    if (typeof id === 'string' && id.indexOf('q:') === 0){ var qf = P.qf && P.qf[id]; if (!qf) return null; return { id:id, name:qf.n, av:null, co:qf.co || '', ci:'', lv:qf.l || 1, w:0, pl:0, bio:'Ajouté par QR code', fb:0, th:[], age:qf.a || null, uid:qf.u || null, real:true }; }
     for (var i = 0; i < MU.length; i++) if (MU[i].id === id) return MU[i];
     if (typeof id === 'string' && id.indexOf('w:') === 0){
       if (WMU[id]) return WMU[id];
@@ -10801,6 +10801,7 @@ var THEMES = [
       r.addEventListener('click', onClick); box.appendChild(r); return r;
     }
     function fbtn(u){
+      if (u.real){ var d = document.createElement('button'); d.type = 'button'; d.className = 'btn fbtn primary'; d.textContent = 'Défier'; d.addEventListener('click', function(e){ e.stopPropagation(); defyFriend(u); }); return d; }
       var b = document.createElement('button'); b.type = 'button'; b.className = 'btn fbtn' + (isFol(u.id) ? '' : ' primary'); b.textContent = isFol(u.id) ? 'Suivi' : 'Suivre';
       b.addEventListener('click', function(e){ e.stopPropagation(); followToggle(u.id); renderMsgs(); });
       return b;
@@ -10870,8 +10871,29 @@ var THEMES = [
     var m = 8 + (x * 7) % 700;
     return { on:false, txt: m < 60 ? 'Vu il y a ' + m + ' min' : 'Vu il y a ' + Math.round(m / 60) + ' h' };
   }
+  /* v543 : défier un ami (compte en ligne) : on ouvre un duel et on lui envoie la demande */
+  function defyFriend(u){
+    unlockAudio();
+    if (!u.uid || !window.joCloudInvite){ toast('Pour défier ' + u.name + ', vous devez être connectés tous les deux à votre compte.'); return; }
+    var code = newCode(); cuPreload(); openRoom('host', code);
+    window.joCloudInvite(u.uid, code).then(function(ok){ toast(ok ? 'Défi envoyé à ' + u.name + '. En attente…' : 'Impossible d’envoyer le défi à ' + u.name + '.'); });
+  }
+  function openRealProf(u){
+    var face = window.joShModel ? window.joShModel() : null;
+    var h = '<div class="rp">' +
+      '<div class="rp-sh">' + (face ? '<div class="rp-face" style="background-image:url(' + face + ')">' + (window.joEngrave ? window.joEngrave(u.name, face) : '') + '</div>' : '') + '</div>' +
+      '<div class="rp-age">' + (u.age ? u.age + ' ans' : 'Âge non renseigné') + '</div>' +
+      '<div class="rp-nm">' + esc(u.name) + '</div>' +
+      '<div class="rp-sub">' + esc(rankOf(u.lv).ic + ' ' + rankOf(u.lv).nm) + ' · niveau ' + u.lv + (u.co ? ' · ' + esc(flagOf(u.co) || '') + ' ' + esc(u.co) : '') + '</div>' +
+      '<div class="upact"><button type="button" class="btn primary" id="rpDuel">Défier</button><button type="button" class="btn" id="rpUnf">Ne plus suivre</button></div></div>';
+    $('upBody').innerHTML = h;
+    $('rpDuel').addEventListener('click', function(){ defyFriend(u); });
+    $('rpUnf').addEventListener('click', function(){ followToggle(u.id); try { show('msgs'); renderMsgs(); } catch(e){} });
+    show('uprof');
+  }
   function openUProf(id){
     sc(); var u = muById(id); if (!u) return;
+    if (u.real){ openRealProf(u); return; }
     var pr = muPres(u), rk = rankOf(u.lv), fg = flagOf(u.co), pw = Math.round(u.w * 100 / u.pl), fers = 40 + hueOf(u.id) * 2, fol = 30 + hueOf(u.name) ;
     var top = u.th.map(function(t, i){ var T = themeById(t); return T ? [T.name, 1500 - i * 230 - (hueOf(u.id) % 90)] : null; }).filter(Boolean);
     var h = '<div class="ph"><div class="ph-bg" style="background-color:' + AV_C[u.av[1]] + '"></div><div class="ph-in"><div id="upAv"></div><div class="ph-name"><span>' + esc(u.name) + '</span><span class="ph-lv">' + u.lv + '</span></div>' +
@@ -11269,8 +11291,8 @@ var THEMES = [
     window.joFriendsMerge = function(list){
       sc(); P.qf = P.qf || {}; var ch = false;
       (list || []).forEach(function(f){ if (!f || !ALPH.test(String(f.c || ''))) return; var id = 'q:' + f.c, o = P.qf[id] || {};
-        var n = cleanTxt(f.n || '', 16) || 'Ami ' + f.c, l = Math.max(1, Math.min(999, f.l | 0 || 1)), co = cleanTxt(f.co || '', 24);
-        if (o.n !== n || o.l !== l || o.co !== co){ P.qf[id] = { n:n, l:l, co:co, ts:o.ts || Date.now() }; ch = true; }
+        var n = cleanTxt(f.n || '', 16) || 'Ami ' + f.c, l = Math.max(1, Math.min(999, f.l | 0 || 1)), co = cleanTxt(f.co || '', 24), ag = (f.a | 0) || null, uu = typeof f.u === 'string' && /^[0-9a-f-]{36}$/.test(f.u) ? f.u : (o.u || null);
+        if (o.n !== n || o.l !== l || o.co !== co || o.a !== ag || o.u !== uu){ P.qf[id] = { n:n, l:l, co:co, a:ag, u:uu, ts:o.ts || Date.now() }; ch = true; }
         if (P.fol.indexOf(id) < 0){ P.fol.push(id); ch = true; }
         if (P.fers.indexOf(id) < 0){ P.fers.push(id); ch = true; } });
       if (ch){ save(); render(); try { if (typeof renderProfile === 'function' && !$('profile').hidden) renderProfile(); } catch(e){} }
@@ -18125,14 +18147,32 @@ html body.padmode #duel .status,html body.padmode #duel .duelfoot,html body.padm
     if (lv !== prof.lv) up.lv = Math.min(9999, lv);
     if (nk && nk !== prof.pseudo && /^[A-Za-z0-9_À-ÿ .-]{2,20}$/.test(nk)) up.pseudo = nk;
     if ((P.country || null) !== (prof.country || null)) up.country = (P.country || '').slice(0, 40) || null;
-    if (Object.keys(up).length){ var u2 = await sb.from('profiles').update(up).eq('id', user.id).select('id,pseudo,country,xp,inv,lv').maybeSingle(); if (!u2.error && u2.data) prof = u2.data; else if (up.inv && u2.error && u2.error.code === '23505' && window.joSetInv) window.joSetInv(); }
+    var ag = (P.age | 0) >= 5 && (P.age | 0) <= 120 ? (P.age | 0) : null; if (ag !== (prof.age == null ? null : prof.age)) up.age = ag;
+    if (Object.keys(up).length){ var u2 = await sb.from('profiles').update(up).eq('id', user.id).select('id,pseudo,country,xp,inv,lv,age').maybeSingle(); if (!u2.error && u2.data) prof = u2.data; else if (up.inv && u2.error && u2.error.code === '23505' && window.joSetInv) window.joSetInv(); }
   }
   async function pullFriends(){
     if (!user || !sb || !window.joFriendsMerge) return;
-    var r = await sb.from('friends').select('friend_id, profiles:friend_id(pseudo,country,inv,lv)').eq('user_id', user.id);
+    var r = await sb.from('friends').select('friend_id, profiles:friend_id(pseudo,country,inv,lv,age)').eq('user_id', user.id);
     if (r.error || !r.data) return;
-    window.joFriendsMerge(r.data.map(function(x){ var p = x.profiles || {}; return { c:p.inv, n:p.pseudo, co:p.country, l:p.lv }; }).filter(function(f){ return f.c; }));
+    window.joFriendsMerge(r.data.map(function(x){ var p = x.profiles || {}; return { c:p.inv, n:p.pseudo, co:p.country, l:p.lv, a:p.age, u:x.friend_id }; }).filter(function(f){ return f.c; }));
   }
+  /* v543 : demandes de duel entre amis */
+  window.joCloudInvite = async function(to, code){
+    if (!user || !sb) return false;
+    try { var nm = String(localP().nick || (prof && prof.pseudo) || 'Un ami').slice(0, 20); var r = await sb.from('duel_invites').insert({ to_user:to, from_name:nm, code:String(code) }); return !r.error; } catch(e){ return false; }
+  };
+  var invSeen = {};
+  async function pollInvites(){
+    if (!user || !sb || document.hidden) return;
+    try {
+      var since = new Date(Date.now() - 10 * 60000).toISOString();
+      var r = await sb.from('duel_invites').select('id,from_name,code,created_at').eq('to_user', user.id).gt('created_at', since).order('created_at', { ascending:false }).limit(1);
+      if (r.error || !r.data || !r.data.length) return;
+      var iv = r.data[0]; if (invSeen[iv.id]) return; invSeen[iv.id] = 1;
+      if (window.joShowInvite) window.joShowInvite(iv.from_name || 'Un ami', iv.code, function(){ sb.from('duel_invites').delete().eq('id', iv.id).then(function(){}, function(){}); });
+    } catch(e){}
+  }
+  setInterval(pollInvites, 12000); document.addEventListener('visibilitychange', function(){ if (!document.hidden) setTimeout(pollInvites, 800); });
   window.joCloudAddFriend = async function(code){
     if (!user || !sb) return;
     try { var r = await sb.rpc('add_friend', { code:String(code).toUpperCase() }); if (!r.error) pullFriends(); } catch(e){}
@@ -18186,7 +18226,7 @@ html body.padmode #duel .status,html body.padmode #duel .duelfoot,html body.padm
   async function loadProfile(){
     prof = null;
     if (!user) return;
-    var r = await sb.from('profiles').select('id,pseudo,country,xp,inv,lv').eq('id', user.id).maybeSingle();
+    var r = await sb.from('profiles').select('id,pseudo,country,xp,inv,lv,age').eq('id', user.id).maybeSingle();
     if (!r.error) prof = r.data;
   }
   function applyProfile(){
@@ -18252,7 +18292,7 @@ html body.padmode #duel .status,html body.padmode #duel .duelfoot,html body.padm
       if (!/^[A-Za-z0-9_À-ÿ .-]{2,20}$/.test(ps)) return bad('2 à 20 caractères : lettres, chiffres, espace, point, tiret.');
       var bt = w.querySelector('button[type=submit]'); bt.disabled = true;
       var c = (cur.country || '').slice(0, 40) || null;
-      var r = await sb.from('profiles').insert({ id:user.id, pseudo:ps, country:c, xp:0 }).select('id,pseudo,country,xp,inv,lv').single();
+      var r = await sb.from('profiles').insert({ id:user.id, pseudo:ps, country:c, xp:0 }).select('id,pseudo,country,xp,inv,lv,age').single();
       bt.disabled = false;
       if (r.error){ return bad(r.error.code === '23505' ? 'Ce pseudo est déjà pris.' : 'Impossible de créer le compte : ' + r.error.message); }
       prof = r.data; applyProfile(); w.remove(); render(); authDone(); toast('Compte créé. Bienvenue, ' + ps + ' !'); cloudSync(true);
@@ -18607,6 +18647,16 @@ html body.tvmode #intro .vsh-s,html body.tvgame #intro .vsh-s,#tvEnd .te-b,#tvEn
 #tvEnd .te-b{contain:layout paint}
 #tvEnd .te-b.in{transform:translateZ(0)}
 html.tv-end #prBg{image-rendering:auto}
+
+/* v543 : profil d'un ami (bouclier gravé + âge) */
+#upBody .rp{display:flex;flex-direction:column;align-items:center;text-align:center;padding:8px 0 20px}
+#upBody .rp-sh{width:min(70vw,300px);aspect-ratio:760/869;position:relative;filter:drop-shadow(0 14px 18px rgba(0,0,0,.35))}
+#upBody .rp-face{position:absolute;inset:0;background:center/100% 100% no-repeat}
+#upBody .rp-face img{filter:none!important}
+#upBody .rp-age{margin-top:14px;font:400 30px/1 "JInqFull","JInquisition",serif;letter-spacing:.03em}
+#upBody .rp-nm{margin-top:10px;font:600 26px/1.1 var(--disp,system-ui)}
+#upBody .rp-sub{margin-top:6px;opacity:.7;font-size:15px}
+#upBody .rp .upact{margin-top:18px;display:flex;gap:10px}
 </style>
 <script id="tvEndJs">(function(){
   /* v533 : écran de fin sur la télé — bannières des joueurs (le gagnant en grand), fond Prism */
@@ -18655,6 +18705,25 @@ html.tv-end #prBg{image-rendering:auto}
   setInterval(function(){ if (!box) return; var r = document.getElementById('result'); if (!r || r.hidden) close(); }, 400);
 })();</script>
 
+<script id="joInviteUi">(function(){
+  window.joShowInvite = function(name, code, done){
+    var o = document.getElementById('joInv'); if (o) o.remove();
+    o = document.createElement('div'); o.id = 'joInv';
+    o.innerHTML = '<div class="ji-c"><div class="ji-t">⚔ Défi !</div><div class="ji-m"></div><div class="ji-b"><button type="button" class="btn primary" id="jiYes">Rejoindre</button><button type="button" class="btn" id="jiNo">Plus tard</button></div></div>';
+    o.querySelector('.ji-m').textContent = name + ' te défie en duel.';
+    document.body.appendChild(o);
+    try { if (window.joSnd) window.joSnd('whoosh'); if (navigator.vibrate) navigator.vibrate([60, 40, 60]); } catch(e){}
+    o.querySelector('#jiYes').addEventListener('click', function(){ o.remove(); try { done && done(); } catch(e){} if (window.joJoin) window.joJoin(code); });
+    o.querySelector('#jiNo').addEventListener('click', function(){ o.remove(); try { done && done(); } catch(e){} });
+    setTimeout(function(){ if (o.isConnected) o.remove(); }, 60000);
+  };
+})();</script>
+<style id="joInviteCss">#joInv{position:fixed;left:12px;right:12px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:2147483600;display:flex;justify-content:center;animation:jiIn .35s cubic-bezier(.2,1.3,.4,1)}
+#joInv .ji-c{width:100%;max-width:420px;background:#111;color:#fff;border-radius:22px;padding:16px 18px;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+#joInv .ji-t{font:400 26px/1 "JInqFull","JInquisition",serif;color:#f4c868}
+#joInv .ji-m{margin:8px 0 12px;font-size:16px}
+#joInv .ji-b{display:flex;gap:10px}#joInv .ji-b .btn{flex:1}
+@keyframes jiIn{from{transform:translateY(120%)}to{transform:none}}</style>
 <script id="openAppBanner">(function(){try{
 if(window.Capacitor||!/Android/i.test(navigator.userAgent))return;
 var c=(location.hash||'').replace(/[^0-9]/g,'');if(c.length!==5)return;
