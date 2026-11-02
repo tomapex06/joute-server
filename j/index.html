@@ -15392,7 +15392,7 @@ window.joEngrave = (function(){
     box.querySelector('.shd-cap b').textContent = window.joDeacc(i.name || 'Joueur');
     var nmEl = box.querySelector('.shd-nm');
     if (nmEl){ window.joNamePng(nmEl, i.name || 'Joueur'); }
-    var agEl = box.querySelector('.shd-age'); if (!agEl){ agEl = document.createElement('div'); agEl.className = 'shd-age'; var cap0 = box.querySelector('.shd-cap'); box.insertBefore(agEl, cap0 || null); } agEl.textContent = i.age ? i.age + ' ans' : ''; agEl.hidden = !i.age;
+    var agEl = box.querySelector('.shd-age'); if (!agEl){ agEl = document.createElement('div'); agEl.className = 'shd-age'; var cap0 = box.querySelector('.shd-cap'); box.insertBefore(agEl, cap0 || null); } var pjc = ''; try { pjc = JSON.parse(localStorage.getItem('joute-v1') || '{}').country || ''; } catch(e){} var fgc = pjc && window.joFlagOf ? window.joFlagOf(pjc) : ''; agEl.innerHTML = (fgc ? '<i class="shd-fg"><b>' + fgc + '</b></i>' : '') + (i.age ? '<span>' + (i.age | 0) + ' ans</span>' : ''); agEl.hidden = !(fgc || i.age);
     var egEl = box.querySelector('.shm-eng'); if (egEl && window.joEngrave){ egEl.innerHTML = window.joEngrave(i.name || 'Joueur', egEl._face); if (document.fonts && document.fonts.load) document.fonts.load('400 40px "JInqFull"').then(function(){ if (egEl.isConnected) egEl.innerHTML = window.joEngrave(i.name || 'Joueur', egEl._face); }, function(){}); }
     var smEl = box.querySelector('.shm-nm'); if (smEl && smEl._cfg && window.joShNameSvg){ smEl.innerHTML = window.joShNameSvg(smEl._cfg, i.name || 'Joueur'); if (document.fonts && document.fonts.load) document.fonts.load('400 40px "JInqFull"').then(function(){ if (smEl.isConnected) smEl.innerHTML = window.joShNameSvg(smEl._cfg, i.name || 'Joueur'); }, function(){}); }
     box.querySelector('.shd-cap span').textContent = ['Niveau ' + (i.lv || 1), i.loc].filter(Boolean).join(' · ');
@@ -18705,7 +18705,12 @@ html.tv-end #prBg{image-rendering:auto}
 
 /* v544 : âge sous le bouclier du profil, en Inquisition */
 #lan3d .shd-age{position:relative;z-index:3;margin:-2px auto 0;text-align:center;font:400 30px/1 "JInqFull","JInquisition",serif;letter-spacing:.04em;color:var(--ink,#111)}
-#lan3d .shd-age[hidden],#lan3d .shd-age{display:none!important} /* v551 : âge retiré du profil (affiché seulement en partie) */
+#lan3d .shd-age[hidden]{display:none!important}
+/* v552 : sous le bouclier — drapeau rond puis âge en Unbounded (le pseudo/niveau en dessous retirés) */
+#lan3d .shd-age{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:22px!important;font:500 17px/1 Unbounded,system-ui,sans-serif!important;letter-spacing:.01em!important;text-transform:none!important;color:var(--ink,#111)}
+#lan3d .shd-age .shd-fg{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);font:normal 37px/1 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-style:normal}
+#lan3d .shd-age .shd-fg b{display:block;font:inherit;line-height:1;transform:scale(1.02,1.42)}
+#lan3d .shd-cap{display:none!important}
 /* v547 : passions retirées des paramètres */
 #sPass{display:none!important}
 /* v547 : profil — une seule case Amis */
