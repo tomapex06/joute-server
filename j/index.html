@@ -3863,11 +3863,11 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
 
   <section id="msgs" class="screen" hidden>
     <div>
-      <h1>Abonnements</h1>
+      <h1>Amis</h1>
     </div>
     <div class="seg" role="group" aria-label="Section">
       <button type="button" id="msT_msg" aria-pressed="true"><b>Messages</b></button>
-      <button type="button" id="msT_fol" aria-pressed="false"><b>Abonnements</b></button>
+      <button type="button" id="msT_fol" aria-pressed="false"><b>Amis</b></button>
       <button type="button" id="msT_find" aria-pressed="false"><b>Trouver</b></button>
     </div>
     <div id="msList" class="lbrows"></div>
@@ -3909,8 +3909,8 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
       </div>
     </div>
     <div class="ps">
-      <div id="psFr" class="clk"><small>Abonnés</small><b id="psW" style="color:#2FB26B">0</b></div>
-      <div id="psFo" class="clk"><small>Abonnements</small><b id="psT" style="color:#3BA7E0">0</b></div>
+      <div id="psFr" class="clk" hidden><small>Abonnés</small><b id="psW" style="color:#2FB26B">0</b></div>
+      <div id="psFo" class="clk"><small>Amis</small><b id="psT" style="color:#3BA7E0">0</b></div>
     </div>
     <div class="pst">
       <h3>Statistiques</h3>
@@ -18675,6 +18675,9 @@ html.tv-end #prBg{image-rendering:auto}
 #lan3d .shd-age[hidden]{display:none}
 /* v547 : passions retirées des paramètres */
 #sPass{display:none!important}
+/* v547 : profil — une seule case Amis */
+#profile .ps{grid-template-columns:1fr!important}
+#profile .ps>#psFr{display:none!important}
 </style>
 <script id="tvEndJs">(function(){
   /* v533 : écran de fin sur la télé — bannières des joueurs (le gagnant en grand), fond Prism */
