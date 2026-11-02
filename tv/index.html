@@ -8355,10 +8355,17 @@ var THEMES = [
   setInterval(function(){
     try {
       if (!(G && G.mode === 'party' && PT && !G.over) || ($('duel').hidden && $('intro').hidden)){ ptEmpty = 0; return; }
-      var inGame = ptPlayers().filter(function(x){ return x.presence.g === G.id; }).length;
+      var inG = ptPlayers().filter(function(x){ return x.presence.g === G.id; }), inGame = inG.length;
+      if (inGame > (G.ptMax || 0)){ G.ptMax = inGame; G.ptNames = inG.map(function(x){ return ptName(x); }); }
+      /* v523 : dès qu'un seul joueur quitte la partie, tout le salon (télé comprise) revient au salon */
+      var drop = (G.ptMax || 0) > 0 && inGame < G.ptMax;
       var alone = G.tv ? inGame === 0 : false;
-      ptEmpty = alone ? ptEmpty + 1 : 0;
-      if (ptEmpty >= 2){ ptEmpty = 0; toast('Partie abandonnée : retour au salon'); ptToLobby(); }
+      ptEmpty = (drop || alone) ? ptEmpty + 1 : 0;
+      if (ptEmpty >= 2){
+        ptEmpty = 0;
+        var still = inG.map(function(x){ return ptName(x); }), who = (G.ptNames || []).filter(function(n){ return still.indexOf(n) < 0; })[0];
+        toast((who ? who + ' a abandonné' : 'Partie abandonnée') + ' : retour au salon'); ptToLobby();
+      }
     } catch(e){}
   }, 1000);
   function backHome(){
