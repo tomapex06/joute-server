@@ -18316,6 +18316,15 @@ html body #after:has(.q-an){flex-wrap:wrap!important;flex:1 1 100%!important}
 html body #qvote:has(.q-an){display:flex!important;flex:1 1 100%;min-width:0;flex-wrap:nowrap;align-items:flex-start;margin:6px 0 0!important;order:5}
 html body #qvote .q-an{display:block;flex:1 1 auto;min-width:0;white-space:normal;font:500 13px/1.4 var(--grot,system-ui);color:#777;text-align:left}
 html body #qvote .q-rep{flex:none;width:auto!important;min-width:38px;padding:0 10px;font-size:15px!important}
+
+/* v525 : score en relief qui suit la courbe du bandeau */
+html body #result .xgb.rib .rib-arc,html body[data-skin] #result .xgb.rib .rib-arc,html body[data-skin] #result .xgb.rib .rib-arc *{filter:none!important}
+html body #result .xgb.rib .rib-arc text.ra-lab,html body #result .xgb.rib .rib-arc text.ra-num,html body[data-skin] #result .xgb.rib .rib-arc text.ra-lab,html body[data-skin] #result .xgb.rib .rib-arc text.ra-num{filter:url(#ribEmb)!important}
+html body #result .xgb.rib .rib-arc{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:2}
+html body #result .xgb.rib.rib-arcd .xg-t{opacity:0!important}
+html body #result .xgb.rib .rib-arc .ra-lab{font:700 64px/1 var(--grot,system-ui);letter-spacing:.24em;fill:#2a1c10}
+html body #result .xgb.rib .rib-arc .ra-num{font:400 250px/1 "JInqFull","JInquisition",serif;letter-spacing:.03em}
+html body #result .xgb.rib .rib-arc .ra-g{font:700 92px/1 var(--grot,system-ui);letter-spacing:0}
 </style>
 <script id="endScrJs">
 (function(){
@@ -18401,6 +18410,37 @@ html body #qvote .q-rep{flex:none;width:auto!important;min-width:38px;padding:0 
     lv.parentNode.insertBefore(sp, lv); lv.style.display = 'none';
     var sync = function(){ inn.textContent = lv.textContent; }; sync();
     new MutationObserver(sync).observe(lv, { childList:true, characterData:true, subtree:true });
+    /* v525 : SCORE GLOBAL + score gravés en relief, le long de la courbe du bandeau */
+    try {
+      var NS = 'http://www.w3.org/2000/svg', svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('class', 'rib-arc'); svg.setAttribute('viewBox', '0 0 2062 683'); svg.setAttribute('aria-hidden', 'true');
+      var arc = function(y, k, d){ var m = 1031, e = k * d * d; return 'M' + (m - d) + ' ' + (y + e) + ' Q' + m + ' ' + (y - e) + ' ' + (m + d) + ' ' + (y + e); };
+      svg.innerHTML = '<defs>' +
+        '<path id="ribArcA" d="' + arc(132, 2.3e-4, 560) + '"/>' +
+        '<path id="ribArcB" d="' + arc(338, 2.15e-4, 600) + '"/>' +
+        '<linearGradient id="ribInk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2a1c"/><stop offset=".55" stop-color="#140d07"/><stop offset="1" stop-color="#000"/></linearGradient>' +
+        '<linearGradient id="ribRed" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2402f"/><stop offset="1" stop-color="#8e1209"/></linearGradient>' +
+        '<filter id="ribEmb" x="-5%" y="-30%" width="110%" height="160%">' +
+          '<feGaussianBlur in="SourceAlpha" stdDeviation="2.2" result="b"/>' +
+          '<feOffset in="b" dx="0" dy="5" result="o"/><feFlood flood-color="#5a3d1c" flood-opacity=".55"/><feComposite in2="o" operator="in" result="sh"/>' +
+          '<feOffset in="SourceAlpha" dx="0" dy="-2.5" result="hl0"/><feFlood flood-color="#fffaf0" flood-opacity=".95"/><feComposite in2="hl0" operator="in" result="hl"/>' +
+          '<feSpecularLighting in="b" surfaceScale="4" specularConstant=".14" specularExponent="26" lighting-color="#fff6e0" result="sp"><feDistantLight azimuth="250" elevation="48"/></feSpecularLighting>' +
+          '<feComposite in="sp" in2="SourceAlpha" operator="in" result="spi"/>' +
+          '<feMerge><feMergeNode in="sh"/><feMergeNode in="hl"/><feMergeNode in="SourceGraphic"/><feMergeNode in="spi"/></feMerge>' +
+        '</filter></defs>' +
+        '<text class="ra-lab" filter="url(#ribEmb)"><textPath href="#ribArcA" startOffset="50%" text-anchor="middle"></textPath></text>' +
+        '<text class="ra-num" filter="url(#ribEmb)"><textPath href="#ribArcB" startOffset="50%" text-anchor="middle"><tspan class="ra-n" fill="url(#ribInk)"></tspan><tspan class="ra-g" fill="url(#ribRed)" dx="22"></tspan></textPath></text>';
+      w.insertBefore(svg, t);
+      var tl = svg.querySelector('.ra-lab textPath'), tn = svg.querySelector('.ra-n'), tg = svg.querySelector('.ra-g');
+      var syncA = function(){
+        var s = t.querySelector('span'), n = t.querySelector('b'), g = t.querySelector('em');
+        tl.textContent = (s ? s.textContent : 'Score global').toUpperCase();
+        tn.textContent = n ? n.textContent : '';
+        var gv = g ? g.textContent.trim() : ''; tg.textContent = gv; tg.style.display = gv ? '' : 'none';
+      };
+      syncA(); new MutationObserver(syncA).observe(t, { childList:true, characterData:true, subtree:true });
+      b.classList.add('rib-arcd');
+    } catch(e){}
     var sm = document.createElement('small'); var dl = new Image(), dr = new Image(); dl.className = dr.className = 'dmd'; dl.alt = dr.alt = ''; dl.src = dr.src = IMG.diamond; sm.appendChild(dl); sm.appendChild(sp); sm.appendChild(dr); b.appendChild(sm);
   }
   function boot(){
