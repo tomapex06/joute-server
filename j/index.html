@@ -18589,7 +18589,9 @@ html body #tvEnd,html body #tvEnd *{filter:none!important}
 #tvEnd .te-b .tl{transform-origin:12.9% 55%;animation:ribTailL 2.6s ease-in-out infinite}
 #tvEnd .te-b .tr{transform-origin:87% 55%;animation:ribTailR 2.6s ease-in-out infinite;animation-delay:-1.3s}
 #tvEnd .te-b svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-#tvEnd .te-b .lab{font:400 104px/1 "JInqFull","JInquisition",serif;letter-spacing:.04em;fill:#24160b}
+#tvEnd .te-b .lab{font:700 66px/1 var(--grot,system-ui,sans-serif);letter-spacing:.2em;fill:#2a1c10}
+#tvEnd .te-ti.img{line-height:0;margin:.6vh 0 -.5vh}
+#tvEnd .te-ti.img img{height:20vh;width:auto;max-width:80vw;display:block;filter:drop-shadow(0 .8vh 2vh rgba(0,0,0,.55))!important}
 #tvEnd .te-b .pts{font:700 70px/1 var(--grot,system-ui,sans-serif);letter-spacing:.02em}
 #tvEnd .te-b .num{font:400 200px/1 "JInqFull","JInquisition",serif;letter-spacing:.03em}
 #tvEnd .te-b .rk{position:absolute;left:50%;top:-1.4vh;transform:translate(-50%,-100%);font:400 4.2vh/1 "JInqFull","JInquisition",serif;color:#f1e3c4;text-shadow:0 .3vh 1vh rgba(0,0,0,.6)}
@@ -18626,7 +18628,11 @@ html body #tvEnd,html body #tvEnd *{filter:none!important}
     bg = document.createElement('div'); bg.id = 'tvEndBg';
     box = document.createElement('div'); box.id = 'tvEnd';
     var wins = rows.filter(function(r){ return r.rk === 1; }).slice(0, 3), rest = rows.filter(function(r){ return r.rk !== 1; }).slice(0, 8);
-    box.innerHTML = '<div class="te-eb">Partie terminée</div><div class="te-ti">' + (wins.length > 1 ? 'Ex æquo' : 'Vainqueur') + '</div>';
+    var ttl = wins.length > 1 ? 'Ex æquo' : 'Vainqueur';
+    box.innerHTML = '<div class="te-eb">Partie terminée</div><div class="te-ti">' + ttl + '</div>';
+    /* titre en Inquisition dorée 3D (même rendu que VICTOIRE) */
+    var tiEl = box.querySelector('.te-ti'), gold = function(){ try { if (!window.joTitlePng || !tiEl.isConnected && box === null) return; var u = window.joTitlePng(ttl, 'gold'); if (u){ tiEl.innerHTML = '<img alt="' + ttl + '" src="' + u + '">'; tiEl.classList.add('img'); } } catch(e){} };
+    try { if (document.fonts && document.fonts.load) document.fonts.load('400 60px "JInqFull"').then(gold, gold); else gold(); } catch(e){ gold(); }
     var w1 = document.createElement('div'); w1.className = 'te-row wins n' + wins.length; wins.forEach(function(r){ w1.appendChild(banner(r, true)); }); box.appendChild(w1);
     document.body.appendChild(bg); document.body.appendChild(box);
     try { if (window.__bgPrism) window.__bgPrism.on(); } catch(e){}
