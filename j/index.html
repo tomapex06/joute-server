@@ -3603,7 +3603,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <div class="panel tact" id="tact" hidden>
       <div class="lab" id="taTitle"></div>
       <p class="hint" id="taStats"></p>
-      <div class="seg" role="group" aria-label="Activité"><button type="button" id="taT_games" aria-pressed="true"><b>Parties en cours</b></button><button type="button" id="taT_pl" aria-pressed="false"><b>Joueurs</b></button></div>
+      <div class="seg" role="group" aria-label="Activité"><button type="button" id="taT_games" aria-pressed="true"><b>Parties en cours</b></button><button type="button" id="taT_pl" aria-pressed="false"><b>Classement</b></button></div>
       <div id="taList" class="talist"></div>
     </div>
 
@@ -7127,7 +7127,7 @@ var THEMES = [
   }
 
   /* Activité du topic : joueurs et parties en cours (simulés) */
-  var taTab = 'games';
+  var taTab = 'games', taRk = 't';
   function taData(){
     if (!PK) return null;
     var T = themeById(PK.t); if (!T) return null;
@@ -7380,6 +7380,28 @@ var THEMES = [
         r.classList.add('clk'); r.tabIndex = 0; r.setAttribute('role', 'button');
         r.innerHTML += '<span class="tawatch">Regarder ›</span>';
         r.addEventListener('click', function(){ openSpec(g, d.T); });
+        list.appendChild(r);
+      });
+    } else if (taTab === 'pl'){
+      /* v548 : classement du topic + classement global (à la place de la liste des joueurs) */
+      var sg = document.createElement('div'); sg.className = 'seg tarks'; sg.setAttribute('role', 'group');
+      [['t', d.T.name], ['g', 'Global']].forEach(function(o){ var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-pressed', String(taRk === o[0])); b.innerHTML = '<b>' + esc(o[1]) + '</b>'; b.addEventListener('click', function(){ taRk = o[0]; renderTA(); }); sg.appendChild(b); });
+      list.appendChild(sg);
+      var all = lbEntries().slice(), tid = d.T.id, byT = taRk === 't'; if (!all.some(function(e){ return e.me; })){ var m0 = myLb(); all.push({ me:true, av:m0.av, tw:m0.tw, name:m0.name, xp:m0.xp, w:m0.w, pl:m0.pl, ci:m0.ci, co:m0.co }); }
+      if (byT) all = all.filter(function(e){ return e.me || e.sim; }).map(function(e){ var c = {}; for (var k in e) c[k] = e[k]; c.tp = e.me ? myTopicPts(tid) : topicPts(e.name, tid, e.xp); return c; }).filter(function(e){ return e.me || e.tp > 0; });
+      all.sort(function(a, b){ return byT ? b.tp - a.tp : (b.xp - a.xp || b.w - a.w); });
+      var mi = -1; all.forEach(function(e, i){ if (e.me) mi = i; });
+      var pos = document.createElement('p'); pos.className = 'hint tapos'; pos.innerHTML = mi >= 0 ? 'Ta position <b>#' + (mi + 1) + '</b> sur ' + all.length + ' joueurs' : ''; list.appendChild(pos);
+      var sh = all.slice(0, 20).map(function(e, i){ return [e, i]; }); if (mi >= 20) sh.push([all[mi], mi]);
+      sh.forEach(function(it){
+        var e = it[0], i = it[1], r = document.createElement('div'); r.className = 'lbrow tarow' + (e.me ? ' me' : '') + (i < 3 ? ' top t' + (i + 1) : '');
+        var rk = document.createElement('span'); rk.className = 'rk'; rk.textContent = String(i + 1); r.appendChild(rk);
+        r.appendChild(avatarEl(e.name, null, hueOf(e.name), e.av));
+        var x = document.createElement('div'); x.className = 'lx';
+        var fg = e.co ? flagOf(e.co) : '';
+        x.innerHTML = '<div class="ln">' + (fg ? '<span class="ctry">' + fg + '</span>' : '') + esc(e.name + (e.me ? ' (toi)' : '')) + '</div><div class="ld">Niv. ' + (Math.floor(e.xp / 200) + 1) + (e.ci ? ' · ' + esc(e.ci) : (e.co ? ' · ' + esc(e.co) : '')) + '</div>';
+        r.appendChild(x);
+        var b = document.createElement('b'); b.className = 'lxp'; b.textContent = byT ? e.tp + ' pts' : e.xp + ' XP'; r.appendChild(b);
         list.appendChild(r);
       });
     } else {
@@ -18678,6 +18700,10 @@ html.tv-end #prBg{image-rendering:auto}
 /* v547 : profil — une seule case Amis */
 #profile .ps{grid-template-columns:1fr!important}
 #profile .ps>#psFr{display:none!important}
+/* v548 : classement dans l'activité du topic */
+.tact .tarks{margin:2px 0 4px}
+.tact .tapos{margin:4px 0 6px;font-size:15px!important;line-height:1.3!important}
+.tact .talist{max-height:none}
 </style>
 <script id="tvEndJs">(function(){
   /* v533 : écran de fin sur la télé — bannières des joueurs (le gagnant en grand), fond Prism */
