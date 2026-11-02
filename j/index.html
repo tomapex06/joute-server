@@ -18711,6 +18711,9 @@ html.tv-end #prBg{image-rendering:auto}
 #lan3d .shd-age .shd-fg{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);font:normal 37px/1 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-style:normal}
 #lan3d .shd-age .shd-fg b{display:block;font:inherit;line-height:1;transform:scale(1.02,1.42)}
 #lan3d .shd-cap{display:none!important}
+/* v553 : drapeau + âge seulement quand le bouclier est de dos */
+#lan3d .shd-age{transition:opacity .25s ease}
+#lan3d .shd:not(.isback) .shd-age{opacity:0;pointer-events:none}
 /* v547 : passions retirées des paramètres */
 #sPass{display:none!important}
 /* v547 : profil — une seule case Amis */
