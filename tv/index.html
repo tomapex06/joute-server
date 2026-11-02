@@ -1097,7 +1097,7 @@ html.logo-inq #ix .ix-wheel::before{content:"O";display:inline-block;background:
 #ix .ix-hint{position:absolute;z-index:5;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));transform:translateX(-50%);font:800 11px/1 var(--grot);letter-spacing:.14em;text-transform:uppercase;color:var(--ink,#0F1138);background:var(--paper,#E8EAF2);border:2px solid var(--ink,#0F1138);padding:10px 14px;white-space:nowrap;animation:ixTag .4s ease-out both}
 @media (prefers-reduced-motion:reduce){#ix *{animation-duration:.01s!important;animation-delay:0s!important}}
 </style>
-<script>try{ if ((localStorage.getItem("joute-logo") || "inq") === "inq") document.documentElement.classList.add("logo-inq"); }catch(e){ document.documentElement.classList.add("logo-inq"); }</script>
+<script>try{ localStorage.removeItem("joute-logo"); }catch(e){} document.documentElement.classList.add("logo-inq");</script>
 <div id="ixbg" aria-hidden="true"><div class="ix-p t"></div><div class="ix-p b"></div></div>
 <div id="ix" aria-hidden="true">
   <div class="ix-c">
@@ -3535,7 +3535,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <div class="brand"><div class="mark" data-t="Joute">J<span class="o">o<button type="button" class="pie" id="pieBtn" aria-label="Roue rapide : quiz au hasard" title="Roue rapide"><svg viewBox="0 0 36 36" aria-hidden="true"><g class="pg"><path d="M18 18L18.8 2.0A16 16 0 0 1 31.4 9.3Z" fill="#3BA7E0"/><path d="M18 18L32.3 10.7A16 16 0 0 1 32.3 25.3Z" fill="#E0589F"/><path d="M18 18L31.4 26.7A16 16 0 0 1 18.8 34.0Z" fill="#FFC21A"/><path d="M18 18L17.2 34.0A16 16 0 0 1 4.6 26.7Z" fill="#9A6B3F"/><path d="M18 18L3.7 25.3A16 16 0 0 1 3.7 10.7Z" fill="#2FB26B"/><path d="M18 18L4.6 9.3A16 16 0 0 1 17.2 2.0Z" fill="#FF7A1A"/></g><circle cx="18" cy="18" r="3.6" fill="#fff" stroke="#111" stroke-width="1.2"/></svg></button></span>ute</div></div>
     <div class="hright"><button type="button" class="meBtn" id="meBtn" aria-label="Mon profil"></button><div class="lvl"><div id="lvlTxt">Niveau 1</div><div class="xpbar"><i id="xpFill" style="width:0%"></i></div></div><div class="hr2"><button type="button" class="msgBtn" id="msgBtn" aria-label="Messages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H10l-5 4v-4H4z"/></svg><span id="msgBadge" class="mbadge" hidden></span></button><button type="button" class="gear" id="gear" aria-label="Réglages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 7h11M18 7h3M3 17h3M10 17h11"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button></div></div>
   </header>
-  <script>try{ if ((localStorage.getItem("joute-logo") || "inq") === "inq") document.body.classList.add("logo-inq"); }catch(e){ document.body.classList.add("logo-inq"); }</script>
+  <script>document.body.classList.add("logo-inq");</script>
 
   <section id="home" class="screen">
     <div id="themesWrap">
@@ -3970,13 +3970,6 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
         <div class="frq-t"><b>Mon QR code</b><small>Fais-le scanner par un ami : tu es ajouté à ses amis.</small><span class="frq-k">Code <b id="frCode"></b></span>
           <button type="button" class="btn primary" id="frScan">Scanner un QR code</button><small id="frCount"></small></div>
       </div>
-    </div>
-    <div>
-      <div class="lab">Logo</div>
-      <div class="seg" id="sLogo" role="group" aria-label="Logo"><button type="button" data-g="inq" aria-pressed="true"><b>Inquisition</b></button><button type="button" data-g="classic" aria-pressed="false"><b>Classique</b></button></div>
-      <script>(function(){ var g = document.getElementById('sLogo'); function cur(){ try { return localStorage.getItem('joute-logo') || 'inq'; } catch(e){ return 'inq'; } }
-        function pr(){ var c = cur(); document.body.classList.toggle('logo-inq', c === 'inq'); document.documentElement.classList.toggle('logo-inq', c === 'inq'); Array.prototype.forEach.call(g.querySelectorAll('button'), function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-g') === c)); }); }
-        Array.prototype.forEach.call(g.querySelectorAll('button'), function(b){ b.addEventListener('click', function(){ try { localStorage.setItem('joute-logo', b.getAttribute('data-g')); } catch(e){} pr(); }); }); pr(); })();</script>
     </div>
     <div>
       <div class="lab">Fond animé</div>
