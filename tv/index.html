@@ -4001,7 +4001,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
         <label class="set-row"><span class="set-t">Mode démo<small>2 quiz fixes par thème, joués dans l’ordre. Après le 2e, le thème est terminé.</small></span><input class="switch" type="checkbox" id="sDemo"></label>
       </div>
       <div class="frow" style="margin-top:14px"><button type="button" class="btn" id="sDemoReset">Réinitialiser la démo</button></div>
-      <div class="frow" style="margin-top:10px" id="sDlRow" hidden><button type="button" class="btn" id="sDlReset">Réinitialiser les défis du jour</button><div class="sets" style="flex-basis:100%;width:100%;margin:8px 0"><div class="set-row" style="display:block"><span class="set-t">Profil<small>Bouclier animé, carte Lanyard 3D ou chevalier.</small></span><div class="seg" id="sProf" role="group" aria-label="Affichage du profil" style="margin-top:8px"><button type="button" data-v="sh" aria-pressed="true"><b>Bouclier</b></button><button type="button" data-v="lan" aria-pressed="false"><b>Lanyard</b></button><button type="button" data-v="kn" aria-pressed="false"><b>Chevalier</b></button></div></div><div class="set-row" style="display:block"><span class="set-t">Modèle du bouclier<small>Aperçu : le nom est dessiné dans l’image (pas encore ton pseudo).</small></span><div class="seg" id="sShM" role="group" aria-label="Modèle du bouclier" style="margin-top:8px;flex-wrap:wrap"><button type="button" data-m="" aria-pressed="true"><b>Croix</b></button><button type="button" data-m="bois" aria-pressed="false"><b>Bois</b></button></div></div><div class="set-row" style="display:block"><span class="set-t">Plaque du lanyard<small>Auto : bronze (niv. 1–4), argent (5–16), or (17+).</small></span><div class="seg" id="sPlq" role="group" aria-label="Plaque du lanyard" style="margin-top:8px"><button type="button" data-p="auto" aria-pressed="true"><b>Auto</b></button><button type="button" data-p="bronze" aria-pressed="false"><b>Bronze</b></button><button type="button" data-p="silver" aria-pressed="false"><b>Argent</b></button><button type="button" data-p="gold" aria-pressed="false"><b>Or</b></button></div></div><label class="set-row"><span class="set-t">Aïd<small>Aperçu sur l’accueil (jusqu’au rechargement).</small></span><input class="switch" type="checkbox" id="sEidPrev"></label><label class="set-row"><span class="set-t">Noël (Bible)<small>Trait doré sur la Bible.</small></span><input class="switch" type="checkbox" id="sNoelPrev"></label><label class="set-row"><span class="set-t">Roch Hachana<small>Étoile bleue sur la Torah.</small></span><input class="switch" type="checkbox" id="sRoshPrev"></label></div><button type="button" class="btn" id="sTrReset" style="margin-left:8px">Réinitialiser les tournois</button><button type="button" class="btn" id="sWhReset" style="margin-left:8px">Réinitialiser la roue</button></div>
+      <div class="frow" style="margin-top:10px" id="sDlRow" hidden><button type="button" class="btn" id="sDlReset">Réinitialiser les défis du jour</button><div class="sets" style="flex-basis:100%;width:100%;margin:8px 0"><div class="set-row" style="display:block"><span class="set-t">Profil<small>Bouclier animé, carte Lanyard 3D ou chevalier.</small></span><div class="seg" id="sProf" role="group" aria-label="Affichage du profil" style="margin-top:8px"><button type="button" data-v="sh" aria-pressed="true"><b>Bouclier</b></button><button type="button" data-v="lan" aria-pressed="false"><b>Lanyard</b></button><button type="button" data-v="kn" aria-pressed="false"><b>Chevalier</b></button></div></div><div class="set-row" style="display:block"><span class="set-t">Plaque du lanyard<small>Auto : bronze (niv. 1–4), argent (5–16), or (17+).</small></span><div class="seg" id="sPlq" role="group" aria-label="Plaque du lanyard" style="margin-top:8px"><button type="button" data-p="auto" aria-pressed="true"><b>Auto</b></button><button type="button" data-p="bronze" aria-pressed="false"><b>Bronze</b></button><button type="button" data-p="silver" aria-pressed="false"><b>Argent</b></button><button type="button" data-p="gold" aria-pressed="false"><b>Or</b></button></div></div><label class="set-row"><span class="set-t">Aïd<small>Aperçu sur l’accueil (jusqu’au rechargement).</small></span><input class="switch" type="checkbox" id="sEidPrev"></label><label class="set-row"><span class="set-t">Noël (Bible)<small>Trait doré sur la Bible.</small></span><input class="switch" type="checkbox" id="sNoelPrev"></label><label class="set-row"><span class="set-t">Roch Hachana<small>Étoile bleue sur la Torah.</small></span><input class="switch" type="checkbox" id="sRoshPrev"></label></div><button type="button" class="btn" id="sTrReset" style="margin-left:8px">Réinitialiser les tournois</button><button type="button" class="btn" id="sWhReset" style="margin-left:8px">Réinitialiser la roue</button></div>
       <div class="lab" style="margin-top:16px">Aperçus</div>
       <div style="display:flex;flex-direction:column;gap:10px">
         <button type="button" class="btn" id="sJokerPrev">Aperçu de la carte Joker</button>
@@ -15116,7 +15116,7 @@ window.joDeacc = function(t){ try { return String(t).normalize('NFD').replace(/[
   var KEY = 'joute_shm';
   /* v528 : seul le Bois est proposé pour l'instant (les autres modèles viendront avec les points) */
   var OPEN = { bois:1 };
-  function get(){ try { var v = localStorage.getItem(KEY) || ''; return (M[v] && OPEN[v]) ? v : ''; } catch(e){ return ''; } }
+  function get(){ return 'bois'; /* v529 : un seul bouclier, le Bois, pour tout le monde */ }
 
   /* nom du joueur écrit sur le bouclier (modèles sans nom dans l'image) */
   var NM = {
@@ -15467,8 +15467,10 @@ window.joDeacc = function(t){ try { return String(t).normalize('NFD').replace(/[
 
   function mkShield(name, img, ghost){
     var d = document.createElement('div'); d.className = 'vsh-s' + (ghost ? ' vsh-ghost' : '');
-    var im = document.createElement('img'); im.alt = ''; im.src = img; d.appendChild(im);
-    if (!ghost && img !== MINE){ var n = document.createElement('div'); n.className = 'vsh-nm'; d.appendChild(n); window.joNamePng(n, name); }
+    var wood = !ghost && img !== MINE && window.joShModel && window.joShModel(), wcfg = wood && window.joShModelNm && window.joShModelNm();
+    var im = document.createElement('img'); im.alt = ''; im.src = wood || img; d.appendChild(im);
+    if (wood){ d.classList.add('vsh-wood'); if (wcfg && window.joShNameSvg){ var wn = document.createElement('div'); wn.className = 'vsh-wnm'; wn.style.cssText = 'top:' + wcfg.t + '%;left:' + wcfg.l + '%;right:' + wcfg.r + '%;height:' + wcfg.h + '%'; wn.innerHTML = window.joShNameSvg(wcfg, name); d.appendChild(wn); if (document.fonts && document.fonts.load) document.fonts.load('400 40px "JInqFull"').then(function(){ if (wn.isConnected) wn.innerHTML = window.joShNameSvg(wcfg, name); }, function(){}); } }
+    else if (!ghost && img !== MINE){ var n = document.createElement('div'); n.className = 'vsh-nm'; d.appendChild(n); window.joNamePng(n, name); }
     return d;
   }
   function fitName(d){ return; var n = d.querySelector('.vsh-nm'); if (!n) return; var fs = sw() * 0.135; n.style.fontSize = fs + 'px'; var k = 0; while (n.scrollWidth > n.clientWidth + 1 && k++ < 30){ fs *= 0.92; n.style.fontSize = fs + 'px'; } }
@@ -18338,6 +18340,12 @@ html body #result .xgb.rib .xg-bar i::after{content:"";position:absolute;inset:0
 
 /* v527 : nom sur les boucliers — pas de filtre gris du skin */
 html body .shm-nm svg,html body[data-skin] .shm-nm svg,html body[data-skin] .shm-nm svg *{filter:none!important}
+
+/* v529 : bouclier Bois partout (VS compris), pseudo gravé */
+html body #intro .vsh-s.vsh-wood{aspect-ratio:700/910}
+html body #intro .vsh-s.vsh-wood img{object-fit:contain}
+html body #intro .vsh-s .vsh-wnm{position:absolute;display:flex;align-items:center;justify-content:center;pointer-events:none}
+html body #intro .vsh-s .vsh-wnm svg,html body[data-skin] #intro .vsh-s .vsh-wnm svg{width:100%;height:100%;filter:none!important}
 </style>
 <script id="endScrJs">
 (function(){
