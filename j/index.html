@@ -3980,8 +3980,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
       <div class="lab">Langue</div>
       <div class="seg" id="sLang" role="group" aria-label="Langue du jeu"><button type="button" data-l="fr" aria-pressed="true"><b>Français</b></button><button type="button" data-l="en" aria-pressed="false"><b>English</b></button></div>
     </div>
-    <div>
-      <div class="lab">Sons</div>
+    <div><details id="sndSet"><summary class="lab" style="cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between">Sons<span class="avq-ch" aria-hidden="true" style="transition:transform .2s">▾</span></summary><style>#sndSet summary::-webkit-details-marker{display:none}#sndSet[open] .avq-ch{transform:rotate(180deg)}</style>
       <div class="sets">
         <label class="set-row"><span class="set-t">Sons<small>Active ou coupe tous les sons du jeu.</small></span><input class="switch" type="checkbox" id="sSnd"></label>
         <div class="set-row"><label class="set-t" for="sVol">Volume<small id="volTxt">70 %</small></label><input type="range" id="sVol" min="0" max="100" step="5"></div>
@@ -3991,7 +3990,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
         <label class="set-row"><span class="set-t">Fanfares<small>Début de duel, victoire, défaite et niveau gagné.</small></span><input class="switch" type="checkbox" id="sCat_fan"></label>
       </div>
       <div class="frow" style="margin-top:14px"><button type="button" class="btn" id="sTest">Tester le son</button></div>
-    </div>
+    </details></div>
     <div><details id="devSet"><summary class="lab" style="margin:14px 0 8px;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between">Paramètres développeur<span class="avq-ch" aria-hidden="true" style="transition:transform .2s">▾</span></summary><style>#devSet summary::-webkit-details-marker{display:none}#devSet[open] .avq-ch{transform:rotate(180deg)}</style>
       <div class="lab">Version démo</div>
       <div class="sets">
