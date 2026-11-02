@@ -18642,6 +18642,16 @@ html body #tvEnd,html body #tvEnd *{filter:none!important}
 #tvEnd .te-b .num{font:400 200px/1 "JInqFull","JInquisition",serif;letter-spacing:.03em}
 #tvEnd .te-b .rk{position:absolute;left:50%;top:-1.4vh;transform:translate(-50%,-100%);font:400 4.2vh/1 "JInqFull","JInquisition",serif;color:#f1e3c4;text-shadow:0 .3vh 1vh rgba(0,0,0,.6)}
 #tvEnd .te-b.win .rk{display:none}
+/* v545 : podium télé — 2e à gauche, 3e à droite */
+#tvEnd .te-row.pod{flex-wrap:nowrap;align-items:flex-end;gap:0}
+#tvEnd .te-row.pod .te-b.win{width:min(44vw,88vh);order:2;z-index:2}
+#tvEnd .te-row.pod .te-b.side{width:min(28vw,56vh);margin:0 -1.5vw -26vh}
+#tvEnd .te-row.pod .te-b.side:first-child{width:min(32vw,64vh);margin-bottom:-22vh}
+#tvEnd .te-row.pod .te-b.side:first-child{order:1}
+#tvEnd .te-row.pod .te-b.side:last-child{order:3}
+#tvEnd .te-row.pod .te-b.side .rk{display:block;font-size:4.6vh}
+#tvEnd .te-row.pod .te-b.ghost{visibility:hidden}
+#tvEnd .te-row.pod .te-b.side{contain:none}
 @media (prefers-reduced-motion:reduce){#tvEnd .te-b .tl,#tvEnd .te-b .tr{animation:none}}
 
 /* v538 : télé plus fluide — pas d'ombre floue recalculée sur les boucliers en mouvement, calques GPU */
@@ -18697,7 +18707,16 @@ html.tv-end #prBg{image-rendering:auto}
     /* titre en Inquisition dorée 3D (même rendu que VICTOIRE) */
     var tiEl = box.querySelector('.te-ti'), gold = function(){ try { if ((!window.joTitlePng && ttl !== 'Vainqueur') || !tiEl.isConnected && box === null) return; var u = ttl === 'Vainqueur' ? TVQ : window.joTitlePng(ttl, 'gold'); if (u){ tiEl.innerHTML = '<img alt="' + ttl + '" src="' + u + '">'; tiEl.classList.add('img'); } } catch(e){} };
     try { if (document.fonts && document.fonts.load) document.fonts.load('400 60px "JInqFull"').then(gold, gold); else gold(); } catch(e){ gold(); }
-    var w1 = document.createElement('div'); w1.className = 'te-row wins n' + wins.length; wins.forEach(function(r){ w1.appendChild(banner(r, true)); }); box.appendChild(w1);
+    var w1 = document.createElement('div');
+    if (wins.length === 1 && rows.length > 1){
+      /* podium : 2e à gauche, vainqueur au centre, 3e à droite */
+      w1.className = 'te-row wins n1 pod';
+      var r2 = rows.filter(function(r){ return r.rk === 2; })[0] || rows[1], r3 = rows.filter(function(r){ return r !== r2 && r.rk !== 1; })[0];
+      var s2 = banner(r2, false); s2.classList.add('side'); w1.appendChild(s2);
+      w1.appendChild(banner(wins[0], true));
+      if (r3){ var s3 = banner(r3, false); s3.classList.add('side'); w1.appendChild(s3); } else { var ph = document.createElement('div'); ph.className = 'te-b side ghost'; w1.appendChild(ph); }
+    } else { w1.className = 'te-row wins n' + wins.length; wins.forEach(function(r){ w1.appendChild(banner(r, true)); }); }
+    box.appendChild(w1);
     document.body.appendChild(bg); document.body.appendChild(box);
     try { if (window.__bgPrism) window.__bgPrism.on(); } catch(e){}
     requestAnimationFrame(function(){ document.documentElement.classList.add('tv-end'); });
