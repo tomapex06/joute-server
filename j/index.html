@@ -18322,6 +18322,13 @@ html body #result .xgb.rib.rib-arcd .xg-t{opacity:0!important}
 html body #result .xgb.rib .rib-arc .ra-lab{font:700 64px/1 var(--grot,system-ui);letter-spacing:.24em;fill:#2a1c10}
 html body #result .xgb.rib .rib-arc .ra-num{font:400 250px/1 "JInqFull","JInquisition",serif;letter-spacing:.03em}
 html body #result .xgb.rib .rib-arc .ra-g{font:700 92px/1 var(--grot,system-ui);letter-spacing:0}
+
+/* v526 : barre d'XP plus lumineuse */
+html body #result .xgb.rib .xg-bar{box-shadow:0 0 0 1px #9a6512,0 0 14px 3px rgba(255,205,90,.75),0 0 34px 8px rgba(255,214,120,.45),inset 0 1px 3px rgba(0,0,0,.6)!important;border-color:#ffc94d!important}
+html body #result .xgb.rib .xg-bar i{position:relative;background:linear-gradient(180deg,#ffffff 0%,#fffbe8 45%,#ffe9a6 100%)!important;box-shadow:0 0 12px 4px rgba(255,236,170,.95),0 0 4px 1px #fff!important;filter:brightness(1.12) saturate(1.1)!important}
+html body #result .xgb.rib .xg-bar i::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(100deg,transparent 0%,rgba(255,255,255,0) 35%,rgba(255,255,255,.95) 50%,rgba(255,255,255,0) 65%,transparent 100%);background-size:220% 100%;animation:xgShine 2.2s linear infinite;mix-blend-mode:screen}
+@keyframes xgShine{0%{background-position:160% 0}100%{background-position:-60% 0}}
+@media (prefers-reduced-motion:reduce){html body #result .xgb.rib .xg-bar i::after{animation:none}}
 </style>
 <script id="endScrJs">
 (function(){
