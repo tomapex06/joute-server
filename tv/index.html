@@ -18592,8 +18592,9 @@ html body #tvEnd,html body #tvEnd *{filter:none!important}
 #tvEnd .te-b .tl{transform-origin:12.9% 55%;animation:ribTailL 2.6s ease-in-out infinite}
 #tvEnd .te-b .tr{transform-origin:87% 55%;animation:ribTailR 2.6s ease-in-out infinite;animation-delay:-1.3s}
 #tvEnd .te-b svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-#tvEnd .te-b .lab{font:700 64px/1 var(--grot,system-ui,sans-serif);letter-spacing:.2em;fill:#2a1c10}
-#tvEnd .te-b .num{font:400 230px/1 "JInqFull","JInquisition",serif;letter-spacing:.03em}
+#tvEnd .te-b .lab{font:400 104px/1 "JInqFull","JInquisition",serif;letter-spacing:.04em;fill:#24160b}
+#tvEnd .te-b .pts{font:700 70px/1 var(--grot,system-ui,sans-serif);letter-spacing:.02em}
+#tvEnd .te-b .num{font:400 200px/1 "JInqFull","JInquisition",serif;letter-spacing:.03em}
 #tvEnd .te-b .rk{position:absolute;left:50%;top:-1.4vh;transform:translate(-50%,-100%);font:400 4.2vh/1 "JInqFull","JInquisition",serif;color:#f1e3c4;text-shadow:0 .3vh 1vh rgba(0,0,0,.6)}
 #tvEnd .te-b.win .rk{display:none}
 @media (prefers-reduced-motion:reduce){#tvEnd .te-b .tl,#tvEnd .te-b .tr{animation:none}}
@@ -18608,11 +18609,11 @@ html body #tvEnd,html body #tvEnd *{filter:none!important}
     var d = document.createElement('div'); d.className = 'te-b' + (win ? ' win' : '');
     d.innerHTML = '<span class="rk">' + esc(r.rk) + (r.rk === 1 ? 'er' : 'e') + '</span>' +
       '<img class="tl" alt="" src="' + R.l + '"><img class="tr" alt="" src="' + R.r + '"><img alt="" src="' + R.c + '">' +
-      '<svg viewBox="0 0 2062 683"><defs><path id="' + id + 'a" d="' + arc(150, 2.3e-4, 560) + '"/><path id="' + id + 'b" d="' + arc(338, 2.15e-4, 600) + '"/>' +
+      '<svg viewBox="0 0 2062 683"><defs><path id="' + id + 'a" d="' + arc(150, 2.3e-4, 560) + '"/><path id="' + id + 'b" d="' + arc(352, 2.15e-4, 600) + '"/>' +
       '<linearGradient id="' + id + 'i" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2a1c"/><stop offset=".55" stop-color="#140d07"/><stop offset="1" stop-color="#000"/></linearGradient>' +
       '<filter id="' + id + 'f" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur in="SourceAlpha" stdDeviation="2.2" result="b"/><feOffset in="b" dy="5" result="o"/><feFlood flood-color="#5a3d1c" flood-opacity=".55"/><feComposite in2="o" operator="in" result="sh"/><feOffset in="SourceAlpha" dy="-2.5" result="h0"/><feFlood flood-color="#fffaf0" flood-opacity=".95"/><feComposite in2="h0" operator="in" result="hl"/><feMerge><feMergeNode in="sh"/><feMergeNode in="hl"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>' +
       '<text class="lab" filter="url(#' + id + 'f)" style="filter:url(#' + id + 'f)!important"><textPath href="#' + id + 'a" startOffset="50%" text-anchor="middle">' + esc(nm.toUpperCase().slice(0, 18)) + '</textPath></text>' +
-      '<text class="num" fill="url(#' + id + 'i)" filter="url(#' + id + 'f)" style="filter:url(#' + id + 'f)!important"><textPath href="#' + id + 'b" startOffset="50%" text-anchor="middle">' + esc(r.score) + '</textPath></text></svg>';
+      '<text class="num" fill="url(#' + id + 'i)" filter="url(#' + id + 'f)" style="filter:url(#' + id + 'f)!important"><textPath href="#' + id + 'b" startOffset="50%" text-anchor="middle">' + esc(r.score) + '<tspan class="pts" fill="#b3231a" dx="24">pts</tspan></textPath></text></svg>';
     return d;
   }
   function close(){
@@ -18630,7 +18631,6 @@ html body #tvEnd,html body #tvEnd *{filter:none!important}
     var wins = rows.filter(function(r){ return r.rk === 1; }).slice(0, 3), rest = rows.filter(function(r){ return r.rk !== 1; }).slice(0, 8);
     box.innerHTML = '<div class="te-eb">Partie terminée</div><div class="te-ti">' + (wins.length > 1 ? 'Ex æquo' : 'Vainqueur') + '</div>';
     var w1 = document.createElement('div'); w1.className = 'te-row wins n' + wins.length; wins.forEach(function(r){ w1.appendChild(banner(r, true)); }); box.appendChild(w1);
-    if (rest.length){ var w2 = document.createElement('div'); w2.className = 'te-row'; rest.forEach(function(r){ w2.appendChild(banner(r, false)); }); box.appendChild(w2); }
     document.body.appendChild(bg); document.body.appendChild(box);
     try { if (window.__bgPrism) window.__bgPrism.on(); } catch(e){}
     requestAnimationFrame(function(){ document.documentElement.classList.add('tv-end'); });
