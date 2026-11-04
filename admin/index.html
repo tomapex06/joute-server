@@ -55,6 +55,14 @@ main{padding:14px 16px 60px}
 #gate input{width:100%;margin:16px 0 10px}
 #toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:99px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
 #toast.on{opacity:1}
+.sect{display:flex;gap:0;margin:12px 0 4px;border:1.5px solid var(--ink);border-radius:12px;overflow:hidden}
+.sect button{flex:1;border:0;background:none;padding:10px;font:600 13px Unbounded,sans-serif;cursor:pointer;color:var(--ink)}
+.sect button.on{background:var(--ink);color:#fff}
+.sect .n{display:inline-block;min-width:20px;padding:1px 6px;border-radius:99px;background:var(--bad);color:#fff;font-size:11px;margin-left:6px}
+.pq{border-top:1px solid var(--line);padding:8px 0}
+.pq:first-of-type{border-top:0}
+.pill.k{background:var(--ink);color:#fff}
+.pill.a{background:var(--ok);color:#fff}
 @media (max-width:560px){.row3{grid-template-columns:1fr}}
 </style>
 </head>
@@ -69,6 +77,8 @@ main{padding:14px 16px 60px}
 <div id="app" hidden>
 <header><div class="wrap">
   <div style="display:flex;justify-content:space-between;align-items:center"><h1>Banque Joute</h1><button class="btn" id="out">Déconnexion</button></div>
+  <div class="sect"><button class="on" data-v="bank">Banque</button><button data-v="prop">Propositions<span class="n" id="pn" hidden></span></button></div>
+  <div id="bankBar">
   <div class="stats" id="stats"></div>
   <div class="tabs">
     <button class="tab on" data-s="reported">Signalées</button>
@@ -80,8 +90,18 @@ main{padding:14px 16px 60px}
     <select id="th"><option value="">Tous les thèmes</option></select>
     <input id="search" type="search" placeholder="Rechercher une question, une réponse ou un n°">
   </div>
+  </div>
+  <div id="propBar" hidden>
+  <div class="tabs" style="margin-top:10px" id="pst">
+    <button class="tab on" data-s="new">Nouvelles</button>
+    <button class="tab" data-s="accepted">Acceptées</button>
+    <button class="tab" data-s="rejected">Refusées</button>
+    <button class="tab" data-s="all">Toutes</button>
+  </div>
+  <div class="tools"><select id="pk"><option value="">Tous les types</option><option value="question">Questions</option><option value="quiz">Quiz</option><option value="topic">Topics (avec questions)</option><option value="topicreq">Demandes de thème</option><option value="fix">Corrections</option></select></div>
+  </div>
 </div></header>
-<main><div class="wrap"><div id="list"></div><div class="pager" id="pager"></div></div></main>
+<main><div class="wrap"><div id="bankView"><div id="list"></div><div class="pager" id="pager"></div></div><div id="propView" hidden><div id="plist"></div></div></div></main>
 </div>
 <div id="toast"></div>
 <script>
@@ -98,8 +118,9 @@ function rpc(fn,body){body=Object.assign({p_token:tok},body||{});return fetch(AP
 function store(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}
 function load(k){try{return localStorage.getItem(k)||''}catch(e){return ''}}
 
-function login(t){tok=t;return rpc('admin_stats').then(function(s){store('joute-admin',tok);$('gate').hidden=true;$('app').hidden=false;stats(s);list()})}
+function login(t){tok=t;return rpc('admin_stats').then(function(s){store('joute-admin',tok);$('gate').hidden=true;$('app').hidden=false;stats(s);list();plist()})}
 function stats(s){
+  themeList=s.themes||[];
   $('stats').innerHTML='<div class="stat"><b>'+s.total+'</b><span>Questions</span></div><div class="stat"><b>'+s.active+'</b><span>Actives</span></div><div class="stat"><b>'+(s.total-s.active)+'</b><span>Désactivées</span></div><div class="stat red"><b>'+s.reported+'</b><span>Signalées</span></div>';
   var sel=$('th'),cur=sel.value;sel.innerHTML='<option value="">Tous les thèmes</option>'+s.themes.slice().sort(function(a,b){return tn(a.theme).localeCompare(tn(b.theme))}).map(function(x){return '<option value="'+x.theme+'">'+esc(tn(x.theme))+' ('+x.active+(x.reported?' · '+x.reported+' ⚑':'')+')</option>'}).join('');sel.value=cur;
 }
@@ -151,10 +172,60 @@ $('list').addEventListener('click',function(e){
   }
   pr.then(function(){list();refreshStats()}).catch(function(err){b.disabled=false;toast('Erreur : '+err.message)});
 });
-document.querySelectorAll('.tab').forEach(function(t){t.onclick=function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===t)});st.status=t.dataset.s;st.off=0;list()}});
+document.querySelectorAll('#bankBar .tab').forEach(function(t){t.onclick=function(){document.querySelectorAll('#bankBar .tab').forEach(function(x){x.classList.toggle('on',x===t)});st.status=t.dataset.s;st.off=0;list()}});
 $('th').onchange=function(){st.theme=this.value;st.off=0;list()};
 var sT;$('search').oninput=function(){var s=this.value.trim();clearTimeout(sT);sT=setTimeout(function(){st.search=s;st.off=0;list()},300)};
 $('out').onclick=function(){store('joute-admin',null);location.reload()};
+/* ---------- Propositions ---------- */
+var KIND={question:'Question',quiz:'Quiz',topic:'Topic',topicreq:'Demande de thème',fix:'Correction'};
+var STN={new:'Nouvelle',accepted:'Acceptée',rejected:'Refusée'};
+var ps={status:'new',kind:''}, props=[], themeList=[];
+function themeOpts(sel){var ids=Object.keys(NAMES);themeList.forEach(function(t){if(ids.indexOf(t.theme)<0)ids.push(t.theme)});return ids.sort(function(a,b){return tn(a).localeCompare(tn(b))}).map(function(t){return '<option value="'+t+'"'+(t===sel?' selected':'')+'>'+esc(tn(t))+'</option>'}).join('')}
+function plist(){
+  $('plist').innerHTML='<div class="empty">Chargement…</div>';
+  rpc('admin_proposals',{p_status:ps.status,p_kind:ps.kind}).then(function(d){props=d.rows||[];var n=(d.counts&&d.counts.new)||0;$('pn').hidden=!n;$('pn').textContent=n;prender()}).catch(function(e){$('plist').innerHTML='<div class="empty">Erreur : '+esc(e.message)+'</div>'})
+}
+function pqBlock(q,i,pid,theme){
+  var o=q.o||[];return '<div class="pq" data-i="'+i+'"><div class="qt" style="font-size:15px">'+esc(q.q)+'</div><div class="ans">'+o.map(function(x,j){return '<span'+(j===0?' class="g"':'')+'>'+(j===0?'✓ ':'')+esc(x)+'</span>'}).join('')+'</div><div class="act"><button class="btn" data-a="padd">Ajouter à la banque…</button></div></div>';
+}
+function pcard(p){
+  var pl=p.payload||{},h='<div class="q" data-pid="'+p.id+'">';
+  h+='<div class="meta"><span class="pill k">'+(KIND[p.kind]||p.kind)+'</span>'+(p.theme?'<span class="pill">'+esc(tn(p.theme))+'</span>':'')+'<span class="pill'+(p.status==='accepted'?' a':p.status==='rejected'?' o':'')+'">'+STN[p.status]+'</span><span>par '+esc(p.author_name||'Joueur')+'</span><span style="margin-left:auto">'+new Date(p.created_at).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+'</span></div>';
+  if(p.kind==='question'){h+=pqBlock({q:pl.q,o:pl.o},0)}
+  else if(p.kind==='quiz'||p.kind==='topic'){h+='<div class="qt">'+esc(p.title)+'</div>'+(pl.desc?'<div class="an">'+esc(pl.desc)+'</div>':'')+(pl.qs||[]).map(function(q,i){return pqBlock(q,i)}).join('')}
+  else if(p.kind==='topicreq'){h+='<div class="qt">'+(pl.kind==='sub'?'Sous-thème « ':'Nouveau thème « ')+esc(p.title)+' »</div>'+(pl.parent?'<div class="an">Dans : '+esc(tn(pl.parent))+'</div>':'')+(pl.desc?'<div class="an">'+esc(pl.desc)+'</div>':'')}
+  else if(p.kind==='fix'){h+='<div class="an" style="color:var(--ink)"><b>Question :</b> '+esc(pl.q)+'</div><div class="reps" style="background:#fff8e6;color:#5c4100"><b>Correction proposée :</b> '+esc(pl.n)+'</div><div class="act" style="margin-bottom:8px"><button class="btn" data-a="pfind">Chercher la question dans la banque</button></div>'}
+  h+='<div class="act" style="margin-top:6px">';
+  if(p.status!=='accepted')h+='<button class="btn g" data-a="pacc">'+(p.kind==='fix'?'Traitée':'Accepter')+'</button>';
+  if(p.status!=='rejected')h+='<button class="btn d" data-a="prej">Refuser</button>';
+  if(p.status!=='new')h+='<button class="btn" data-a="pnew">Remettre en nouvelle</button>';
+  h+='</div></div>';return h;
+}
+function prender(){$('plist').innerHTML=props.length?props.map(pcard).join(''):'<div class="empty">'+(ps.status==='new'?'Aucune nouvelle proposition':'Rien ici')+'</div>'}
+function pfind(id){for(var i=0;i<props.length;i++)if(String(props[i].id)===String(id))return props[i]}
+function addForm(box,q,theme){
+  if(box.querySelector('.edit')){box.querySelector('.edit').remove();return}
+  var o=q.o||['','','',''],f=document.createElement('div');f.className='edit';
+  f.innerHTML='<label>Thème</label><select data-f="th">'+themeOpts(theme)+'</select><label>Question</label><textarea data-f="q">'+esc(q.q)+'</textarea><label>Bonne réponse</label><input data-f="good" value="'+esc(o[0])+'"><label>Mauvaises réponses</label><div class="row3"><input data-f="w0" value="'+esc(o[1])+'"><input data-f="w1" value="'+esc(o[2])+'"><input data-f="w2" value="'+esc(o[3])+'"></div><label>Sous-thème (facultatif)</label><input data-f="ctx" value=""><label>Anecdote (facultatif)</label><textarea data-f="an"></textarea><label>Niveau</label><select data-f="diff"><option value="1">Curieux</option><option value="2" selected>Initié</option><option value="3">Érudit</option></select><div class="act"><button class="btn k" data-a="pins">Ajouter à la banque</button></div>';
+  box.appendChild(f);
+}
+$('plist').addEventListener('click',function(e){
+  var b=e.target.closest('[data-a]');if(!b)return;var card=b.closest('[data-pid]'),p=pfind(card.dataset.pid),a=b.dataset.a,pl=p.payload||{};
+  if(a==='padd'){var blk=b.closest('.pq'),i=+blk.dataset.i,q=p.kind==='question'?{q:pl.q,o:pl.o}:(pl.qs||[])[i];return addForm(blk,q,p.theme||'cg')}
+  if(a==='pfind'){setView('bank');$('search').value=(pl.q||'').slice(0,40);st.search=$('search').value;st.status='all';document.querySelectorAll('#bankBar .tab').forEach(function(x){x.classList.toggle('on',x.dataset.s==='all')});st.off=0;list();return}
+  b.disabled=true;var pr;
+  if(a==='pins'){var ed=b.closest('.edit'),w=[v(ed,'w0'),v(ed,'w1'),v(ed,'w2')];
+    if(!v(ed,'q')||!v(ed,'good')||w.some(function(x){return !x})){b.disabled=false;return toast('Remplis la question et les 4 réponses')}
+    pr=rpc('admin_add_question',{p_theme:v(ed,'th'),p_q:v(ed,'q'),p_good:v(ed,'good'),p_wrong:w,p_diff:+v(ed,'diff'),p_anecdote:v(ed,'an'),p_ctx:v(ed,'ctx'),p_src:'joueur:'+p.id}).then(function(nid){toast('Ajoutée à la banque (n° '+nid+')');ed.closest('.pq').style.opacity='.45';ed.remove();refreshStats();if(p.kind==='question'&&p.status!=='accepted')return rpc('admin_decide_proposal',{p_id:p.id,p_status:'accepted'}).then(plist)});
+    return pr.catch(function(err){b.disabled=false;toast('Erreur : '+err.message)});
+  }
+  var stv={pacc:'accepted',prej:'rejected',pnew:'new'}[a];
+  rpc('admin_decide_proposal',{p_id:p.id,p_status:stv}).then(function(){toast(stv==='accepted'?'Acceptée':stv==='rejected'?'Refusée':'Remise en nouvelle');plist()}).catch(function(err){b.disabled=false;toast('Erreur : '+err.message)});
+});
+document.querySelectorAll('#pst .tab').forEach(function(t){t.onclick=function(){document.querySelectorAll('#pst .tab').forEach(function(x){x.classList.toggle('on',x===t)});ps.status=t.dataset.s;plist()}});
+$('pk').onchange=function(){ps.kind=this.value;plist()};
+function setView(vw){document.querySelectorAll('.sect button').forEach(function(x){x.classList.toggle('on',x.dataset.v===vw)});$('bankBar').hidden=vw!=='bank';$('bankView').hidden=vw!=='bank';$('propBar').hidden=vw!=='prop';$('propView').hidden=vw!=='prop';if(vw==='prop')plist()}
+document.querySelectorAll('.sect button').forEach(function(x){x.onclick=function(){setView(x.dataset.v)}});
 function showGate(msg){$('app').hidden=true;$('gate').hidden=false;$('gerr').textContent=msg||''}
 $('go').onclick=function(){var t=$('tok').value.trim();if(!t)return;login(t).catch(function(){showGate('Clé incorrecte')})};
 $('tok').onkeydown=function(e){if(e.key==='Enter')$('go').click()};

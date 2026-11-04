@@ -8645,6 +8645,7 @@ var THEMES = [
   var dbNs = null, sampleNs = null, userNs = null, myUid = '', QB = {}, SHARED = [];
   function qbId(u){ var k = ugcKey(u), h = 5381, i; for (i = 0; i < k.length; i++) h = ((h * 33) ^ k.charCodeAt(i)) >>> 0; return u.t + '_' + h.toString(36); }
   function qbPublish(u){
+    if (!qbPublish.mute){ try { window.joPropose && window.joPropose('question', u.t, u.q, { q:u.q, o:u.o }, myName()); } catch(e){} }
     if (!dbNs || !myUid) return;
     try { dbNs.doc('qbank/' + qbId(u)).set({ t:u.t, q:u.q, o:u.o, by:myUid, byName:myName(), voters:[myUid], up:1, ts:Date.now() }).catch(function(){}); } catch(e){}
   }
@@ -8680,10 +8681,11 @@ var THEMES = [
     K.addEventListener('change', function(){ fillP(); Pp.hidden = K.value !== 'sub'; });
     $('tqForm').addEventListener('submit', function(e){
       e.preventDefault();
-      if (!dbNs || !myUid){ $('tqMsg').textContent = 'Indisponible pour le moment.'; return; }
       var kind = K.value, parent = kind === 'sub' ? Pp.value : '', name = cleanTxt($('tqN').value, 30), desc = cleanTxt($('tqD').value, 80);
       if (name.length < 3){ $('tqMsg').textContent = 'Donne un nom d’au moins 3 caractères.'; return; }
       if (kind === 'sub' && !parent){ $('tqMsg').textContent = 'Choisis le thème parent.'; return; }
+      try { window.joPropose && window.joPropose('topicreq', parent, name, { kind:kind, parent:parent, desc:desc }, myName()); } catch(e){}
+      if (!dbNs || !myUid){ $('tqMsg').textContent = 'Demande envoyée, merci ! Elle sera étudiée.'; $('tqN').value = ''; $('tqD').value = ''; return; }
       var id = tqId(kind, parent, name);
       if (TQ[id]){ if (TQ[id].voters.indexOf(myUid) < 0) tqVote(TQ[id]); $('tqMsg').textContent = 'Cette demande existe déjà : ton vote est ajouté.'; return; }
       dbNs.doc('topicreq/' + id).set({ kind:kind, parent:parent, name:name, desc:desc, by:myUid, byName:myName(), voters:[myUid], done:false, ts:Date.now() })
@@ -9008,7 +9010,8 @@ var THEMES = [
     if (title.length < 3){ m.textContent = 'Donne un titre d’au moins 3 caractères.'; return; }
     if (r.bad){ m.textContent = 'Question ' + r.bad + ' incomplète : 6 caractères minimum et 4 réponses différentes.'; return; }
     if (r.qs.length < 3){ m.textContent = 'Un quiz contient au moins 3 questions complètes.'; return; }
-    var added = 0; r.qs.forEach(function(q){ var u = validUgc({ t:t, q:q.q, o:q.o }); if (u && ugcAdd(u, true)) added++; });
+    var added = 0; qbPublish.mute = true; try { r.qs.forEach(function(q){ var u = validUgc({ t:t, q:q.q, o:q.o }); if (u && ugcAdd(u, true)) added++; }); } finally { qbPublish.mute = false; }
+    try { window.joPropose && window.joPropose('quiz', t, title, { qs:r.qs }, myName()); } catch(e){}
     var ts = Date.now(); P.quizzes = (P.quizzes || []).concat({ title:title, t:t, n:r.qs.length, ts:ts }).slice(-50); save();
     if (dbNs && myUid){ try { dbNs.doc('quizreq/' + myUid + '_' + ts).set({ title:title, t:t, qs:r.qs, by:myUid, byName:myName(), ts:ts }).catch(function(){}); } catch(err){} }
     try { feedPost('quiz', t, title); } catch(e){}
@@ -9023,6 +9026,7 @@ var THEMES = [
     if (r.qs.length < 3){ m.textContent = 'Un topic démarre avec au moins 3 questions complètes.'; return; }
     var ts = Date.now(), id = tqId('topic', '', name);
     P.topicReq = (P.topicReq || []).concat({ name:name, desc:desc, n:r.qs.length, ts:ts }).slice(-30); save();
+    try { window.joPropose && window.joPropose('topic', '', name, { desc:desc, qs:r.qs }, myName()); } catch(e){}
     if (dbNs && myUid){
       try { dbNs.doc('topicreq/' + id).set({ kind:'topic', parent:'', name:name, desc:desc, qs:r.qs, by:myUid, byName:myName(), voters:[myUid], done:false, ts:ts }).catch(function(){}); } catch(err){}
     }
@@ -9035,6 +9039,7 @@ var THEMES = [
     if (q.length < 6 || n.length < 6){ $('fxMsg').textContent = 'Indique la question et ta correction (6 caractères minimum chacune).'; return; }
     var t = $('fxT').value, ts = Date.now();
     P.fix = (P.fix || []).concat({ t:t, q:q, n:n, ts:ts }).slice(-100); save();
+    try { window.joPropose && window.joPropose('fix', t, q, { q:q, n:n }, myName()); } catch(e){}
     if (dbNs && myUid){ try { dbNs.doc('qfix/' + myUid + '_' + ts).set({ t:t, q:q, n:n, by:myUid, byName:myName(), ts:ts }).catch(function(){}); } catch(err){} }
     $('fxMsg').textContent = 'Merci ! Ta correction est envoyée et sera vérifiée.';
     $('fxQ').value = ''; $('fxN').value = '';
@@ -18631,6 +18636,7 @@ html body #intro .vsh-s.vsh-wood img{object-fit:fill}
   function get(k){ return db().then(function(d){ return new Promise(function(res){ var t = d.transaction('kv').objectStore('kv').get(k); t.onsuccess = function(){ res(t.result); }; t.onerror = function(){ res(null); }; }); }); }
   function put(k, v){ return db().then(function(d){ return new Promise(function(res){ var t = d.transaction('kv', 'readwrite'); t.objectStore('kv').put(v, k); t.oncomplete = function(){ res(true); }; t.onerror = function(){ res(false); }; }); }); }
   function rpc(fn, body){ return fetch(API + fn, { method:'POST', headers:{ 'apikey':KEY, 'Authorization':'Bearer ' + KEY, 'Content-Type':'application/json' }, body:JSON.stringify(body || {}) }).then(function(r){ if (!r.ok) throw new Error('http ' + r.status); return r.json(); }); }
+  window.joPropose = function(kind, theme, title, payload, name){ try { return rpc('submit_proposal', { p_kind:kind, p_theme:theme || '', p_title:title || '', p_payload:payload || {}, p_device:dev(), p_name:name || '' }).catch(function(){}); } catch(e){ return Promise.resolve(); } };
   function refresh(force){
     return get('at').then(function(at){
       if (!force && B.ready && at && Date.now() - at < 6 * 3600e3) return;
