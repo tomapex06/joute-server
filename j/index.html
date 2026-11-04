@@ -7367,9 +7367,9 @@ var THEMES = [
     var box = $('tact'); if (!box) return;
     var d = taData(); if (!d){ box.hidden = true; return; }
     box.hidden = false;
-    $('taTitle').textContent = d.T.name + (PK.m ? ' · ' + subName(d.T, PK.m) : '') + ' en ce moment';
-    var free = d.pl.filter(function(p){ return p.st === 'free'; }).length;
-    $('taStats').textContent = d.pl.length + ' joueurs · ' + d.games.length + ' parties en cours · ' + free + ' disponibles';
+    $('taTitle').textContent = 'Classement · ' + d.T.name + (PK.m ? ' · ' + subName(d.T, PK.m) : '');
+    /* v555 : plus de fausses parties en cours, seulement le classement des vrais joueurs */
+    taTab = 'pl'; $('taStats').textContent = ''; $('taStats').hidden = true; $('taT_games').hidden = true; $('taT_pl').hidden = true;
     $('taT_games').setAttribute('aria-pressed', String(taTab === 'games')); $('taT_pl').setAttribute('aria-pressed', String(taTab === 'pl'));
     var list = $('taList'); list.innerHTML = '';
     if (taTab === 'games'){
@@ -7383,12 +7383,13 @@ var THEMES = [
         list.appendChild(r);
       });
     } else if (taTab === 'pl'){
+      try { window.joLBChanged = function(){ try { if (taTab === 'pl' && !$('pick').hidden) renderTA(); } catch(e){} }; window.joLBFetch && window.joLBFetch(); } catch(e){}
       /* v548 : classement du topic + classement global (à la place de la liste des joueurs) */
       var sg = document.createElement('div'); sg.className = 'seg tarks'; sg.setAttribute('role', 'group');
       [['t', d.T.name], ['g', 'Global']].forEach(function(o){ var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-pressed', String(taRk === o[0])); b.innerHTML = '<b>' + esc(o[1]) + '</b>'; b.addEventListener('click', function(){ taRk = o[0]; renderTA(); }); sg.appendChild(b); });
       list.appendChild(sg);
       var all = lbEntries().slice(), tid = d.T.id, byT = taRk === 't'; if (!all.some(function(e){ return e.me; })){ var m0 = myLb(); all.push({ me:true, av:m0.av, tw:m0.tw, name:m0.name, xp:m0.xp, w:m0.w, pl:m0.pl, ci:m0.ci, co:m0.co }); }
-      if (byT) all = all.filter(function(e){ return e.me || e.sim; }).map(function(e){ var c = {}; for (var k in e) c[k] = e[k]; c.tp = e.me ? myTopicPts(tid) : topicPts(e.name, tid, e.xp); return c; }).filter(function(e){ return e.me || e.tp > 0; });
+      if (byT) all = all.filter(function(e){ return e.me || e.sim || e.real; }).map(function(e){ var c = {}; for (var k in e) c[k] = e[k]; c.tp = e.me ? myTopicPts(tid) : e.real ? realTopicPts(e, tid) : topicPts(e.name, tid, e.xp); return c; }).filter(function(e){ return e.me || e.tp > 0; });
       all.sort(function(a, b){ return byT ? b.tp - a.tp : (b.xp - a.xp || b.w - a.w); });
       var mi = -1; all.forEach(function(e, i){ if (e.me) mi = i; });
       var pos = document.createElement('p'); pos.className = 'hint tapos'; pos.innerHTML = mi >= 0 ? 'Ta position <b>#' + (mi + 1) + '</b> sur ' + all.length + ' joueurs' : ''; list.appendChild(pos);
@@ -8526,8 +8527,10 @@ var THEMES = [
       out.push({ me:!!p.isMe, av:pr.av, tw:(pr.twk === trWeek() && Number.isFinite(pr.tw)) ? Math.max(0, Math.min(1e6, Math.floor(pr.tw))) : 0, name:cleanTxt(pr.name, 16) || 'Joueur', xp:Math.max(0, Math.min(1e7, Math.floor(pr.xp))), w:Math.max(0, Math.min(1e6, Math.floor(pr.w || 0))), pl:Math.max(0, Math.min(1e6, Math.floor(pr.pl || 0))), ci:cleanTxt(pr.ci, 24), co:cleanTxt(pr.co, 24) });
     });
     if (!LB){ var m0 = myLb(); out.push({ me:true, av:m0.av, tw:m0.tw, name:m0.name, xp:m0.xp, w:m0.w, pl:m0.pl, ci:m0.ci, co:m0.co }); }
-    return out.concat(worldSim());
+    (window.joRealLB || []).forEach(function(x){ if (!x || typeof x.name !== 'string') return; var rav = null; try { rav = x.avc && avcParse(x.avc) ? x.avc : (x.av && x.av.e ? [x.av.e, x.av.c] : null); } catch(e){} out.push({ real:true, av:rav, tw:0, name:cleanTxt(x.name, 16) || 'Joueur', xp:Math.max(0, Math.min(1e7, Math.floor(+x.xp || 0))), w:Math.max(0, Math.floor(+x.w || 0)), pl:Math.max(0, Math.floor(+x.pl || 0)), ci:cleanTxt(x.ci, 24), co:cleanTxt(x.co, 24), best:x.best || {}, med:x.med || {} }); });
+    return out; /* v555 : seulement les vrais joueurs (plus de joueurs simulés) */
   }
+  function realTopicPts(e, tid){ var m = (e.med && e.med[tid]) || [0, 0, 0]; return ((e.best && e.best[tid]) | 0) + 40 * ((m[0] | 0) + 2 * (m[1] | 0) + 3 * (m[2] | 0)); }
   function noEmoOn(){ return document.body.getAttribute('data-skin') === 'max'; }
   /* Classement par topic ou pound for pound (tous topics) */
   var lbTopic = 'all';
@@ -8542,6 +8545,7 @@ var THEMES = [
   function syncTopicSel(){ ['lbTopic', 'tlTopic'].forEach(function(i){ var e = $(i); if (e){ fillTopicSel(e); e.value = lbTopic; } }); }
   function renderLb(){
     if ($('hub').hidden || $('pane_lb').hidden) return;
+    try { if (window.joLBFetch && Date.now() - (window.joRealLBAt || 0) > 60000){ var prevCb = window.joLBChanged; window.joLBChanged = function(){ try { renderLb(); } catch(e){} try { prevCb && prevCb(); } catch(e){} }; window.joLBFetch(); } } catch(e){}
     var list = lbEntries(), me = myLb(), hint = '';
     var norm = function(s){ return String(s || '').toLowerCase(); };
     if (lbTab === 'country'){ if (!me.co) hint = 'Renseigne ton pays dans Réglages > Profil.'; list = list.filter(function(e){ return me.co && norm(e.co) === norm(me.co); }); }
@@ -8550,7 +8554,7 @@ var THEMES = [
     var byT = lbTab !== 'tour' && lbTopic !== 'all';
     syncTopicSel(); $('lbTopic').hidden = lbTab === 'tour';
     if (byT){
-      list = list.filter(function(e){ return e.me || e.sim; }).map(function(e){ var c = {}; for (var k in e) c[k] = e[k]; c.tp = e.me ? myTopicPts(lbTopic) : topicPts(e.name, lbTopic, e.xp); return c; }).filter(function(e){ return e.me || e.tp > 0; });
+      list = list.filter(function(e){ return e.me || e.sim || e.real; }).map(function(e){ var c = {}; for (var k in e) c[k] = e[k]; c.tp = e.me ? myTopicPts(lbTopic) : e.real ? realTopicPts(e, lbTopic) : topicPts(e.name, lbTopic, e.xp); return c; }).filter(function(e){ return e.me || e.tp > 0; });
     }
     list.sort(function(a, b){ return lbTab === 'tour' ? b.tw - a.tw : byT ? (b.tp - a.tp) : (b.xp - a.xp || b.w - a.w); });
     var box = $('lbRows'); box.innerHTML = '';
@@ -18636,6 +18640,10 @@ html body #intro .vsh-s.vsh-wood img{object-fit:fill}
   function get(k){ return db().then(function(d){ return new Promise(function(res){ var t = d.transaction('kv').objectStore('kv').get(k); t.onsuccess = function(){ res(t.result); }; t.onerror = function(){ res(null); }; }); }); }
   function put(k, v){ return db().then(function(d){ return new Promise(function(res){ var t = d.transaction('kv', 'readwrite'); t.objectStore('kv').put(v, k); t.oncomplete = function(){ res(true); }; t.onerror = function(){ res(false); }; }); }); }
   function rpc(fn, body){ return fetch(API + fn, { method:'POST', headers:{ 'apikey':KEY, 'Authorization':'Bearer ' + KEY, 'Content-Type':'application/json' }, body:JSON.stringify(body || {}) }).then(function(r){ if (!r.ok) throw new Error('http ' + r.status); return r.json(); }); }
+  window.joRealLB = window.joRealLB || []; window.joRealLBAt = 0;
+  window.joLBFetch = function(force){ if (!force && Date.now() - window.joRealLBAt < 60000) return Promise.resolve(window.joRealLB); window.joRealLBAt = Date.now();
+    var myH = Promise.resolve(''); try { var su = JSON.parse(localStorage.getItem('joute-sync') || '{}').uid; if (su && crypto.subtle) myH = crypto.subtle.digest('SHA-256', new TextEncoder().encode(su)).then(function(b){ return Array.prototype.map.call(new Uint8Array(b), function(x){ return ('0' + x.toString(16)).slice(-2); }).join('').slice(0, 12); }); } catch(e){}
+    return Promise.all([rpc('leaderboard', {}), myH]).then(function(r){ var me = r[1]; window.joRealLB = (Array.isArray(r[0]) ? r[0] : []).filter(function(x){ return x && x.h !== me; }); try { window.joLBChanged && window.joLBChanged(); } catch(e){} return window.joRealLB; }).catch(function(){ return window.joRealLB; }); };
   window.joPropose = function(kind, theme, title, payload, name){ try { return rpc('submit_proposal', { p_kind:kind, p_theme:theme || '', p_title:title || '', p_payload:payload || {}, p_device:dev(), p_name:name || '' }).catch(function(){}); } catch(e){ return Promise.resolve(); } };
   function refresh(force){
     return get('at').then(function(at){
