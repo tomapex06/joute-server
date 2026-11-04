@@ -10905,7 +10905,14 @@ var THEMES = [
   /* v543 : défier un ami (compte en ligne) : on ouvre un duel et on lui envoie la demande */
   function defyFriend(u){
     unlockAudio();
-    if (!u.uid || !window.joCloudInvite){ toast('Pour défier ' + u.name + ', vous devez être connectés tous les deux à votre compte.'); return; }
+    var signedIn = false; try { signedIn = !!JSON.parse(localStorage.getItem('joute-sync') || '{}').uid; } catch(e){}
+    if (!signedIn || !window.joCloudInvite){ toast('Connecte-toi (Apple ou Google) dans Réglages pour défier ' + u.name + '.'); return; }
+    if (!u.uid){
+      /* ami ajouté avant la connexion : on l'enregistre en ligne puis on réessaie */
+      var cd = typeof u.id === 'string' && u.id.indexOf('q:') === 0 ? u.id.slice(2) : '';
+      if (cd && window.joCloudAddFriend){ toast('Synchronisation avec ' + u.name + '…'); window.joCloudAddFriend(cd).then(function(){ setTimeout(function(){ var u2 = muById(u.id); if (u2 && u2.uid) defyFriend(u2); else toast(u.name + ' doit se connecter à son compte pour recevoir ton défi.'); }, 1500); }); return; }
+      toast(u.name + ' doit se connecter à son compte pour recevoir ton défi.'); return;
+    }
     var code = newCode(); cuPreload(); openRoom('host', code);
     window.joCloudInvite(u.uid, code).then(function(ok){ toast(ok ? 'Défi envoyé à ' + u.name + '. En attente…' : 'Impossible d’envoyer le défi à ' + u.name + '.'); });
   }
@@ -18250,6 +18257,8 @@ html body.padmode #duel .status,html body.padmode #duel .duelfoot,html body.padm
       }
       setSync({ uid:user.id, at:s.at || null });
       await push();
+      /* v557 : les amis ajoutés par QR avant la connexion sont enregistrés en ligne (amitié réciproque) */
+      try { var qf0 = localP().qf || {}; for (var qk in qf0){ if (qk.indexOf('q:') === 0 && qf0[qk] && !qf0[qk].u){ try { await sb.rpc('add_friend', { code:qk.slice(2).toUpperCase() }); } catch(e2){} } } } catch(e1){}
       await pullFriends();
     } catch(e){}
   }
