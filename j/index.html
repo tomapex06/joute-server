@@ -7369,7 +7369,7 @@ var THEMES = [
     box.hidden = false;
     $('taTitle').textContent = 'Classement · ' + d.T.name + (PK.m ? ' · ' + subName(d.T, PK.m) : '');
     /* v555 : plus de fausses parties en cours, seulement le classement des vrais joueurs */
-    taTab = 'pl'; $('taStats').textContent = ''; $('taStats').hidden = true; $('taT_games').hidden = true; $('taT_pl').hidden = true;
+    taTab = 'pl'; $('taStats').textContent = ''; $('taStats').hidden = true; $('taT_games').hidden = true; $('taT_pl').hidden = true; $('taT_games').parentNode.hidden = true;
     $('taT_games').setAttribute('aria-pressed', String(taTab === 'games')); $('taT_pl').setAttribute('aria-pressed', String(taTab === 'pl'));
     var list = $('taList'); list.innerHTML = '';
     if (taTab === 'games'){
@@ -15412,7 +15412,7 @@ window.joEngrave = (function(){
       '<div class="shd-xp"><i data-w="' + Math.max(3, Math.min(100, i.into || 0)) + '"></i></div>' +
       '<div class="shd-sc"><div><b data-n="' + (i.xp | 0) + '">0</b><small>Score</small></div><div><b data-n="' + (i.w | 0) + '">0</b><small>Victoires</small></div><div><b data-n="' + pct + '" data-s="%">0</b><small>Réussite</small></div></div>' +
       '<div class="shd-tp"><small>Meilleurs topics</small>' + top + '</div>' +
-      '<div class="shd-cd"><button type="button" class="shd-jn">⚔ Joute TV</button>' +
+      '<div class="shd-cd"><button type="button" class="shd-jn">⚔ Rejoindre un duel</button>' +
       '<div class="shd-nx">' + (i.next ? 'Prochain statut : ' + T(i.next[0]) + ' · niv. ' + i.next[1] : 'Statut maximum') + '</div></div>';
     var jn = box.querySelector('.shd-jn');
     ['pointerdown', 'pointerup', 'click'].forEach(function(ev){ jn.addEventListener(ev, function(e){ e.stopPropagation(); }); });
@@ -15432,7 +15432,7 @@ window.joEngrave = (function(){
   function joinBox(){
     var old = document.getElementById('shdJoin'); if (old) old.remove();
     var o = document.createElement('div'); o.id = 'shdJoin';
-    o.innerHTML = '<form class="sj-c"><div class="sj-t">Joute TV</div><p class="sj-p">Sur la télé, ouvre <b>joute.co</b>, puis entre ici le code à 5 chiffres affiché à l’écran.</p><input class="sj-i" inputmode="numeric" pattern="[0-9]*" maxlength="5" autocomplete="off" placeholder="00000" aria-label="Code Joute TV"><p class="sj-e" hidden>Le code compte 5 chiffres.</p><div class="sj-b"><button type="button" class="sj-x">Annuler</button><button type="submit" class="sj-go">Rejoindre</button></div></form>';
+    o.innerHTML = '<form class="sj-c"><div class="sj-t">Rejoindre un duel</div><p class="sj-p">Entre le code à 5 chiffres du duel, affiché chez ton ami ou sur la télé (<b>joute.co</b>).</p><input class="sj-i" inputmode="numeric" pattern="[0-9]*" maxlength="5" autocomplete="off" placeholder="00000" aria-label="Code du duel"><p class="sj-e" hidden>Le code compte 5 chiffres.</p><div class="sj-b"><button type="button" class="sj-x">Annuler</button><button type="submit" class="sj-go">Rejoindre</button></div></form>';
     document.body.appendChild(o);
     var inp = o.querySelector('.sj-i'), er = o.querySelector('.sj-e');
     var close = function(){ o.classList.add('out'); setTimeout(function(){ o.remove(); }, 200); };
@@ -18630,6 +18630,7 @@ html body #intro .vsh-s.vsh-wood img{object-fit:fill}
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
 </script>
+
 <script id="joBankLoader">(function(){
   var API = 'https://rukvvvtcmirkkykknzio.supabase.co/rest/v1/rpc/', KEY = window.JOUTE_SB_KEY || 'sb_publishable_VviBAmGKmK6F3UuE3yyPZQ_zTcmD--t';
   var B = window.joBank = { v:'', by:{}, n:0, ready:false, hide:{} };
