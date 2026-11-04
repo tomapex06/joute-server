@@ -10920,10 +10920,9 @@ var THEMES = [
     var face = window.joShModel ? window.joShModel() : null;
     var h = '<div class="rp">' +
       '<div class="rp-sh">' + (face ? '<div class="rp-face" style="background-image:url(' + face + ')">' + (window.joEngrave ? window.joEngrave(u.name, face) : '') + '</div>' : '') + '</div>' +
-      '<div class="rp-age">' + (u.age ? u.age + ' ans' : 'Âge non renseigné') + '</div>' +
-      '<div class="rp-nm">' + esc(u.name) + '</div>' +
-      '<div class="rp-sub">' + esc(rankOf(u.lv).ic + ' ' + rankOf(u.lv).nm) + ' · niveau ' + u.lv + (u.co ? ' · ' + esc(flagOf(u.co) || '') + ' ' + esc(u.co) : '') + '</div>' +
-      '<div class="upact"><button type="button" class="btn primary" id="rpDuel">Défier</button><button type="button" class="btn" id="rpUnf">Ne plus suivre</button></div></div>';
+      ((u.co && flagOf(u.co)) ? '<div class="rp-fgw"><i class="rp-fg"><b>' + esc(flagOf(u.co)) + '</b></i></div>' : '') +
+      '<div class="rp-sub">' + esc(rankOf(u.lv).ic + ' ' + rankOf(u.lv).nm) + ' · niveau ' + u.lv + '</div>' +
+      '<div class="upact rp-act"><button type="button" class="btn primary" id="rpDuel">Défier</button><button type="button" class="btn" id="rpUnf">Ne plus suivre</button></div></div>';
     $('upBody').innerHTML = h;
     $('rpDuel').addEventListener('click', function(){ defyFriend(u); });
     $('rpUnf').addEventListener('click', function(){ followToggle(u.id); try { show('msgs'); renderMsgs(); } catch(e){} });
@@ -18640,6 +18639,14 @@ html body #intro .vsh-s.vsh-wood img{object-fit:fill}
 })();
 </script>
 
+<style id="rpV559">/* v559 : profil d'un ami */
+.rp .rp-fgw{display:flex;justify-content:center;margin:14px 0 6px}
+.rp .rp-fg{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);font:normal 44px/1 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-style:normal}
+.rp .rp-fg b{display:block;font:inherit;line-height:1;transform:scale(1.02,1.42)}
+.rp .rp-sub{text-align:center}
+html body #upBody .rp .upact.rp-act{display:flex!important;flex-direction:row!important;justify-content:center!important;align-items:center!important;gap:10px!important;flex-wrap:nowrap!important;width:100%!important}
+html body #upBody .rp .upact.rp-act .btn{flex:0 1 auto!important;width:auto!important;min-width:0!important;margin:0!important;padding-left:22px!important;padding-right:22px!important;white-space:nowrap!important}
+</style>
 <script id="joBankLoader">(function(){
   var API = 'https://rukvvvtcmirkkykknzio.supabase.co/rest/v1/rpc/', KEY = window.JOUTE_SB_KEY || 'sb_publishable_VviBAmGKmK6F3UuE3yyPZQ_zTcmD--t';
   var B = window.joBank = { v:'', by:{}, n:0, ready:false, hide:{} };
