@@ -69,14 +69,21 @@ main{padding:14px 16px 60px}
 <body>
 <div id="gate" hidden>
   <h1>Banque Joute</h1>
-  <p style="color:var(--mut)">Saisis ta clé d'administration.</p>
-  <input id="tok" type="password" autocomplete="off" placeholder="Clé">
-  <button class="btn k" id="go">Entrer</button>
+  <div id="bioBox" hidden>
+    <p style="color:var(--mut)">Déverrouille avec ton empreinte ou Face ID.</p>
+    <button class="btn k" id="bioGo" style="font-size:15px;padding:14px 22px">🔒 Déverrouiller</button>
+    <p><button class="btn" id="bioKey" style="margin-top:14px">Utiliser la clé à la place</button></p>
+  </div>
+  <div id="keyBox">
+    <p style="color:var(--mut)">Saisis ta clé d'administration.</p>
+    <input id="tok" type="password" autocomplete="off" placeholder="Clé">
+    <button class="btn k" id="go">Entrer</button>
+  </div>
   <p id="gerr" style="color:var(--bad)"></p>
 </div>
 <div id="app" hidden>
 <header><div class="wrap">
-  <div style="display:flex;justify-content:space-between;align-items:center"><h1>Banque Joute</h1><button class="btn" id="out">Déconnexion</button></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:6px"><h1>Banque Joute</h1><span><button class="btn" id="bioSet" hidden>Activer l'empreinte</button> <button class="btn" id="out">Déconnexion</button></span></div>
   <div class="sect"><button class="on" data-v="bank">Banque</button><button data-v="prop">Propositions<span class="n" id="pn" hidden></span></button></div>
   <div id="bankBar">
   <div class="stats" id="stats"></div>
@@ -118,7 +125,7 @@ function rpc(fn,body){body=Object.assign({p_token:tok},body||{});return fetch(AP
 function store(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}
 function load(k){try{return localStorage.getItem(k)||''}catch(e){return ''}}
 
-function login(t){tok=t;return rpc('admin_stats').then(function(s){store('joute-admin',tok);$('gate').hidden=true;$('app').hidden=false;stats(s);list();plist()})}
+function login(t){tok=t;return rpc('admin_stats').then(function(s){if(!load('joute-admin-pk'))store('joute-admin',tok);bioUi();$('gate').hidden=true;$('app').hidden=false;stats(s);list();plist()})}
 function stats(s){
   themeList=s.themes||[];
   $('stats').innerHTML='<div class="stat"><b>'+s.total+'</b><span>Questions</span></div><div class="stat"><b>'+s.active+'</b><span>Actives</span></div><div class="stat"><b>'+(s.total-s.active)+'</b><span>Désactivées</span></div><div class="stat red"><b>'+s.reported+'</b><span>Signalées</span></div>';
@@ -175,7 +182,7 @@ $('list').addEventListener('click',function(e){
 document.querySelectorAll('#bankBar .tab').forEach(function(t){t.onclick=function(){document.querySelectorAll('#bankBar .tab').forEach(function(x){x.classList.toggle('on',x===t)});st.status=t.dataset.s;st.off=0;list()}});
 $('th').onchange=function(){st.theme=this.value;st.off=0;list()};
 var sT;$('search').oninput=function(){var s=this.value.trim();clearTimeout(sT);sT=setTimeout(function(){st.search=s;st.off=0;list()},300)};
-$('out').onclick=function(){store('joute-admin',null);location.reload()};
+$('out').onclick=function(){store('joute-admin',null);if(load('joute-admin-pk')&&!confirm('Garder le déverrouillage par empreinte sur cet appareil ?'))store('joute-admin-pk',null);location.reload()};
 /* ---------- Propositions ---------- */
 var KIND={question:'Question',quiz:'Quiz',topic:'Topic',topicreq:'Demande de thème',fix:'Correction'};
 var STN={new:'Nouvelle',accepted:'Acceptée',rejected:'Refusée'};
@@ -226,10 +233,34 @@ document.querySelectorAll('#pst .tab').forEach(function(t){t.onclick=function(){
 $('pk').onchange=function(){ps.kind=this.value;plist()};
 function setView(vw){document.querySelectorAll('.sect button').forEach(function(x){x.classList.toggle('on',x.dataset.v===vw)});$('bankBar').hidden=vw!=='bank';$('bankView').hidden=vw!=='bank';$('propBar').hidden=vw!=='prop';$('propView').hidden=vw!=='prop';if(vw==='prop')plist()}
 document.querySelectorAll('.sect button').forEach(function(x){x.onclick=function(){setView(x.dataset.v)}});
-function showGate(msg){$('app').hidden=true;$('gate').hidden=false;$('gerr').textContent=msg||''}
+/* ---------- Empreinte / Face ID (passkey + PRF : la clé est chiffrée sur l'appareil) ---------- */
+var B64={e:function(b){return btoa(String.fromCharCode.apply(null,new Uint8Array(b))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')},d:function(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';var r=atob(s),u=new Uint8Array(r.length);for(var i=0;i<r.length;i++)u[i]=r.charCodeAt(i);return u}};
+function bioOk(){return !!(window.PublicKeyCredential&&navigator.credentials&&window.crypto&&crypto.subtle&&window.isSecureContext)}
+function bioUi(){$('bioSet').hidden=!bioOk()||!!load('joute-admin-pk')}
+function aesKey(prf){return crypto.subtle.importKey('raw',prf,'HKDF',false,['deriveKey']).then(function(k){return crypto.subtle.deriveKey({name:'HKDF',hash:'SHA-256',salt:new Uint8Array(16),info:new TextEncoder().encode('joute-admin')},k,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])})}
+function prfGet(credId,salt){return navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rpId:location.hostname,allowCredentials:[{type:'public-key',id:B64.d(credId)}],userVerification:'required',timeout:60000,extensions:{prf:{eval:{first:B64.d(salt)}}}}}).then(function(a){var r=a.getClientExtensionResults&&a.getClientExtensionResults();return r&&r.prf&&r.prf.results&&r.prf.results.first?new Uint8Array(r.prf.results.first):null})}
+$('bioSet').onclick=function(){
+  var salt=crypto.getRandomValues(new Uint8Array(32)),credId;
+  navigator.credentials.create({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rp:{name:'Joute admin',id:location.hostname},user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'admin@joute',displayName:'Joute admin'},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{residentKey:'preferred',userVerification:'required'},timeout:60000,extensions:{prf:{eval:{first:salt}}}}})
+  .then(function(c){credId=B64.e(c.rawId);var r=c.getClientExtensionResults&&c.getClientExtensionResults();if(r&&r.prf&&r.prf.results&&r.prf.results.first)return new Uint8Array(r.prf.results.first);if(r&&r.prf&&r.prf.enabled===false)return null;return prfGet(credId,B64.e(salt))})
+  .then(function(prf){
+    if(!prf){store('joute-admin-pk',JSON.stringify({id:credId,mode:'gate'}));store('joute-admin',tok);toast('Empreinte activée');bioUi();return}
+    return aesKey(prf).then(function(k){var iv=crypto.getRandomValues(new Uint8Array(12));return crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,new TextEncoder().encode(tok)).then(function(ct){store('joute-admin-pk',JSON.stringify({id:credId,mode:'prf',salt:B64.e(salt),iv:B64.e(iv),ct:B64.e(ct)}));store('joute-admin',null);toast('Empreinte activée : la clé est chiffrée sur cet appareil');bioUi()})});
+  }).catch(function(e){toast('Empreinte non activée'+(e&&e.name==='NotAllowedError'?' (annulé)':''))});
+};
+function bioUnlock(){
+  var v;try{v=JSON.parse(load('joute-admin-pk'))}catch(e){}if(!v)return showGate();
+  $('gerr').textContent='';
+  (v.mode==='prf'?prfGet(v.id,v.salt).then(function(prf){if(!prf)throw new Error('prf');return aesKey(prf).then(function(k){return crypto.subtle.decrypt({name:'AES-GCM',iv:B64.d(v.iv)},k,B64.d(v.ct))}).then(function(pt){return new TextDecoder().decode(pt)})})
+   :navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rpId:location.hostname,allowCredentials:[{type:'public-key',id:B64.d(v.id)}],userVerification:'required',timeout:60000}}).then(function(){return load('joute-admin')}))
+  .then(function(t){if(!t)throw new Error('vide');return login(t)}).catch(function(e){$('gerr').textContent=e&&e.name==='NotAllowedError'?'Annulé':'Échec du déverrouillage'})
+}
+$('bioGo').onclick=bioUnlock;
+$('bioKey').onclick=function(){$('bioBox').hidden=true;$('keyBox').hidden=false};
+function showGate(msg){$('app').hidden=true;$('gate').hidden=false;$('gerr').textContent=msg||'';var has=!!load('joute-admin-pk')&&bioOk();$('bioBox').hidden=!has;$('keyBox').hidden=has}
 $('go').onclick=function(){var t=$('tok').value.trim();if(!t)return;login(t).catch(function(){showGate('Clé incorrecte')})};
 $('tok').onkeydown=function(e){if(e.key==='Enter')$('go').click()};
-var saved=load('joute-admin');if(saved)login(saved).catch(function(){store('joute-admin',null);showGate()});else showGate();
+var saved=load('joute-admin');if(load('joute-admin-pk')&&bioOk())showGate();else if(saved)login(saved).catch(function(){store('joute-admin',null);showGate()});else showGate();
 })();
 </script>
 </body>
