@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Joute · Banque de questions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Sora:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#ececec;--card:#fff;--ink:#111;--mut:#6b6b6b;--line:#d6d6d6;--ok:#1a9e0a;--acc:#2bff0a;--bad:#d11f2a;--warn:#f0a500}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 Sora,system-ui,sans-serif}
+h1{font:800 22px/1 Unbounded,sans-serif;margin:0}
+header{background:var(--bg);padding:16px 16px 10px;border-bottom:1px solid var(--line)}
+.wrap{max-width:900px;margin:0 auto}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 10px}
+.stat{background:var(--card);border-radius:12px;padding:8px 12px;min-width:92px}
+.stat b{display:block;font:600 20px/1.1 Unbounded,sans-serif}
+.stat span{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
+.stat.red b{color:var(--bad)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{border:1.5px solid var(--ink);background:none;border-radius:99px;padding:7px 14px;font:600 12px Unbounded,sans-serif;cursor:pointer;color:var(--ink)}
+.tab.on{background:var(--ink);color:#fff}
+.tools{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+select,input,textarea{font:inherit;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff;color:var(--ink)}
+.tools input{flex:1;min-width:160px}
+main{padding:14px 16px 60px}
+.q{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;border-left:5px solid transparent}
+.q.rep{border-left-color:var(--bad)}
+.q.off{opacity:.62;border-left-color:var(--mut)}
+.meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:11px;color:var(--mut);margin-bottom:6px}
+.pill{background:var(--bg);border-radius:99px;padding:2px 8px;font-weight:600}
+.pill.r{background:var(--bad);color:#fff}
+.pill.o{background:var(--mut);color:#fff}
+.qt{font-weight:600;font-size:16px;margin:2px 0 8px}
+.ans{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.ans span{border:1px solid var(--line);border-radius:8px;padding:3px 8px;font-size:13px}
+.ans .g{border-color:var(--ok);background:#e9fbe5;color:#0c5c03;font-weight:600}
+.an{font-size:13px;color:var(--mut);margin-bottom:8px}
+.reps{font-size:12px;background:#fff1f1;border-radius:8px;padding:6px 8px;margin-bottom:8px;color:#7a0c13}
+.act{display:flex;gap:6px;flex-wrap:wrap}
+.btn{border:0;border-radius:99px;padding:8px 14px;font:600 12px Sora,sans-serif;cursor:pointer;background:var(--bg);color:var(--ink)}
+.btn.k{background:var(--ink);color:#fff}
+.btn.d{background:var(--bad);color:#fff}
+.btn.g{background:var(--acc);color:#111}
+.btn:disabled{opacity:.5;cursor:default}
+.edit{display:grid;gap:6px;margin-top:8px}
+.edit label{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+.edit textarea{min-height:56px;resize:vertical}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.pager{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:10px;color:var(--mut);font-size:13px}
+.empty{text-align:center;color:var(--mut);padding:40px 0}
+#gate{max-width:380px;margin:18vh auto;padding:0 16px;text-align:center}
+#gate input{width:100%;margin:16px 0 10px}
+#toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:99px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast.on{opacity:1}
+@media (max-width:560px){.row3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="gate" hidden>
+  <h1>Banque Joute</h1>
+  <p style="color:var(--mut)">Saisis ta clé d'administration.</p>
+  <input id="tok" type="password" autocomplete="off" placeholder="Clé">
+  <button class="btn k" id="go">Entrer</button>
+  <p id="gerr" style="color:var(--bad)"></p>
+</div>
+<div id="app" hidden>
+<header><div class="wrap">
+  <div style="display:flex;justify-content:space-between;align-items:center"><h1>Banque Joute</h1><button class="btn" id="out">Déconnexion</button></div>
+  <div class="stats" id="stats"></div>
+  <div class="tabs">
+    <button class="tab on" data-s="reported">Signalées</button>
+    <button class="tab" data-s="all">Toutes</button>
+    <button class="tab" data-s="active">Actives</button>
+    <button class="tab" data-s="inactive">Désactivées</button>
+  </div>
+  <div class="tools">
+    <select id="th"><option value="">Tous les thèmes</option></select>
+    <input id="search" type="search" placeholder="Rechercher une question, une réponse ou un n°">
+  </div>
+</div></header>
+<main><div class="wrap"><div id="list"></div><div class="pager" id="pager"></div></div></main>
+</div>
+<div id="toast"></div>
+<script>
+(function(){
+var API='https://rukvvvtcmirkkykknzio.supabase.co/rest/v1/rpc/', KEY='sb_publishable_VviBAmGKmK6F3UuE3yyPZQ_zTcmD--t';
+var NAMES={afr:'Afrique',arc:'Architecture',cg:'Culture générale',chi:'Chimie',cin:'Cinéma',dis:'Disney',exp:'Expressions',gas:'Gastronomie',geo:'Géographie',his:'Histoire',hp:'Harry Potter',jv:'Tech & jeux vidéo',liv:'Livres',lng:'Langue française',mzk:'Musique',nat:'Animaux & nature',phy:'Physique',pnt:'Peinture',pok:'Pokémon',rmo:'Religions du monde',ser:'Séries & sagas',spo:'Sport'};
+var DIFF={1:'Curieux',2:'Initié',3:'Érudit'};
+var tok='', st={status:'reported',theme:'',search:'',off:0,lim:50}, rows=[], total=0;
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function tn(t){return NAMES[t]||t}
+function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove('on')},1800)}
+function rpc(fn,body){body=Object.assign({p_token:tok},body||{});return fetch(API+fn,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.text().then(function(t){var d=t?JSON.parse(t):null;if(!r.ok)throw new Error(d&&d.message||('http '+r.status));return d})})}
+function store(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}
+function load(k){try{return localStorage.getItem(k)||''}catch(e){return ''}}
+
+function login(t){tok=t;return rpc('admin_stats').then(function(s){store('joute-admin',tok);$('gate').hidden=true;$('app').hidden=false;stats(s);list()})}
+function stats(s){
+  $('stats').innerHTML='<div class="stat"><b>'+s.total+'</b><span>Questions</span></div><div class="stat"><b>'+s.active+'</b><span>Actives</span></div><div class="stat"><b>'+(s.total-s.active)+'</b><span>Désactivées</span></div><div class="stat red"><b>'+s.reported+'</b><span>Signalées</span></div>';
+  var sel=$('th'),cur=sel.value;sel.innerHTML='<option value="">Tous les thèmes</option>'+s.themes.slice().sort(function(a,b){return tn(a.theme).localeCompare(tn(b.theme))}).map(function(x){return '<option value="'+x.theme+'">'+esc(tn(x.theme))+' ('+x.active+(x.reported?' · '+x.reported+' ⚑':'')+')</option>'}).join('');sel.value=cur;
+}
+function refreshStats(){rpc('admin_stats').then(stats).catch(function(){})}
+function list(){
+  $('list').innerHTML='<div class="empty">Chargement…</div>';
+  rpc('admin_questions',{p_theme:st.theme,p_search:st.search,p_status:st.status,p_limit:st.lim,p_offset:st.off}).then(function(d){rows=d.rows||[];total=d.total||0;render()}).catch(function(e){$('list').innerHTML='<div class="empty">Erreur : '+esc(e.message)+'</div>'})
+}
+function card(q){
+  var opts=[q.good].concat(q.wrong||[]);
+  var h='<div class="q'+(q.active?'':' off')+(q.reports>0?' rep':'')+'" data-id="'+q.id+'">';
+  h+='<div class="meta"><span class="pill">'+esc(tn(q.theme))+'</span><span class="pill">'+(DIFF[q.diff]||q.diff)+'</span>'+(q.ctx?'<span>'+esc(q.ctx)+'</span>':'')+(q.reports>0?'<span class="pill r">⚑ '+q.reports+'</span>':'')+(q.active?'':'<span class="pill o">Désactivée</span>')+'<span style="margin-left:auto">n° '+q.id+'</span></div>';
+  h+='<div class="qt">'+esc(q.q)+'</div><div class="ans">'+opts.map(function(o,i){return '<span'+(i===0?' class="g"':'')+'>'+(i===0?'✓ ':'')+esc(o)+'</span>'}).join('')+'</div>';
+  if(q.anecdote)h+='<div class="an">'+esc(q.anecdote)+'</div>';
+  if(q.rep&&q.rep.length)h+='<div class="reps">'+q.rep.map(function(r){return '⚑ '+esc(r.reason||'signalée')+' · '+new Date(r.at).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}).join('<br>')+'</div>';
+  h+='<div class="act">';
+  if(q.reports>0&&q.active)h+='<button class="btn g" data-a="keep">Elle est juste : garder</button>';
+  h+=q.active?'<button class="btn d" data-a="off">Désactiver</button>':'<button class="btn k" data-a="on">Réactiver</button>';
+  h+='<button class="btn" data-a="edit">Modifier</button></div></div>';
+  return h;
+}
+function render(){
+  $('list').innerHTML=rows.length?rows.map(card).join(''):'<div class="empty">'+(st.status==='reported'?'Aucune question signalée 🎉':'Aucune question')+'</div>';
+  var p=Math.floor(st.off/st.lim)+1,n=Math.max(1,Math.ceil(total/st.lim));
+  $('pager').innerHTML=total>st.lim?'<button class="btn" id="prev"'+(p<=1?' disabled':'')+'>‹</button><span>'+total+' questions · page '+p+' / '+n+'</span><button class="btn" id="next"'+(p>=n?' disabled':'')+'>›</button>':(total?'<span>'+total+' question'+(total>1?'s':'')+'</span>':'');
+  if($('prev'))$('prev').onclick=function(){st.off-=st.lim;list();scrollTo(0,0)};
+  if($('next'))$('next').onclick=function(){st.off+=st.lim;list();scrollTo(0,0)};
+}
+function find(id){for(var i=0;i<rows.length;i++)if(String(rows[i].id)===String(id))return rows[i]}
+function editForm(el,q){
+  if(el.querySelector('.edit')){el.querySelector('.edit').remove();return}
+  var w=q.wrong||['','',''];
+  var f=document.createElement('div');f.className='edit';
+  f.innerHTML='<label>Question</label><textarea data-f="q">'+esc(q.q)+'</textarea><label>Bonne réponse</label><input data-f="good" value="'+esc(q.good)+'"><label>Mauvaises réponses</label><div class="row3"><input data-f="w0" value="'+esc(w[0])+'"><input data-f="w1" value="'+esc(w[1])+'"><input data-f="w2" value="'+esc(w[2])+'"></div><label>Contexte (sous-thème)</label><input data-f="ctx" value="'+esc(q.ctx)+'"><label>Anecdote</label><textarea data-f="an">'+esc(q.anecdote)+'</textarea><label>Niveau</label><select data-f="diff"><option value="1">Curieux</option><option value="2">Initié</option><option value="3">Érudit</option></select><div class="act"><button class="btn k" data-a="save">Enregistrer</button><label style="display:flex;gap:6px;align-items:center;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink)"><input type="checkbox" data-f="clr"'+(q.reports>0?' checked':'')+'> effacer les signalements et réactiver</label></div>';
+  el.appendChild(f);f.querySelector('[data-f=diff]').value=String(q.diff||1);
+}
+function v(el,f){var x=el.querySelector('[data-f='+f+']');return x.type==='checkbox'?x.checked:x.value.trim()}
+$('list').addEventListener('click',function(e){
+  var b=e.target.closest('[data-a]');if(!b)return;var el=b.closest('.q'),id=el.dataset.id,q=find(id),a=b.dataset.a,pr;
+  if(a==='edit')return editForm(el,q);
+  b.disabled=true;
+  if(a==='off')pr=rpc('admin_set_active',{p_id:+id,p_active:false,p_clear:false}).then(function(){toast('Question désactivée')});
+  else if(a==='on')pr=rpc('admin_set_active',{p_id:+id,p_active:true,p_clear:true}).then(function(){toast('Question réactivée')});
+  else if(a==='keep')pr=rpc('admin_set_active',{p_id:+id,p_active:true,p_clear:true}).then(function(){toast('Signalements effacés')});
+  else if(a==='save'){
+    var w=[v(el,'w0'),v(el,'w1'),v(el,'w2')];
+    if(!v(el,'q')||!v(el,'good')||w.some(function(x){return !x})){b.disabled=false;return toast('Remplis la question et les 4 réponses')}
+    pr=rpc('admin_update_question',{p_id:+id,p_q:v(el,'q'),p_good:v(el,'good'),p_wrong:w,p_diff:+v(el,'diff'),p_anecdote:v(el,'an'),p_ctx:v(el,'ctx')}).then(function(){return v(el,'clr')?rpc('admin_set_active',{p_id:+id,p_active:true,p_clear:true}):null}).then(function(){toast('Question enregistrée')});
+  }
+  pr.then(function(){list();refreshStats()}).catch(function(err){b.disabled=false;toast('Erreur : '+err.message)});
+});
+document.querySelectorAll('.tab').forEach(function(t){t.onclick=function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===t)});st.status=t.dataset.s;st.off=0;list()}});
+$('th').onchange=function(){st.theme=this.value;st.off=0;list()};
+var sT;$('search').oninput=function(){var s=this.value.trim();clearTimeout(sT);sT=setTimeout(function(){st.search=s;st.off=0;list()},300)};
+$('out').onclick=function(){store('joute-admin',null);location.reload()};
+function showGate(msg){$('app').hidden=true;$('gate').hidden=false;$('gerr').textContent=msg||''}
+$('go').onclick=function(){var t=$('tok').value.trim();if(!t)return;login(t).catch(function(){showGate('Clé incorrecte')})};
+$('tok').onkeydown=function(e){if(e.key==='Enter')$('go').click()};
+var saved=load('joute-admin');if(saved)login(saved).catch(function(){store('joute-admin',null);showGate()});else showGate();
+})();
+</script>
+</body>
+</html>
