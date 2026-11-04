@@ -18241,7 +18241,7 @@ html body.padmode #duel .status,html body.padmode #duel .duelfoot,html body.padm
           /* 1re connexion de ce téléphone à ce compte : on garde la progression la plus avancée */
           var cx = (cloud.data.xp | 0) + (cloud.data.played | 0), lx = (loc.xp | 0) + (loc.played | 0);
           take = cx >= lx;
-        } else take = cAt > modAt() + 1000;
+        } else take = cAt > modAt() + 1000 && !(s.at && Math.abs((Date.parse(s.at) || 0) - cAt) < 1500); /* v558 : ne pas recharger sa propre sauvegarde (relançait l'intro) */
       }
       if (take){
         var once = false; try { once = sessionStorage.getItem('joute-pulled') === cloud.updated_at; } catch(e){}
