@@ -3545,7 +3545,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v565', apk:140, ios:6 };
+    window.JO_BUILD = { web:'v566', apk:141, ios:6 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -18669,6 +18669,32 @@ html body.solo-duel #result .rc{grid-template-columns:28px minmax(0,1fr) auto!im
 <style id="tabV565">/* v565 : iPad — colonne plus large, sans zoom */
 @media (min-width:700px) and (min-height:700px){ html body .app{max-width:min(92vw,600px)!important} }
 </style>
+<style id="masterV566">/* v566 : paramètres développeur réservés au compte master */
+html:not(.jo-master) #devSet{display:none!important}
+</style>
+<script id="masterJs">/* v566 : mode master (Tom) : compte de Tom, ou 7 appuis sur le numéro de version + clé admin */
+(function(){
+  var MASTER = ['fcf3fc36-33a6-4e4f-b8d6-2341c58ed539'];
+  function isM(){ try { if (localStorage.getItem('joute-master') === '1') return true; var u = JSON.parse(localStorage.getItem('joute-sync') || '{}').uid; return MASTER.indexOf(u) >= 0; } catch(e){ return false; } }
+  function apply(){ document.documentElement.classList.toggle('jo-master', isM()); }
+  apply(); setInterval(apply, 3000);
+  var n = 0, t0 = 0;
+  function tap(){
+    var now = Date.now(); if (now - t0 > 3000) n = 0; t0 = now; n++;
+    if (n < 7) return; n = 0;
+    try {
+      if (localStorage.getItem('joute-master') === '1'){ if (confirm('Quitter le mode master sur cet appareil ?')){ localStorage.removeItem('joute-master'); apply(); } return; }
+    } catch(e){}
+    var k = prompt('Clé admin'); if (!k) return;
+    var KEY = 'sb_publishable_VviBAmGKmK6F3UuE3yyPZQ_zTcmD--t';
+    fetch('https://rukvvvtcmirkkykknzio.supabase.co/rest/v1/rpc/admin_stats', { method:'POST', headers:{ apikey:KEY, Authorization:'Bearer ' + KEY, 'Content-Type':'application/json' }, body:JSON.stringify({ p_token:k.trim() }) })
+      .then(function(r){ if (!r.ok) throw 0; try { localStorage.setItem('joute-master', '1'); } catch(e){} apply(); alert('Mode master activé'); })
+      .catch(function(){ alert('Clé incorrecte'); });
+  }
+  function bind(){ var v = document.getElementById('joVer'); if (v && !v._m){ v._m = 1; v.addEventListener('click', tap); } else if (!v) setTimeout(bind, 500); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind); else bind();
+})();
+</script>
 <script id="joBankLoader">(function(){
   var API = 'https://rukvvvtcmirkkykknzio.supabase.co/rest/v1/rpc/', KEY = window.JOUTE_SB_KEY || 'sb_publishable_VviBAmGKmK6F3UuE3yyPZQ_zTcmD--t';
   var B = window.joBank = { v:'', by:{}, n:0, ready:false, hide:{} };
