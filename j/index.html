@@ -3545,7 +3545,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v570', apk:145, ios:10 };
+    window.JO_BUILD = { web:'v571', apk:146, ios:11 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -18716,6 +18716,14 @@ html body.solo-duel #duel .status .qvote[hidden]{display:none!important}
 html body.solo-duel #duel .status .qvote:has(.q-an){grid-column:1/-1!important;grid-row:2!important}
 html body.solo-duel #duel .pips .pip.ko{background:linear-gradient(135deg,transparent calc(50% - 1.2px),var(--ink,#111) calc(50% - 1.2px) calc(50% + 1.2px),transparent calc(50% + 1.2px))!important;box-shadow:none!important}
 html body.solo-duel #duel .status #next{justify-self:end!important;grid-column:3!important}
+</style>
+<style id="pipsV571">/* v571 : cercles de réponses plus grands (encore plus sur iPad) */
+html body.in-duel #duel .pips{gap:6px!important}
+html body.in-duel #duel .pips .pip,html body.in-duel #duel .pips .pip.dbl{width:13px!important;height:13px!important;border-radius:50%!important}
+@media (min-width:700px) and (min-height:900px){
+html body.in-duel #duel .pips{gap:10px!important}
+html body.in-duel #duel .pips .pip,html body.in-duel #duel .pips .pip.dbl{width:22px!important;height:22px!important;border-width:2px!important}
+}
 </style>
 <script id="joBankLoader">(function(){
   var API = 'https://rukvvvtcmirkkykknzio.supabase.co/rest/v1/rpc/', KEY = window.JOUTE_SB_KEY || 'sb_publishable_VviBAmGKmK6F3UuE3yyPZQ_zTcmD--t';
