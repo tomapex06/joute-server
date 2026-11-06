@@ -3545,7 +3545,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v573', apk:148, ios:13 };
+    window.JO_BUILD = { web:'v574', apk:149, ios:14 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -7478,7 +7478,7 @@ var THEMES = [
   }
 
   function newGame(T, qs, mode, extra){
-    pendSet(null);
+    if (!V) pendSet(null);
     if (G){ clearInterval(G.timer); clearTimeout(G.adv); }
     clearTimeout(introTmr);
     G = Object.assign({ theme:T, qs:qs, i:0, you:0, bot:0, log:[], mode:mode, locked:true, timer:null, adv:null, revealed:{}, over:false, mine:null }, extra);
@@ -7998,6 +7998,7 @@ var THEMES = [
     settle({ choice:g.mine.choice, youOk:g.mine.youOk, youPts:g.mine.youPts, botChoice:oc, botOk:oppOk, botPts:oppOk ? points(ot, mult) : 0, botT:ot });
   }
 
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden && V && V.role === 'host' && !V.gameId){ try { renderFriend(); } catch(e){} } });
   function renderFriend(){
     if (!V) return;
     var host = V.role === 'host', present = !!oppPeer() && !V.gone;
@@ -8005,7 +8006,7 @@ var THEMES = [
     $('frTitle').textContent = host ? 'Donne ce code à ton ami' : 'Tu rejoins un duel';
     try { var dbg = $('netDbg'); if (!dbg){ dbg = document.createElement('p'); dbg.id = 'netDbg'; dbg.className = 'foot'; dbg.style.cssText = 'opacity:.55;font-size:11px;margin-top:6px'; var anc = $('hostBox'); anc.parentNode.insertBefore(dbg, anc); } dbg.hidden = !window.JOUTE_NATIVE; dbg.textContent = window.__netDbg || ''; } catch(e){}
     if (host){
-      if (V.preset && present && !V.autoDone && !V.pending && !V.gameId){ V.autoDone = true; var pv = V.preset; setTimeout(function(){ if (V && V.preset === pv && oppPeer() && !V.gameId) hostStart(pv.t, pv.m); }, 600); }
+      if (V.preset && present && !V.autoDone && !V.pending && !V.gameId && !document.hidden){ V.autoDone = true; var pv = V.preset; setTimeout(function(){ if (document.hidden){ if (V && V.preset === pv) V.autoDone = false; return; } if (V && V.preset === pv && oppPeer() && !V.gameId) hostStart(pv.t, pv.m); }, 600); }
       $('themes2').parentNode.hidden = !!V.preset && !V.gameId;
       if (!V.pending) $('frStatus').textContent = present
         ? (V.preset && !V.gameId ? V.oppName + ' est là. Lancement du duel…' : V.oppName + ' est là. Choisis un thème pour lancer le duel.')
