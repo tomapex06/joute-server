@@ -1119,6 +1119,7 @@ html.logo-inq #ix .ix-wheel::before{content:"O";display:inline-block;background:
 <script>(function(){
   var el=document.getElementById('ix'); if(!el) return;
   var skip=/nointro/.test(location.search+location.hash)||(navigator.webdriver&&!/[?&]intro/.test(location.search));
+  try{ var pd=JSON.parse(localStorage.getItem('joute-pend')||'null'); if(pd&&pd.code&&Date.now()-(pd.at||0)<20*60*1000) skip=true; }catch(e){} /* v575 : retour direct au salon après un redémarrage */
   function kill(){ try{ document.body.classList.remove('ixOn'); giveBack(); var bg=document.getElementById('ixbg'); if(bg) bg.remove(); el.remove(); var s=document.getElementById('ixCss'); if(s) s.remove(); }catch(e){} }
   if(skip){ kill(); return; }
   document.body.classList.add('ixOn');
@@ -3545,7 +3546,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v574', apk:149, ios:14 };
+    window.JO_BUILD = { web:'v575', apk:150, ios:15 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
