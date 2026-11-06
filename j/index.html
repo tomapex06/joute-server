@@ -18909,12 +18909,15 @@ html.tv-end #prBg{image-rendering:auto}
 #joInv .ji-b{display:flex;gap:10px}#joInv .ji-b .btn{flex:1}
 @keyframes jiIn{from{transform:translateY(120%)}to{transform:none}}</style>
 <script id="openAppBanner">(function(){try{
-if(window.Capacitor||!/Android/i.test(navigator.userAgent))return;
-var c=(location.hash||'').replace(/[^0-9]/g,'');if(c.length!==5)return;
-var a=document.createElement('a');a.id='openApp';a.href='intent://j/'+c+'#Intent;scheme=joute;package=app.joute.quiz;end';
-a.innerHTML='<b>Tu as l’app Joute ?</b><span>Ouvrir le duel dans l’app</span>';
-var st=document.createElement('style');st.textContent='#openApp{position:fixed;z-index:2147483000;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:3px;padding:12px 16px;border-radius:16px;background:#111;color:#fff;text-decoration:none;font:600 14px/1.2 system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.3)}#openApp b{font-weight:800}#openApp span{opacity:.75;font-size:13px}';
+if(window.Capacitor)return;
+var ua=navigator.userAgent,and=/Android/i.test(ua),ios=/iPhone|iPad|iPod/i.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
+if(!and&&!ios)return;
+var c=(location.hash||location.search||location.pathname.replace(/^\/j\/?/,'')).replace(/[^0-9]/g,'');if(c.length!==5)return;
+var url=and?'intent://j/'+c+'#Intent;scheme=joute;package=app.joute.quiz;end':'joute://j/'+c;
+var a=document.createElement('a');a.id='openApp';a.href=url;
+a.innerHTML='<b>Ouvrir le duel dans l’app Joute</b><span>Touche ici pour rejoindre la partie '+c+'</span>';
+var st=document.createElement('style');st.textContent='#openApp{position:fixed;z-index:2147483000;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:3px;padding:14px 16px;border-radius:16px;background:#111;color:#fff;text-decoration:none;font:600 15px/1.2 system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.3)}#openApp b{font-weight:800}#openApp span{opacity:.75;font-size:13px}';
 document.head.appendChild(st);document.body.appendChild(a);
-a.addEventListener('click',function(){setTimeout(function(){a.remove()},800)});
+if(and){try{if(!sessionStorage.getItem('joTry'+c)){sessionStorage.setItem('joTry'+c,'1');location.href='intent://j/'+c+'#Intent;scheme=joute;package=app.joute.quiz;S.browser_fallback_url='+encodeURIComponent(location.href)+';end';}}catch(e){}}
 }catch(e){}})();</script>
 </body></html>

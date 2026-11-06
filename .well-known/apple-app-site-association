@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "FGQMB35WMV.app.joute.quiz",
+        "appIDs": ["FGQMB35WMV.app.joute.quiz"],
+        "paths": ["/j", "/j/*"],
+        "components": [{ "/": "/j" }, { "/": "/j/*" }]
+      }
+    ]
+  }
+}
