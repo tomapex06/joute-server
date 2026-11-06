@@ -3543,6 +3543,12 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
       <div class="frow he-row"><button type="button" class="btn primary" id="heAsk"><span>Proposer / corriger</span><small>une question</small></button><button type="button" class="btn" id="heFeed">Actualité</button><button type="button" class="btn" id="heComm">Communautés</button><button type="button" class="btn" id="heLb">Classement</button></div>
     </div>
     <p class="foot" id="stats" style="text-align:center"></p>
+    <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
+    <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
+    window.JO_BUILD = { web:'v564', apk:139, ios:6 };
+    (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
+      var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
+      document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
   </section>
 
   <section id="pick" class="screen" hidden>
@@ -7077,7 +7083,7 @@ var THEMES = [
     sv += '</svg>';
     var dots = ''; for (var di = 0; di < (g.free ? 0 : N); di++) dots += '<i class="' + (di < g.i ? 'done' : di === g.i ? 'cur' : '') + '"></i>';
     if (g.free) box.innerHTML = '<div class="wh-card wz wz-free"><div class="wh-wrap"><div class="wh-orb" id="whOrb"><div class="wh-ptr"></div></div>' + sv + '<button type="button" class="wh-spin" id="whSpin">Spin</button></div><div class="wz-fchip" id="whRes"></div></div>';
-    else box.innerHTML = '<div class="wh-card wz"><div class="wz-top"><div class="wz-tt"><b>Wheel<br>of Fortune</b><span class="wh-dots">' + dots + '</span></div>' + (g.free ? '' : '<div class="wz-n"><b>' + (g.i + 1) + '</b><small>/' + N + '</small></div>') + '</div>'
+    else box.innerHTML = '<div class="wh-card wz"><div class="wz-top"><div class="wz-tt"><b>' + (P.lang === 'en' ? 'Wheel<br>of Fortune' : 'Roue de<br>la fortune') + '</b><span class="wh-dots">' + dots + '</span></div>' + (g.free ? '' : '<div class="wz-n"><b>' + (g.i + 1) + '</b><small>/' + N + '</small></div>') + '</div>'
       + '<div class="wh-wrap"><div class="wh-orb" id="whOrb"><div class="wh-ptr"></div></div>' + sv + '<button type="button" class="wh-spin" id="whSpin">Spin</button></div>'
       + '<div class="wz-card"><small>Catégorie</small><div class="wh-res" id="whRes">—</div><div class="wz-row"><span class="wz-hint"><span class="wz-prize">' + (g.free ? 'Un thème au hasard' : '3 bonnes sur 3 = 1 Joker 50/50') + '</span></span></div></div></div>' + ((!g.free && g.i === 0 && (window.__pieSpin || g.wheelDaily)) ? '<button type="button" class="wz-back" id="whBack" aria-label="Retour à l’accueil"><span aria-hidden="true">‹</span> Retour</button>' : '');
     box.hidden = false;
