@@ -3545,7 +3545,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v572', apk:147, ios:12 };
+    window.JO_BUILD = { web:'v573', apk:148, ios:13 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -7478,6 +7478,7 @@ var THEMES = [
   }
 
   function newGame(T, qs, mode, extra){
+    pendSet(null);
     if (G){ clearInterval(G.timer); clearTimeout(G.adv); }
     clearTimeout(introTmr);
     G = Object.assign({ theme:T, qs:qs, i:0, you:0, bot:0, log:[], mode:mode, locked:true, timer:null, adv:null, revealed:{}, over:false, mine:null }, extra);
@@ -7851,9 +7852,14 @@ var THEMES = [
     }
   }
 
+  /* v573 : garder le salon en cours si l'app est tuée en arrière-plan (WhatsApp…) */
+  function pendSet(o){ try { if (o){ o.at = Date.now(); localStorage.setItem('joute-pend', JSON.stringify(o)); } else localStorage.removeItem('joute-pend'); } catch(e){} }
+  function pendGet(){ try { var o = JSON.parse(localStorage.getItem('joute-pend') || 'null'); if (o && o.code && Date.now() - (o.at || 0) < 20 * 60 * 1000) return o; } catch(e){} return null; }
+  window.joPendClear = function(){ pendSet(null); };
   function openRoom(role, code, preset){
     if (!roomNs) return;
     leaveVs();
+    pendSet({ k:role, code:code, pre:preset ? { t:preset.t, m:preset.m || '' } : null });
     var pT = preset && themeById(preset.t), pre = (role === 'host' && pT && !pT.game && validGame({ id:'x', t:pT.id, m:preset.m || '', s:1 })) ? { t:pT.id, m:preset.m || '' } : null;
     var mine = V = {
       preset:pre, autoDone:false,
@@ -8069,7 +8075,7 @@ var THEMES = [
   }
   function openSalon(find){
     if (!roomNs) return;
-    leaveVs(); leaveSalon(); leaveParty();
+    leaveVs(); leaveSalon(); leaveParty(); pendSet(null);
     var mine = L = { R:null, unsubs:[], nick:myNick(), me:null, others:[], inv:null, out:null, msg:'', dismissed:null, tmr:null, accepting:false, q:false, qt:null };
     if (find === true){ mine.q = true; mine.qt = mondeTheme(); mine.qAt = Date.now(); }
     show('lobby'); renderLobby();
@@ -8202,6 +8208,7 @@ var THEMES = [
   function openParty(role, code, R0, tv){
     if (!roomNs) return;
     leaveVs(); leaveSalon(); leaveParty();
+    if (role === 'host' && !tv) pendSet({ k:'party', code:code }); else pendSet(null);
     var T0 = PK && themeById(PK.t);
     var th = (role === 'host' && T0 && !T0.game && validGame({ id:'x', t:T0.id, m:PK.m || '', s:1 })) ? { t:T0.id, m:PK.m || '' } : null;
     var mine = PT = { role:role, code:code, nick:myNick(), R:null, unsubs:[], th:th, gameId:null, ignore:undefined, me:{ a:[] }, hostSeen:false, hostName:'', gone:false, notFound:false, tv:!!(tv && role === 'host'), hostTv:false };
@@ -8392,7 +8399,7 @@ var THEMES = [
   }, 1000);
   function backHome(){
     launchTok++; stopAudio();
-    leaveVs(); leaveSalon(); leaveParty(); leaveComm();
+    leaveVs(); leaveSalon(); leaveParty(); leaveComm(); pendSet(null);
     if (G){ clearInterval(G.timer); clearTimeout(G.adv); G.locked = true; }
     renderHome(); show('home');
   }
@@ -11430,6 +11437,10 @@ var THEMES = [
     var h = '';
     try { h = (location.hash || '').replace(/^#/, '').toLowerCase(); } catch(e){}
     if (/^[a-z0-9]{5}$/.test(h)) openRoom('guest', h);
+    else if (!window.__pendDone){ window.__pendDone = 1; var pd = pendGet(); if (pd){ try {
+      if (pd.k === 'party') openParty('host', pd.code);
+      else if (pd.k === 'host' || pd.k === 'guest') openRoom(pd.k, pd.code, pd.pre && themeById(pd.pre.t) ? pd.pre : null);
+    } catch(e){} } }
   }
   try {
     if (window.JOUTE_NET){ onlineOn(window.JOUTE_NET); }
