@@ -3545,7 +3545,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v567', apk:142, ios:7 };
+    window.JO_BUILD = { web:'v568', apk:143, ios:8 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -18705,6 +18705,16 @@ html:not(.jo-master) #devSet{display:none!important}
  html body .wh-card.wz .wh-spin{transform:scale(1.35)}
  html body .wh-card.wz .wz-card{font-size:20px}
 }
+</style>
+<style id="soloV568">/* v568 : solo — pas de revanche ; barre après réponse : points à gauche (gros), drapeau centré, Continuer à droite */
+html body.solo-duel #result #again,html body.solo-duel #result #rvBox{display:none!important}
+html body.solo-duel.in-duel #duel .status .after,html body.solo-duel #duel .status .after{flex:1 1 100%!important;display:grid!important;grid-template-columns:1fr auto 1fr!important;align-items:center!important;gap:8px!important;width:100%!important}
+html body.solo-duel #duel .status .after[hidden]{display:none!important}
+html body.solo-duel #duel .status .gain{justify-self:start!important;grid-column:1!important;font-size:34px!important}
+html body.solo-duel #duel .status .qvote{justify-self:center!important;grid-column:2!important;margin:0!important}
+html body.solo-duel #duel .status .qvote[hidden]{display:none!important}
+html body.solo-duel #duel .status .qvote:has(.q-an){grid-column:1/-1!important;grid-row:2!important}
+html body.solo-duel #duel .status #next{justify-self:end!important;grid-column:3!important}
 </style>
 <script id="joBankLoader">(function(){
   var API = 'https://rukvvvtcmirkkykknzio.supabase.co/rest/v1/rpc/', KEY = window.JOUTE_SB_KEY || 'sb_publishable_VviBAmGKmK6F3UuE3yyPZQ_zTcmD--t';
