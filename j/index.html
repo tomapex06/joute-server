@@ -3545,7 +3545,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v566', apk:141, ios:6 };
+    window.JO_BUILD = { web:'v567', apk:142, ios:7 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -15792,6 +15792,8 @@ body.in-duel #duel .duelfoot{padding-bottom:max(26px, calc(env(safe-area-inset-b
     if (d.classList.contains('phq') !== photo) d.classList.toggle('phq', photo);
     var v = photo ? { imgH: Math.min(560, H * 0.5), optH: 64, optF: 18, qF: 22, ptsF: 92 }
                   : { imgH: 0, optH: 76, optF: 22, qF: 30, ptsF: 112 };
+    /* v567 : tablette (iPad) — tout est plus grand pour remplir l'écran, la boucle ci-dessous réduit si ça déborde */
+    if (window.innerWidth >= 600 && H >= 860){ var tk = Math.min(1.75, H / 700); v.optH = Math.round(v.optH * tk); v.optF = Math.round(v.optF * tk); v.qF = Math.round(v.qF * tk); v.ptsF = Math.round(v.ptsF * tk); if (photo) v.imgH = Math.min(Math.round(H * 0.45), 760); }
     /* le score ne doit jamais déborder : taille selon le nombre de chiffres (chaque côté a la moitié de la largeur) */
     try { var sy = document.getElementById('sYou'), sbt = document.getElementById('sBot'), nch = Math.max(String(sy && sy.textContent || '').trim().length, String(sbt && sbt.textContent || '').trim().length, 1); var half = (d.clientWidth || window.innerWidth) / 2 - 8; v.ptsF = Math.max(36, Math.min(v.ptsF, Math.floor(half / (nch * 0.62 + 0.15)))); } catch(e){}
     function apply(){ s.setProperty('--imgH', px(v.imgH)); s.setProperty('--optH', px(v.optH)); s.setProperty('--optF', px(v.optF)); s.setProperty('--qF', px(v.qF)); s.setProperty('--ptsF', px(v.ptsF)); }
@@ -18695,6 +18697,15 @@ html:not(.jo-master) #devSet{display:none!important}
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind); else bind();
 })();
 </script>
+<style id="tabV567">/* v567 : iPad — roue Joker plus grande */
+@media (min-width:700px) and (min-height:900px){
+ html body .wh-card.wz{max-width:620px!important}
+ html body .wh-card.wz .wz-tt b{font-size:56px!important;line-height:1!important}
+ html body .wh-card.wz .wh-wrap,html body .wh-card.wz .wh-svg{width:100%!important;max-width:560px!important;height:auto!important}
+ html body .wh-card.wz .wh-spin{transform:scale(1.35)}
+ html body .wh-card.wz .wz-card{font-size:20px}
+}
+</style>
 <script id="joBankLoader">(function(){
   var API = 'https://rukvvvtcmirkkykknzio.supabase.co/rest/v1/rpc/', KEY = window.JOUTE_SB_KEY || 'sb_publishable_VviBAmGKmK6F3UuE3yyPZQ_zTcmD--t';
   var B = window.joBank = { v:'', by:{}, n:0, ready:false, hide:{} };
