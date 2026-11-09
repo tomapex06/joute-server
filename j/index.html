@@ -3546,7 +3546,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v575', apk:150, ios:15 };
+    window.JO_BUILD = { web:'v576', apk:151, ios:16 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -7859,6 +7859,7 @@ var THEMES = [
   window.joPendClear = function(){ pendSet(null); };
   function openRoom(role, code, preset){
     if (!roomNs) return;
+    if (V && V.role === role && V.code === code && !V.gone){ show('friend'); renderFriend(); return; } /* v576 : jamais deux fois le même salon */
     leaveVs();
     pendSet({ k:role, code:code, pre:preset ? { t:preset.t, m:preset.m || '' } : null });
     var pT = preset && themeById(preset.t), pre = (role === 'host' && pT && !pT.game && validGame({ id:'x', t:pT.id, m:preset.m || '', s:1 })) ? { t:pT.id, m:preset.m || '' } : null;
@@ -7925,6 +7926,8 @@ var THEMES = [
 
   function hostStart(themeId, mode){
     if (!V || V.role !== 'host' || !oppPeer()) return;
+    if (V.pending && V.hsAt && Date.now() - V.hsAt < 10000) return; /* v576 : pas de double lancement */
+    V.hsAt = Date.now();
     var game = { id: Math.random().toString(36).slice(2, 8), t: themeId, m: mode || '', s: newSeed(), d: P.lv + 1 };
     var qx0 = mkQx(game.t, game.m, game.s, game.d); if (qx0) game.qx = qx0;
     V.game = game; V.gameId = game.id; V.ready = game.id; V.pending = true; V.me.a = [];
@@ -7999,7 +8002,8 @@ var THEMES = [
     settle({ choice:g.mine.choice, youOk:g.mine.youOk, youPts:g.mine.youPts, botChoice:oc, botOk:oppOk, botPts:oppOk ? points(ot, mult) : 0, botT:ot });
   }
 
-  document.addEventListener('visibilitychange', function(){ if (!document.hidden && V && V.role === 'host' && !V.gameId){ try { renderFriend(); } catch(e){} } });
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden && V){ try { onRoom(); } catch(e){} } });
+  setInterval(function(){ if (V && V.pending && !document.hidden){ try { onRoom(); } catch(e){} } }, 1500); /* v576 : relance si le lancement reste bloqué */
   function renderFriend(){
     if (!V) return;
     var host = V.role === 'host', present = !!oppPeer() && !V.gone;
