@@ -3546,7 +3546,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v580', apk:155, ios:20 };
+    window.JO_BUILD = { web:'v581', apk:156, ios:21 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -7819,17 +7819,26 @@ var THEMES = [
     if (jkWon && window.holoJoker) setTimeout(function(){ if (G === g && !$('result').hidden){ try { snd('whoosh'); window.holoJoker(P.jk | 0); } catch(_){} } }, 900);
 
     var v = $('verdict');
+    var neutral = g.solo && !g.wheelDaily && !g.tour && !g.daily; /* v581 : solo = pas de victoire/défaite, juste ton score */
+    if (neutral){
+      var okN = (g.log || []).filter(function(r){ return r.youOk; }).length;
+      v.className = 'verdict solo';
+      v.textContent = okN + ' sur ' + (g.log || []).length;
+      v.setAttribute('data-t', v.textContent);
+      snd('draw');
+    } else {
     v.className = 'verdict ' + (win ? 'win' : draw ? 'draw' : 'lose');
     v.textContent = win ? 'Victoire' : draw ? 'Égalité' : 'Défaite';
     v.setAttribute('data-t', v.textContent);
     snd(win ? 'win' : draw ? 'draw' : 'lose');
     if (win) setTimeout(function(){ if (G === g && !$('result').hidden) confetti(); }, 150);
     else if (!draw) setTimeout(function(){ if (G === g && !$('result').hidden){ rain(); snd('thunder', 0.7); lightning(0.7); } }, 250);
+    }
     if (after > before) snd('level', 1.3);
     $('fYouName').textContent = (g.mode === 'vs' && V) ? V.nick : 'Toi';
     $('fYou').textContent = fmt(g.you); $('fBot').textContent = fmt(g.bot); leadMark(g.you, g.bot);
     $('fBotName').textContent = g.lv.name;
-    var line = '<strong>+' + gain + ' XP</strong>';
+    var line = (neutral ? '<strong>' + (g.log || []).filter(function(r){ return r.youOk; }).length + ' bonne' + ((g.log || []).filter(function(r){ return r.youOk; }).length > 1 ? 's' : '') + ' réponse' + ((g.log || []).filter(function(r){ return r.youOk; }).length > 1 ? 's' : '') + '</strong> · ' : '') + '<strong>+' + gain + ' XP</strong>';
     if (after > before) line += ' · niveau ' + after + ' atteint';
     if (rankOf(after).nm !== rankOf(before).nm) line += ' · nouveau statut : <strong>' + rankOf(after).nm + ' ' + rankOf(after).ic + '</strong>';
     if (tier >= 0) line += ' · médaille ' + ['de bronze 🥉', 'd’argent 🥈', 'd’or 🥇'][tier];
