@@ -3546,7 +3546,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v581', apk:156, ios:21 };
+    window.JO_BUILD = { web:'v582', apk:157, ios:22 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -7773,6 +7773,8 @@ var THEMES = [
     var end = P.xp, start = end - gain, D = 1700;
     var l0 = Math.floor(start / 200) + 1, l1 = Math.floor(end / 200) + 1;
     var tot = $('xgTot'), gn = $('xgGain'), fl = $('xgFill');
+    /* v582 : score de la partie affiché sur la bannière (solo) */
+    var lab = tot.parentNode.querySelector('span'); if (lab) lab.textContent = (g && g.solo && !g.wheelDaily) ? 'Partie ' + fmt(g.you) + ' pts · Score global' : 'Score global';
     box.hidden = false; tot.textContent = fmt(start); gn.textContent = '+' + gain; gn.className = '';
     $('xgLvl').textContent = 'Niveau ' + l0;
     fl.style.transition = 'none'; fl.style.width = ((start % 200) / 2) + '%';
@@ -7823,8 +7825,7 @@ var THEMES = [
     if (neutral){
       var okN = (g.log || []).filter(function(r){ return r.youOk; }).length;
       v.className = 'verdict solo';
-      v.textContent = okN + ' sur ' + (g.log || []).length;
-      v.setAttribute('data-t', v.textContent);
+      v.textContent = ''; v.setAttribute('data-t', '');
       snd('draw');
     } else {
     v.className = 'verdict ' + (win ? 'win' : draw ? 'draw' : 'lose');
@@ -18730,7 +18731,7 @@ html body #intro .vsh-s.vsh-wood img{object-fit:fill}
       var tl = svg.querySelector('.ra-lab textPath'), tn = svg.querySelector('.ra-n'), tg = svg.querySelector('.ra-g');
       var syncA = function(){
         var s = t.querySelector('span'), n = t.querySelector('b'), g = t.querySelector('em');
-        tl.textContent = (s ? s.textContent : 'Score global').toUpperCase();
+        tl.textContent = (s ? s.textContent : 'Score global').toUpperCase(); tl.parentNode.style.fontSize = tl.textContent.length > 16 ? '46px' : '';
         tn.textContent = n ? n.textContent : '';
         var gv = g ? g.textContent.trim() : ''; tg.textContent = gv; tg.style.display = gv ? '' : 'none';
       };
@@ -18815,6 +18816,12 @@ html body.solo-duel #duel .status .qvote[hidden]{display:none!important}
 html body.solo-duel #duel .status .qvote:has(.q-an){grid-column:1/-1!important;grid-row:2!important}
 html body #intro.solo .vs-mid,html body #intro.solo #vsOpp{display:none!important}
 html body #intro.solo #vsYou{margin-left:auto!important;margin-right:auto!important}
+html body.solo-duel #result .vrow,html body.solo-duel #result .final{display:none!important}
+html body.solo-duel #result .xgb{margin-top:max(24px,env(safe-area-inset-top,0px))!important}
+html body #result .xgb.rib .xg-t #xgGame{grid-column:1;grid-row:2;justify-self:end;text-align:right;font-style:normal;white-space:nowrap;margin-right:4px;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+html body #result .xgb.rib .xg-t #xgGame small{font:700 clamp(8px,2.2vw,10px)/1 var(--grot,system-ui)!important;letter-spacing:.2em;text-transform:uppercase;color:#5a3a10!important}
+html body #result .xgb.rib .xg-t #xgGame b{font:700 clamp(17px,5.6vw,26px)/1 var(--grot,system-ui)!important;color:#1a140c!important;letter-spacing:0}
+html body #result .xgb.rib .xg-t #xgGame[hidden]{display:none!important}
 html body #intro.solo .vsh-vs,html body #intro.solo .vsh .vsh-s ~ .vsh-s,html body #intro.solo .vsh-cap:not(.y){display:none!important}
 html body .qimg svg.flag,html body[data-skin] .qimg svg.flag,html body[data-skin] #duel .qimg svg.flag{filter:none!important} /* v577 : drapeaux en couleur */
 html body #duel .pips .pip.ko,html body.solo-duel #duel .pips .pip.ko{background:linear-gradient(135deg,transparent calc(50% - 1.2px),var(--ink,#111) calc(50% - 1.2px) calc(50% + 1.2px),transparent calc(50% + 1.2px))!important;box-shadow:none!important}
