@@ -3546,7 +3546,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v577', apk:152, ios:17 };
+    window.JO_BUILD = { web:'v578', apk:153, ios:18 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -5483,7 +5483,7 @@ var THEMES = [
     }
     var qs;
     if (extra && Array.isArray(extra.qx) && extra.qx.length >= N && okQx(extra.qx)) qs = extra.qx.map(function(x){ return Object.assign({}, x, { opts:x.opts.slice() }); });
-    else { /* multi sans liste envoyée : pas de banque, pour que tous les appareils tirent les mêmes questions */ BANK_OFF = (kind === 'vs' || kind === 'party'); try { qs = buildQs(T, mode, seed, diff, kind === 'bot'); } finally { BANK_OFF = false; } }
+    else { /* multi sans liste envoyée : pas de banque, pour que tous les appareils tirent les mêmes questions */ BANK_OFF = (kind === 'vs' || kind === 'party'); FRESH = kind === 'bot' && !(extra && (extra.tour || extra.daily)); try { qs = buildQs(T, mode, seed, diff, kind === 'bot'); } finally { BANK_OFF = false; FRESH = false; } }
     if (kind === 'bot' && !(extra && (extra.tour || extra.daily))) qs = phInject(T, qs);
     extra = Object.assign({ diff: diff || 1 }, extra);
     var isPhoto = (T.id === 'arc' && mode === 'photo') || T.id === 'aut' || (T.id === 'arc' && mode === 'bat');
@@ -5833,10 +5833,28 @@ var THEMES = [
       ["Que signifie « poser un lapin » ?", ["Ne pas venir à un rendez-vous", "Offrir un animal", "Faire une farce", "Partir en courant"]]
     ], h:[] }
   };
+  /* v578 : mémoire des questions déjà vues (6 mois) — on tire d'abord les jamais vues, puis les plus anciennes */
+  var FRESH = false, SEEN_DAYS = 183;
+  var SEEN = (function(){ try { return JSON.parse(localStorage.getItem('joute-seen') || '{}') || {}; } catch(e){ return {}; } })();
+  function qKey(t){ t = String(t || '').toLowerCase().replace(/\s+/g, ' ').trim(); var h = 5381; for (var i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function today(){ return Math.floor(Date.now() / 864e5); }
+  function seenAge(t){ var d = SEEN[qKey(t)]; return d ? today() - d : 1e9; }
+  function seenSave(){ try { var ks = Object.keys(SEEN); if (ks.length > 30000){ var lim = today() - SEEN_DAYS; ks.forEach(function(k){ if (SEEN[k] < lim) delete SEEN[k]; }); } localStorage.setItem('joute-seen', JSON.stringify(SEEN)); } catch(e){} }
+  function markSeen(qs){ try { var d = today(); (qs || []).forEach(function(q){ if (q && q.q) SEEN[qKey(q.rq || q.q)] = d; }); seenSave(); } catch(e){} }
+  window.joSeenCount = function(){ return Object.keys(SEEN).length; };
+  /* tirage : mélange (graine), puis jamais vues (ou vues il y a plus de 6 mois) d'abord, sinon les plus anciennes */
+  function freshPick(rows, n, rnd, txt){
+    var sh = shuffle(rows, rnd);
+    if (!FRESH) return sh.slice(0, n);
+    txt = txt || function(r){ return r[0]; };
+    var sc = sh.map(function(r, i){ var a = seenAge(txt(r)); return { r:r, i:i, s:a >= SEEN_DAYS ? 1e9 : a }; });
+    sc.sort(function(a, b){ return (b.s - a.s) || (a.i - b.i); });
+    return sc.slice(0, n).map(function(x){ return x.r; });
+  }
   function pickStatic(easy, hard, n, rnd, d){
-    if (!hard || !hard.length || d === 1) return shuffle(easy, rnd).slice(0, n);
-    var h = shuffle(hard, rnd).slice(0, Math.min(d === 3 ? n : 3, hard.length));
-    var e = shuffle(easy, rnd).slice(0, n - h.length);
+    if (!hard || !hard.length || d === 1) return freshPick(easy, n, rnd);
+    var h = freshPick(hard, Math.min(d === 3 ? n : 3, hard.length), rnd);
+    var e = freshPick(easy, n - h.length, rnd);
     return shuffle(h.concat(e), rnd);
   }
   function hasLevels(T){ return !!(HARD[T.id] || T.id === 'cap' || T.id === 'calc' || (T.id === 'spo' && HARD.foot)); }
@@ -5858,10 +5876,12 @@ var THEMES = [
     var rows = bankRows(T.id), rnd = mulberry32((seed | 0) + 4241), d = diff === 2 || diff === 3 ? diff : 1;
     var nb = Math.min(res.length, Math.max(1, res.length - 2));
     var pref = rows.filter(function(r){ return d === 1 ? r[5] === 1 : d === 2 ? r[5] <= 2 : r[5] >= 2; }); if (pref.length < nb * 4) pref = rows;
+    if (FRESH){ var freshN = pref.filter(function(r){ return seenAge(r[2]) >= SEEN_DAYS; }).length, freshS = res.filter(function(q){ return seenAge(q.q) >= SEEN_DAYS; }).length;
+      if (freshS < res.length && freshN >= res.length) nb = res.length - freshS; else if (freshS < res.length) nb = Math.min(res.length, Math.max(nb, res.length - freshS)); }
     var seen = P.bks || {}, un = mark ? pref.filter(function(r){ return !seen[r[0]]; }) : pref; if (un.length < nb) un = pref;
     var have = {}; res.forEach(function(q){ have[q.q.toLowerCase()] = 1; });
-    var pick = shuffle(un, rnd).filter(function(r){ return !have[r[2].toLowerCase()]; }).slice(0, nb);
-    var keep = shuffle(res, rnd).slice(0, res.length - pick.length);
+    var pick = freshPick(FRESH ? pref : un, pref.length, rnd, function(r){ return r[2]; }).filter(function(r){ return !have[r[2].toLowerCase()]; }).slice(0, nb);
+    var keep = FRESH ? shuffle(res, rnd).sort(function(a, b){ return seenAge(b.q) - seenAge(a.q); }).slice(0, res.length - pick.length) : shuffle(res, rnd).slice(0, res.length - pick.length);
     var out = shuffle(keep.concat(pick.map(function(r){ return bankQ(r, rnd); })), rnd);
     if (mark && pick.length){ var bk = P.bks || (P.bks = {}), ks = Object.keys(bk); if (ks.length > 4000) ks.slice(0, 1500).forEach(function(k){ delete bk[k]; }); pick.forEach(function(r){ bk[r[0]] = 1; }); save(); }
     return out;
@@ -5869,7 +5889,7 @@ var THEMES = [
   function mkQx(themeId, mode, s, d){
     try {
       var T = themeById(themeId); if (!T || !bankHas(T.id)) return undefined;
-      var qs = buildQs(T, mode || '', s, d || 1, false);
+      FRESH = true; var qs; try { qs = buildQs(T, mode || '', s, d || 1, false); } finally { FRESH = false; }
       if (!qs || qs.length < N || qs.some(function(q){ return q.img || q.art || q.bt || !q.opts || q.opts.length !== 4; })) return undefined;
       return qs.slice(0, N).map(function(q){ var o = { q:q.q, opts:q.opts.slice(), ans:q.ans }; if (q.bid){ o.bid = q.bid; o.ctx = q.ctx || ''; o.an = (q.an || '').slice(0, 180); } return o; });
     } catch(e){ return undefined; }
@@ -5917,11 +5937,11 @@ var THEMES = [
     if (T.id === 'mjb') return jerseyQs(JB, true, rnd);
     if (REL[T.id]){
       var Rb = REL[T.id], Rp = Rb[mode] || Object.keys(Rb).reduce(function(a, k){ return a.concat(Rb[k]); }, []);
-      return shuffle(Rp, rnd).slice(0, N).map(function(row){ var good = row[1][0], o = shuffle(row[1], rnd); return { q:row[0], opts:o, ans:o.indexOf(good) }; });
+      return freshPick(Rp, N, rnd).map(function(row){ var good = row[1][0], o = shuffle(row[1], rnd); return { q:row[0], opts:o, ans:o.indexOf(good) }; });
     }
     if (T.id === 'lng'){
       var Lq = LNG[mode] ? LNG[mode].q : LNG.gra.q.concat(LNG.ort.q, LNG.con.q, LNG.lex.q);
-      return shuffle(Lq, rnd).slice(0, N).map(function(row){ var good = row[1][0], o = shuffle(row[1], rnd); return { q:row[0], opts:o, ans:o.indexOf(good) }; });
+      return freshPick(Lq, N, rnd).map(function(row){ var good = row[1][0], o = shuffle(row[1], rnd); return { q:row[0], opts:o, ans:o.indexOf(good) }; });
     }
     if (T.id === 'his' && HIS[mode]){
       return pickStatic(HIS[mode].q, HIS[mode].h, N, rnd, d).map(function(row){
@@ -6860,6 +6880,7 @@ var THEMES = [
     $('xpFill').style.width = (into / 2) + '%';
   }
 
+  window.joPools = function(){ var out = {}; GROUPS.forEach(function(g){ g.ids.forEach(function(id){ var T = themeById(id); if (!T) return; var st = (Array.isArray(T.q) ? T.q.length : 0) + (HARD[id] ? HARD[id].length : 0); if (REL[id]) Object.keys(REL[id]).forEach(function(k){ st += REL[id][k].length; }); if (id === 'lng') Object.keys(LNG).forEach(function(k){ st += (LNG[k].q || []).length; }); if (id === 'his') Object.keys(HIS).forEach(function(k){ st += (HIS[k].q || []).length + (HIS[k].h || []).length; }); if (id === 'spo' && typeof FOOT !== 'undefined') st += FOOT.length; var b = bankRows(id); out[id] = { nom:T.name, statiques:st, banque:b ? b.length : 0 }; }); }); return out; };
   var GROUPS = [
     { name:'Savoirs', ids:['act','cg','his','sav','myt','jus'] },
     { name:'Religions', ids:['bib','cor','tor','rmo'] },
@@ -7509,6 +7530,7 @@ var THEMES = [
   }
 
   function newGame(T, qs, mode, extra){
+    markSeen(qs);
     if (!V) pendSet(null);
     if (G){ clearInterval(G.timer); clearTimeout(G.adv); }
     clearTimeout(introTmr);
