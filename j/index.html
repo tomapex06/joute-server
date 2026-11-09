@@ -3546,7 +3546,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v578', apk:153, ios:18 };
+    window.JO_BUILD = { web:'v579', apk:154, ios:19 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -6772,9 +6772,10 @@ var THEMES = [
     };
     show('intro');
     snd('blade');
-    try { if (window.joVsSh){ if (g.mode === 'party'){ if (g.tv){ /* télé : boucliers des joueurs du salon, jamais celui de la télé */ var tp = ptPlayers().map(function(x){ return { name:ptName(x), sub:x.presence.host === 1 ? 'H\u00f4te' : 'Joueur' }; }); if (tp.length >= 2) window.joVsSh.start(false, tp.slice(0, 2)); else if (tp.length === 1) window.joVsSh.start(true, tp, true); } else if (g.vsPair) window.joVsSh.start(false, g.vsPair); else window.joVsSh.start(true, [{ name:nm, sub:(PT && PT.role === 'host') ? 'Toi \u00b7 H\u00f4te' : 'Toi' }], true); } else window.joVsSh.start(!(g.mode === 'vs')); } } catch(e){}
+    try { if (window.joVsSh){ if (g.solo) window.joVsSh.start(false, [{ name:nm, sub:'Toi' }], true); else if (g.mode === 'party'){ if (g.tv){ /* télé : boucliers des joueurs du salon, jamais celui de la télé */ var tp = ptPlayers().map(function(x){ return { name:ptName(x), sub:x.presence.host === 1 ? 'H\u00f4te' : 'Joueur' }; }); if (tp.length >= 2) window.joVsSh.start(false, tp.slice(0, 2)); else if (tp.length === 1) window.joVsSh.start(true, tp, true); } else if (g.vsPair) window.joVsSh.start(false, g.vsPair); else window.joVsSh.start(true, [{ name:nm, sub:(PT && PT.role === 'host') ? 'Toi \u00b7 H\u00f4te' : 'Toi' }], true); } else window.joVsSh.start(!(g.mode === 'vs')); } } catch(e){}
     g.introAt = performance.now();
-    if (g.mode === 'vs' || g.mode === 'party'){
+    if (g.solo){ introTmr = setTimeout(go, 1900); }
+    else if (g.mode === 'vs' || g.mode === 'party'){
       bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
       introTmr = setTimeout(go, 3200);
     } else {
@@ -15778,7 +15779,11 @@ window.joEngrave = (function(){
     you = mkShield(me, RED); root.insertBefore(you, cv); fitName(you);
     var ry = solo ? { x:W() * 0.5, y:H() * 0.47, r:0 } : restYou(), h = hit();
     var from = { x: -sw(), y: -shh() * .6, r: -40, s: .7 };
-    if (!searching){
+    if (solo && !searching){
+      /* v579 : solo — un seul bouclier qui tombe, un seul choc, c'est tout */
+      anim(you, [ { x:ry.x, y:-shh() * .7, r:-6, s:1.08, o:0 }, { x:ry.x, y:ry.y + 10, r:1.5, s:1, o:.62 }, { x:ry.x, y:ry.y - 4, r:-.5, s:1, o:.82 }, { x:ry.x, y:ry.y, r:0, s:1, o:1 } ], 760, 'linear');
+      setTimeout(function(){ if (root) impactFx(ry.x, ry.y + shh() * .38, false); }, 470);
+    } else if (!searching){
       anim(you, [ { x:from.x, y:from.y, r:from.r, s:from.s, o:0 }, { x:h.x - sw() * .28, y:h.y - shh() * .06, r:14, s:1.06, o:.42 }, { x:ry.x - 14, y:ry.y - 10, r:ry.r - 6, s:1, o:.72 }, { x:ry.x, y:ry.y, r:ry.r, s:1, o:1 } ], 1250, 'cubic-bezier(.3,.6,.3,1)');
       bringOpp(true);
     } else {
@@ -18795,7 +18800,6 @@ html body.solo-duel #duel .status .qvote[hidden]{display:none!important}
 html body.solo-duel #duel .status .qvote:has(.q-an){grid-column:1/-1!important;grid-row:2!important}
 html body #intro.solo .vs-mid,html body #intro.solo #vsOpp{display:none!important}
 html body #intro.solo #vsYou{margin-left:auto!important;margin-right:auto!important}
-html body #intro.solo .vsh{transform:translateY(16vh)}
 html body #intro.solo .vsh-vs,html body #intro.solo .vsh .vsh-s ~ .vsh-s,html body #intro.solo .vsh-cap:not(.y){display:none!important}
 html body .qimg svg.flag,html body[data-skin] .qimg svg.flag,html body[data-skin] #duel .qimg svg.flag{filter:none!important} /* v577 : drapeaux en couleur */
 html body #duel .pips .pip.ko,html body.solo-duel #duel .pips .pip.ko{background:linear-gradient(135deg,transparent calc(50% - 1.2px),var(--ink,#111) calc(50% - 1.2px) calc(50% + 1.2px),transparent calc(50% + 1.2px))!important;box-shadow:none!important}
