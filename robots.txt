@@ -1,2 +1,2 @@
-Disallow: /review/
 User-agent: *
+Disallow: /review/
