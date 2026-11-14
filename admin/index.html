@@ -84,7 +84,7 @@ main{padding:14px 16px 60px}
 <div id="app" hidden>
 <header><div class="wrap">
   <div style="display:flex;justify-content:space-between;align-items:center;gap:6px"><h1>Banque Joute</h1><span><button class="btn" id="bioSet" hidden>Activer l'empreinte</button> <button class="btn" id="out">Déconnexion</button></span></div>
-  <div class="sect"><button class="on" data-v="bank">Banque</button><button data-v="prop">Propositions<span class="n" id="pn" hidden></span></button></div>
+  <div class="sect"><button class="on" data-v="bank">Banque</button><button data-v="prop">Propositions<span class="n" id="pn" hidden></span></button><button data-v="rep">Joueurs<span class="n" id="rn" hidden></span></button></div>
   <div id="bankBar">
   <div class="stats" id="stats"></div>
   <div class="tabs">
@@ -107,8 +107,16 @@ main{padding:14px 16px 60px}
   </div>
   <div class="tools"><select id="pk"><option value="">Tous les types</option><option value="question">Questions</option><option value="quiz">Quiz</option><option value="topic">Topics (avec questions)</option><option value="topicreq">Demandes de thème</option><option value="fix">Corrections</option></select></div>
   </div>
+  <div id="repBar" hidden>
+  <div class="tabs" style="margin-top:10px" id="rst">
+    <button class="tab on" data-s="new">À traiter</button>
+    <button class="tab" data-s="done">Traités</button>
+    <button class="tab" data-s="dismissed">Ignorés</button>
+    <button class="tab" data-s="all">Tous</button>
+  </div>
+  </div>
 </div></header>
-<main><div class="wrap"><div id="bankView"><div id="list"></div><div class="pager" id="pager"></div></div><div id="propView" hidden><div id="plist"></div></div></div></main>
+<main><div class="wrap"><div id="bankView"><div id="list"></div><div class="pager" id="pager"></div></div><div id="propView" hidden><div id="plist"></div></div><div id="repView" hidden><div id="rlist"></div></div></div></main>
 </div>
 <div id="toast"></div>
 <script>
@@ -125,7 +133,7 @@ function rpc(fn,body){body=Object.assign({p_token:tok},body||{});return fetch(AP
 function store(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}
 function load(k){try{return localStorage.getItem(k)||''}catch(e){return ''}}
 
-function login(t){tok=t;return rpc('admin_stats').then(function(s){if(!load('joute-admin-pk'))store('joute-admin',tok);bioUi();$('gate').hidden=true;$('app').hidden=false;stats(s);list();plist()})}
+function login(t){tok=t;return rpc('admin_stats').then(function(s){if(!load('joute-admin-pk'))store('joute-admin',tok);bioUi();$('gate').hidden=true;$('app').hidden=false;stats(s);list();plist();rlist()})}
 function stats(s){
   themeList=s.themes||[];
   $('stats').innerHTML='<div class="stat"><b>'+s.total+'</b><span>Questions</span></div><div class="stat"><b>'+s.active+'</b><span>Actives</span></div><div class="stat"><b>'+(s.total-s.active)+'</b><span>Désactivées</span></div><div class="stat red"><b>'+s.reported+'</b><span>Signalées</span></div>';
@@ -231,7 +239,33 @@ $('plist').addEventListener('click',function(e){
 });
 document.querySelectorAll('#pst .tab').forEach(function(t){t.onclick=function(){document.querySelectorAll('#pst .tab').forEach(function(x){x.classList.toggle('on',x===t)});ps.status=t.dataset.s;plist()}});
 $('pk').onchange=function(){ps.kind=this.value;plist()};
-function setView(vw){document.querySelectorAll('.sect button').forEach(function(x){x.classList.toggle('on',x.dataset.v===vw)});$('bankBar').hidden=vw!=='bank';$('bankView').hidden=vw!=='bank';$('propBar').hidden=vw!=='prop';$('propView').hidden=vw!=='prop';if(vw==='prop')plist()}
+function setView(vw){document.querySelectorAll('.sect button').forEach(function(x){x.classList.toggle('on',x.dataset.v===vw)});$('bankBar').hidden=vw!=='bank';$('bankView').hidden=vw!=='bank';$('propBar').hidden=vw!=='prop';$('propView').hidden=vw!=='prop';$('repBar').hidden=vw!=='rep';$('repView').hidden=vw!=='rep';if(vw==='prop')plist();if(vw==='rep')rlist()}
+/* ---------- Signalements de joueurs (v583) ---------- */
+var rs={status:'new'}, reps=[];
+var RSTN={new:'À traiter',done:'Traité',dismissed:'Ignoré'};
+function rlist(){
+  $('rlist').innerHTML='<div class="empty">Chargement…</div>';
+  rpc('admin_player_reports',{p_status:rs.status}).then(function(d){reps=d.rows||[];var n=(d.counts&&d.counts.new)||0;$('rn').hidden=!n;$('rn').textContent=n;rrender()}).catch(function(e){$('rlist').innerHTML='<div class="empty">Erreur : '+esc(e.message)+'</div>'})
+}
+function rrender(){
+  $('rlist').innerHTML=reps.length?reps.map(function(r){
+    var h='<div class="q'+(r.status==='new'?' rep':'')+'" data-id="'+r.id+'" data-t="'+esc(r.target)+'">';
+    h+='<div class="meta"><span class="pill r">⚑ '+esc(r.reason||'signalé')+'</span><span class="pill">'+(RSTN[r.status]||r.status)+'</span>'+(r.total>1?'<span class="pill o">'+r.total+' signalements au total</span>':'')+'<span style="margin-left:auto">'+new Date(r.created_at).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+'</span></div>';
+    h+='<div class="qt">'+esc(r.pseudo)+(r.pseudo!==r.target_name&&r.target_name?' <small style="color:var(--mut)">(signalé sous « '+esc(r.target_name)+' »)</small>':'')+'</div>';
+    h+='<div class="an">Signalé par '+esc(r.reporter_name)+'</div><div class="act">';
+    if(r.status!=='done')h+='<button class="btn d" data-a="ren">Renommer le pseudo</button><button class="btn k" data-a="done">Traité</button>';
+    if(r.status==='new')h+='<button class="btn" data-a="dismissed">Ignorer</button>';
+    if(r.status!=='new')h+='<button class="btn" data-a="new">Remettre à traiter</button>';
+    return h+'</div></div>';
+  }).join(''):'<div class="empty">'+(rs.status==='new'?'Aucun joueur signalé 🎉':'Rien ici')+'</div>';
+}
+$('rlist').addEventListener('click',function(e){
+  var b=e.target.closest('[data-a]');if(!b)return;var el=b.closest('.q'),id=+el.dataset.id,a=b.dataset.a,pr;b.disabled=true;
+  if(a==='ren'){if(!confirm('Remplacer le pseudo de ce joueur par un pseudo neutre (JoueurXXXXX) ?')){b.disabled=false;return}pr=rpc('admin_rename_player',{p_target:el.dataset.t}).then(function(nn){toast('Pseudo remplacé par '+nn);return rpc('admin_decide_report',{p_id:id,p_status:'done'})})}
+  else pr=rpc('admin_decide_report',{p_id:id,p_status:a}).then(function(){toast(RSTN[a])});
+  pr.then(rlist).catch(function(err){b.disabled=false;toast('Erreur : '+err.message)});
+});
+document.querySelectorAll('#rst .tab').forEach(function(t){t.onclick=function(){document.querySelectorAll('#rst .tab').forEach(function(x){x.classList.toggle('on',x===t)});rs.status=t.dataset.s;rlist()}});
 document.querySelectorAll('.sect button').forEach(function(x){x.onclick=function(){setView(x.dataset.v)}});
 /* ---------- Empreinte / Face ID (passkey + PRF : la clé est chiffrée sur l'appareil) ---------- */
 var B64={e:function(b){return btoa(String.fromCharCode.apply(null,new Uint8Array(b))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')},d:function(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';var r=atob(s),u=new Uint8Array(r.length);for(var i=0;i<r.length;i++)u[i]=r.charCodeAt(i);return u}};
