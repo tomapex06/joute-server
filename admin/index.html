@@ -86,7 +86,7 @@ main{padding:14px 16px 60px}
 <div id="app" hidden>
 <header><div class="wrap">
   <div style="display:flex;justify-content:space-between;align-items:center;gap:6px"><h1>Banque Joute</h1><span><button class="btn" id="bioSet" hidden>Activer l'empreinte</button> <button class="btn" id="out">Déconnexion</button></span></div>
-  <div class="sect"><button class="on" data-v="bank">Banque</button><button data-v="prop">Propositions<span class="n" id="pn" hidden></span></button><button data-v="rep">Joueurs<span class="n" id="rn" hidden></span></button><button data-v="top">Topics</button></div>
+  <div class="sect"><button class="on" data-v="bank">Banque</button><button data-v="prop">Propositions<span class="n" id="pn" hidden></span></button><button data-v="pl">Joueurs</button><button data-v="rep">Signalements<span class="n" id="rn" hidden></span></button><button data-v="top">Topics</button></div>
   <div id="bankBar">
   <div class="stats" id="stats"></div>
   <div class="tabs">
@@ -119,7 +119,7 @@ main{padding:14px 16px 60px}
   </div>
   </div>
 </div></header>
-<main><div class="wrap"><div id="bankView"><div id="list"></div><div class="pager" id="pager"></div></div><div id="propView" hidden><div id="plist"></div></div><div id="repView" hidden><div id="rlist"></div></div><div id="topView" hidden><div id="tlist"></div></div></div></main>
+<main><div class="wrap"><div id="bankView"><div id="list"></div><div class="pager" id="pager"></div></div><div id="propView" hidden><div id="plist"></div></div><div id="repView" hidden><div id="rlist"></div></div><div id="topView" hidden><div id="tlist"></div></div><div id="plView" hidden><div id="pllist"></div></div></div></main>
 </div>
 <div id="toast"></div>
 <script>
@@ -130,7 +130,7 @@ var DIFF={1:'Curieux',2:'Initié',3:'Érudit'};
 var tok='', st={status:'reported',theme:'',search:'',off:0,lim:50}, rows=[], total=0;
 function $(i){return document.getElementById(i)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function tn(t){return NAMES[t]||t}
+function tn(t){if(NAMES[t])return NAMES[t];try{for(var i=0;i<APPTH.length;i++)if(APPTH[i].id===t)return APPTH[i].name}catch(e){}return t}
 function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove('on')},1800)}
 function rpc(fn,body){body=Object.assign({p_token:tok},body||{});return fetch(API+fn,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.text().then(function(t){var d=t?JSON.parse(t):null;if(!r.ok)throw new Error(d&&d.message||('http '+r.status));return d})})}
 function store(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}
@@ -156,6 +156,29 @@ function tlist(){
   rows.forEach(function(r){h+='<tr class="'+(r.gen?'gen':(r.tot<50?'low':''))+'"><td>'+esc(r.name)+' <small>'+esc(r.id)+(r.orphan?' · hors app':'')+'</small></td><td>'+(r.gen?'—':r.app)+'</td><td>'+r.bank+'</td><td><b>'+(r.gen?'généré':r.tot)+'</b></td><td>'+(r.rep||'')+'</td></tr>'});
   h+='</tbody><tfoot><tr><td>Total</td><td>'+T.app+'</td><td>'+T.bank+'</td><td><b>'+(T.app+T.bank)+'</b></td><td></td></tr></tfoot></table>';
   $('tlist').innerHTML=h;
+}
+function devOf(r){
+  var ua=r.ua||'',d=r.dev||'',pl=r.plat||'',dev='?',app='';
+  var src=d||ua;
+  if(/iPad/.test(src))dev='iPad';else if(/iPhone/.test(src))dev='iPhone';else if(/Android/.test(src)){var m=src.match(/;\s*([^;]+?)\s+Build\//)||src.match(/Android[^;]*;\s*([^;)]+)/);var md=m?m[1].trim():'';var SAM={'SM-S93':'Galaxy S25','SM-S92':'Galaxy S24','SM-S91':'Galaxy S23','SM-S90':'Galaxy S22','SM-A':'Galaxy A'};var nm='';Object.keys(SAM).forEach(function(k){if(!nm&&md.indexOf(k)===0)nm=SAM[k]});dev='Android'+(md?' · '+(nm||md):'')}
+  else if(/Macintosh|Windows|Linux/.test(src))dev='Ordinateur';
+  if(pl==='ios'||pl==='android')app='App';else if(pl==='web')app='Web';
+  else if(/; wv\)/.test(ua)||(/iPhone|iPad/.test(ua)&&!/Safari/.test(ua)))app='App';else if(ua)app='Web';
+  return {dev:dev,app:app};
+}
+function ago(x){if(!x)return '—';var m=(Date.now()-new Date(x))/60000;if(m<60)return 'il y a '+Math.max(1,Math.round(m))+' min';var h=m/60;if(h<24)return 'il y a '+Math.round(h)+' h';var d=h/24;return d<30?'il y a '+Math.round(d)+' j':new Date(x).toLocaleDateString('fr-FR')}
+function pllist(){
+  $('pllist').innerHTML='<div class="empty">Chargement…</div>';
+  rpc('admin_players').then(function(rows){
+    rows=rows||[];var now=Date.now(),act7=0,act1=0,ios=0,and=0,games=0;
+    rows.forEach(function(r){var s=r.seen?now-new Date(r.seen):1e15;if(s<864e5)act1++;if(s<7*864e5)act7++;var o=devOf(r);r._o=o;if(/iPhone|iPad/.test(o.dev))ios++;else if(/Android/.test(o.dev))and++;games+=r.played||0});
+    var h='<div class="stats" style="margin:14px 0"><div class="stat"><b>'+rows.length+'</b><span>comptes</span></div><div class="stat"><b>'+act1+'</b><span>actifs 24 h</span></div><div class="stat"><b>'+act7+'</b><span>actifs 7 j</span></div><div class="stat"><b>'+ios+' / '+and+'</b><span>iPhone / Android</span></div><div class="stat"><b>'+games+'</b><span>parties jouées</span></div></div>';
+    h+='<table class="tt"><thead><tr><th>Joueur</th><th>Appareil</th><th>Inscrit</th><th>Vu</th><th>Niv.</th><th>Parties</th><th>Victoires</th><th>Topics</th></tr></thead><tbody>';
+    rows.forEach(function(r){var o=r._o,w=r.played?Math.round(100*r.wins/r.played):0;
+      h+='<tr><td style="text-align:left"><b>'+esc(r.pseudo||'?')+'</b>'+(r.country?' <small>'+esc(r.country)+'</small>':'')+(r.best?'<br><small>meilleur : '+esc(tn(r.best))+'</small>':'')+'</td><td style="text-align:left">'+esc(o.dev)+(o.app?' <small>· '+o.app+'</small>':'')+(r.ver?'<br><small>'+esc(r.ver)+'</small>':'')+'</td><td>'+(r.created?new Date(r.created).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'}):'—')+'</td><td>'+ago(r.seen)+'</td><td>'+(r.lv||1)+'</td><td>'+(r.played||0)+'</td><td>'+(r.wins||0)+(r.played?' <small>('+w+' %)</small>':'')+'</td><td>'+(r.themes||0)+'</td></tr>'});
+    h+='</tbody></table><p style="color:var(--mut);font-size:13px;margin-bottom:30px">Seuls les joueurs qui ont créé un compte apparaissent ici. Les téléchargements anonymes et les désinstallations ne sont visibles que dans la Play Console et App Store Connect (chiffres globaux). « Vu » = dernière activité synchronisée. La version de l’app apparaîtra à partir de la mise à jour v590.</p>';
+    $('pllist').innerHTML=h;
+  }).catch(function(e){$('pllist').innerHTML='<div class="empty">Erreur : '+esc(e.message)+'</div>'});
 }
 function refreshStats(){rpc('admin_stats').then(stats).catch(function(){})}
 function list(){
@@ -259,7 +282,7 @@ $('plist').addEventListener('click',function(e){
 });
 document.querySelectorAll('#pst .tab').forEach(function(t){t.onclick=function(){document.querySelectorAll('#pst .tab').forEach(function(x){x.classList.toggle('on',x===t)});ps.status=t.dataset.s;plist()}});
 $('pk').onchange=function(){ps.kind=this.value;plist()};
-function setView(vw){document.querySelectorAll('.sect button').forEach(function(x){x.classList.toggle('on',x.dataset.v===vw)});$('bankBar').hidden=vw!=='bank';$('bankView').hidden=vw!=='bank';$('propBar').hidden=vw!=='prop';$('propView').hidden=vw!=='prop';$('repBar').hidden=vw!=='rep';$('repView').hidden=vw!=='rep';$('topView').hidden=vw!=='top';if(vw==='top')tlist();if(vw==='prop')plist();if(vw==='rep')rlist()}
+function setView(vw){document.querySelectorAll('.sect button').forEach(function(x){x.classList.toggle('on',x.dataset.v===vw)});$('bankBar').hidden=vw!=='bank';$('bankView').hidden=vw!=='bank';$('propBar').hidden=vw!=='prop';$('propView').hidden=vw!=='prop';$('repBar').hidden=vw!=='rep';$('repView').hidden=vw!=='rep';$('topView').hidden=vw!=='top';if(vw==='top')tlist();$('plView').hidden=vw!=='pl';if(vw==='pl')pllist();if(vw==='prop')plist();if(vw==='rep')rlist()}
 /* ---------- Signalements de joueurs (v583) ---------- */
 var rs={status:'new'}, reps=[];
 var RSTN={new:'À traiter',done:'Traité',dismissed:'Ignoré'};
