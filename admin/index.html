@@ -58,6 +58,9 @@ main{padding:14px 16px 60px}
 .sect{display:flex;gap:0;margin:12px 0 4px;border:1.5px solid var(--ink);border-radius:12px;overflow:hidden}
 .sect button{flex:1;border:0;background:none;padding:10px;font:600 13px Unbounded,sans-serif;cursor:pointer;color:var(--ink)}
 .sect button.on{background:var(--ink);color:#fff}
+.lv{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.lv button{flex:1;min-width:70px;border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:9px 4px;font:600 12px Sora,sans-serif;cursor:pointer;color:var(--ink)}.lv button.pr{border-color:var(--ink);border-style:dashed}.lv button.on{background:var(--ink);border-color:var(--ink);border-style:solid;color:#fff}
+.ex{font-size:12px;color:var(--mut);margin-bottom:4px}.ex b{color:var(--ink)}.fl{font-size:12px;background:#fff6e0;color:#6b4a00;border-radius:8px;padding:5px 8px;margin:6px 0}
+.dsum{background:var(--card);border-radius:14px;padding:12px 14px;font-size:13px;margin-top:4px}.dsum b{font:600 18px Unbounded,sans-serif}
 .sect .n{display:inline-block;min-width:20px;padding:1px 6px;border-radius:99px;background:var(--bad);color:#fff;font-size:11px;margin-left:6px}
 .pq{border-top:1px solid var(--line);padding:8px 0}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:1px;background:#bbb}.dot.g{background:#16c25a;box-shadow:0 0 6px rgba(22,194,90,.7)}.dot.r{background:#e0282e;box-shadow:0 0 6px rgba(224,40,46,.6)}
@@ -87,7 +90,7 @@ main{padding:14px 16px 60px}
 <div id="app" hidden>
 <header><div class="wrap">
   <div style="display:flex;justify-content:space-between;align-items:center;gap:6px"><h1>Banque Joute</h1><span><button class="btn" id="bioSet" hidden>Activer l'empreinte</button> <button class="btn" id="out">Déconnexion</button></span></div>
-  <div class="sect"><button class="on" data-v="bank">Banque</button><button data-v="prop">Propositions<span class="n" id="pn" hidden></span></button><button data-v="pl">Joueurs</button><button data-v="rep">Signalements<span class="n" id="rn" hidden></span></button><button data-v="top">Topics</button></div>
+  <div class="sect"><button class="on" data-v="bank">Banque</button><button data-v="prop">Propositions<span class="n" id="pn" hidden></span></button><button data-v="pl">Joueurs</button><button data-v="rep">Signalements<span class="n" id="rn" hidden></span></button><button data-v="top">Topics</button><button data-v="dif">Difficulté</button></div>
   <div id="bankBar">
   <div class="stats" id="stats"></div>
   <div class="tabs">
@@ -120,7 +123,7 @@ main{padding:14px 16px 60px}
   </div>
   </div>
 </div></header>
-<main><div class="wrap"><div id="bankView"><div id="list"></div><div class="pager" id="pager"></div></div><div id="propView" hidden><div id="plist"></div></div><div id="repView" hidden><div id="rlist"></div></div><div id="topView" hidden><div id="tlist"></div></div><div id="plView" hidden><div id="pllist"></div></div></div></main>
+<main><div class="wrap"><div id="bankView"><div id="list"></div><div class="pager" id="pager"></div></div><div id="propView" hidden><div id="plist"></div></div><div id="repView" hidden><div id="rlist"></div></div><div id="topView" hidden><div id="tlist"></div></div><div id="plView" hidden><div id="pllist"></div></div><div id="difView" hidden><div id="dhead"></div><div class="tabs" id="dst" style="margin:10px 0 12px"><button class="tab on" data-s="todo">À valider</button><button class="tab" data-s="dis">Désaccords</button><button class="tab" data-s="flag">À corriger</button><button class="tab" data-s="done">Validées</button><button class="tab" data-s="all">Toutes</button></div><div id="dlist"></div></div></div></main>
 </div>
 <div id="toast"></div>
 <script>
@@ -283,7 +286,7 @@ $('plist').addEventListener('click',function(e){
 });
 document.querySelectorAll('#pst .tab').forEach(function(t){t.onclick=function(){document.querySelectorAll('#pst .tab').forEach(function(x){x.classList.toggle('on',x===t)});ps.status=t.dataset.s;plist()}});
 $('pk').onchange=function(){ps.kind=this.value;plist()};
-function setView(vw){document.querySelectorAll('.sect button').forEach(function(x){x.classList.toggle('on',x.dataset.v===vw)});$('bankBar').hidden=vw!=='bank';$('bankView').hidden=vw!=='bank';$('propBar').hidden=vw!=='prop';$('propView').hidden=vw!=='prop';$('repBar').hidden=vw!=='rep';$('repView').hidden=vw!=='rep';$('topView').hidden=vw!=='top';if(vw==='top')tlist();$('plView').hidden=vw!=='pl';if(vw==='pl')pllist();if(vw==='prop')plist();if(vw==='rep')rlist()}
+function setView(vw){document.querySelectorAll('.sect button').forEach(function(x){x.classList.toggle('on',x.dataset.v===vw)});$('bankBar').hidden=vw!=='bank';$('bankView').hidden=vw!=='bank';$('propBar').hidden=vw!=='prop';$('propView').hidden=vw!=='prop';$('repBar').hidden=vw!=='rep';$('repView').hidden=vw!=='rep';$('topView').hidden=vw!=='top';$('difView').hidden=vw!=='dif';if(vw==='dif')dlist();if(vw==='top')tlist();$('plView').hidden=vw!=='pl';if(vw==='pl')pllist();if(vw==='prop')plist();if(vw==='rep')rlist()}
 /* ---------- Signalements de joueurs (v583) ---------- */
 var rs={status:'new'}, reps=[];
 var RSTN={new:'À traiter',done:'Traité',dismissed:'Ignoré'};
@@ -310,6 +313,28 @@ $('rlist').addEventListener('click',function(e){
   pr.then(rlist).catch(function(err){b.disabled=false;toast('Erreur : '+err.message)});
 });
 document.querySelectorAll('#rst .tab').forEach(function(t){t.onclick=function(){document.querySelectorAll('#rst .tab').forEach(function(x){x.classList.toggle('on',x===t)});rs.status=t.dataset.s;rlist()}});
+
+/* ---------- Difficulté (essai agent, v591) ---------- */
+var DL={1:'Facile',2:'Moyen',3:'Difficile',4:'Expert'}, OLDL={1:'Curieux (1)',2:'Initié (2)',3:'Érudit (3)'}, ds={s:'todo'}, drows=[];
+function dlist(){$('dlist').innerHTML='<div class="empty">Chargement…</div>';rpc('admin_diff_list',{p_batch:'essai1'}).then(function(d){drows=d||[];drender()}).catch(function(e){$('dlist').innerHTML='<div class="empty">Erreur : '+esc(e.message)+'</div>'})}
+function dfin(r){return r.decided||null}
+function drender(){
+  var n=drows.length,done=drows.filter(dfin).length,agree=drows.filter(function(r){return r.lvl1===r.lvl2}).length,same=drows.filter(function(r){return r.decided&&r.decided===r.lvl}).length,cnt={1:0,2:0,3:0,4:0};
+  drows.forEach(function(r){cnt[r.decided||r.lvl]++});
+  $('dhead').innerHTML='<div class="dsum"><b>'+done+' / '+n+'</b> validées'+(done?' · '+same+' gardées telles quelles':'')+'<br>Accord des 2 experts : '+agree+' / '+n+'<br>Répartition : Facile '+cnt[1]+' · Moyen '+cnt[2]+' · Difficile '+cnt[3]+' · Expert '+cnt[4]+'<br><span style="color:var(--mut)">Rien n\'est changé dans la banque tant que l\'essai n\'est pas appliqué. Touche le bon niveau (pointillé = proposition de l\'agent) ; retouche pour annuler.</span></div>';
+  var list=drows.filter(function(r){return ds.s==='all'||(ds.s==='todo'&&!r.decided)||(ds.s==='done'&&r.decided)||(ds.s==='dis'&&r.lvl1!==r.lvl2)||(ds.s==='flag'&&r.flag)});
+  $('dlist').innerHTML=list.length?list.map(function(r){
+    var opts=[r.good].concat(r.wrong||[]),h='<div class="q" data-id="'+r.id+'">';
+    h+='<div class="meta"><span class="pill">'+esc(tn(r.theme))+'</span><span class="pill o">Avant : '+(OLDL[r.old]||r.old)+'</span><span>n° '+r.id+'</span></div>';
+    h+='<div class="qt">'+esc(r.q)+'</div><div class="ans">'+opts.map(function(o,i){return '<span'+(i?'':' class="g"')+'>'+esc(o)+'</span>'}).join('')+'</div>';
+    h+='<div class="ex">Expert 1 : <b>'+DL[r.lvl1]+'</b> ('+r.pct1+' % trouvent) · Expert 2 : <b>'+DL[r.lvl2]+'</b> ('+r.pct2+' %)</div>';
+    if(r.why)h+='<div class="an">'+esc(r.why)+'</div>';
+    if(r.flag)h+='<div class="fl">⚠ '+esc(r.flag)+'</div>';
+    h+='<div class="lv">'+[1,2,3,4].map(function(l){return '<button data-l="'+l+'" class="'+(l===r.lvl?'pr':'')+(r.decided===l?' on':'')+'">'+DL[l]+'</button>'}).join('')+'</div></div>';
+    return h}).join(''):'<div class="empty">Rien ici</div>';
+}
+$('dlist').addEventListener('click',function(e){var b=e.target.closest('.lv button');if(!b)return;var el=b.closest('.q'),id=+el.dataset.id,l=+b.dataset.l,r=drows.filter(function(x){return x.id===id})[0];if(!r)return;var nv=r.decided===l?null:l;b.disabled=true;rpc('admin_diff_decide',{p_id:id,p_lvl:nv}).then(function(){r.decided=nv;drender();toast(nv?DL[nv]+' ✓':'Annulé')}).catch(function(err){b.disabled=false;toast('Erreur : '+err.message)})});
+document.querySelectorAll('#dst .tab').forEach(function(t){t.onclick=function(){document.querySelectorAll('#dst .tab').forEach(function(x){x.classList.toggle('on',x===t)});ds.s=t.dataset.s;drender()}});
 document.querySelectorAll('.sect button').forEach(function(x){x.onclick=function(){setView(x.dataset.v)}});
 /* ---------- Empreinte / Face ID (passkey + PRF : la clé est chiffrée sur l'appareil) ---------- */
 var B64={e:function(b){return btoa(String.fromCharCode.apply(null,new Uint8Array(b))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')},d:function(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';var r=atob(s),u=new Uint8Array(r.length);for(var i=0;i<r.length;i++)u[i]=r.charCodeAt(i);return u}};
