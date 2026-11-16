@@ -60,6 +60,7 @@ main{padding:14px 16px 60px}
 .sect button.on{background:var(--ink);color:#fff}
 .sect .n{display:inline-block;min-width:20px;padding:1px 6px;border-radius:99px;background:var(--bad);color:#fff;font-size:11px;margin-left:6px}
 .pq{border-top:1px solid var(--line);padding:8px 0}
+.q .dt{font-size:12.5px;color:var(--mut);margin:-2px 0 8px}
 .tt{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:30px}.tt th,.tt td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right}.tt th:first-child,.tt td:first-child{text-align:left}.tt small{color:var(--mut)}.tt tr.low td{color:var(--bad)}.tt tr.gen td{color:var(--mut)}.tt tfoot td{font-weight:700;border-top:2px solid var(--ink)}
 .pq:first-of-type{border-top:0}
 .pill.k{background:var(--ink);color:#fff}
@@ -90,6 +91,7 @@ main{padding:14px 16px 60px}
   <div class="stats" id="stats"></div>
   <div class="tabs">
     <button class="tab on" data-s="reported">Signalées</button>
+    <button class="tab" data-s="recent">Nouvelles</button>
     <button class="tab" data-s="all">Toutes</button>
     <button class="tab" data-s="active">Actives</button>
     <button class="tab" data-s="inactive">Désactivées</button>
@@ -164,6 +166,8 @@ function card(q){
   var opts=[q.good].concat(q.wrong||[]);
   var h='<div class="q'+(q.active?'':' off')+(q.reports>0?' rep':'')+'" data-id="'+q.id+'">';
   h+='<div class="meta"><span class="pill">'+esc(tn(q.theme))+'</span><span class="pill">'+(DIFF[q.diff]||q.diff)+'</span>'+(q.ctx?'<span>'+esc(q.ctx)+'</span>':'')+(q.reports>0?'<span class="pill r">⚑ '+q.reports+'</span>':'')+(q.active?'':'<span class="pill o">Désactivée</span>')+'<span style="margin-left:auto">n° '+q.id+'</span></div>';
+  var SRC={wikipedia:'Wikipédia (tâche auto)',countries:'données pays',iupac:'tableau périodique','':'banque d’origine'},sl=SRC[q.src||'']||(/^oq\d+/.test(q.src||'')?'Open Quiz':q.src),fd=function(x){return new Date(x).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})};
+  h+='<div class="dt">🕓 Ajoutée le '+(q.created_at?fd(q.created_at):'?')+' · source : '+esc(sl)+(q.updated_at&&q.created_at&&Math.abs(new Date(q.updated_at)-new Date(q.created_at))>60000?' · modifiée le '+fd(q.updated_at):'')+'</div>';
   h+='<div class="qt">'+esc(q.q)+'</div><div class="ans">'+opts.map(function(o,i){return '<span'+(i===0?' class="g"':'')+'>'+(i===0?'✓ ':'')+esc(o)+'</span>'}).join('')+'</div>';
   if(q.anecdote)h+='<div class="an">'+esc(q.anecdote)+'</div>';
   if(q.rep&&q.rep.length)h+='<div class="reps">'+q.rep.map(function(r){return '⚑ '+esc(r.reason||'signalée')+' · '+new Date(r.at).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}).join('<br>')+'</div>';
