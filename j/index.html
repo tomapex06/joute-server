@@ -3564,7 +3564,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v588', apk:161, ios:26 };
+    window.JO_BUILD = { web:'v589', apk:161, ios:26 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -15743,7 +15743,7 @@ window.joEngrave = (function(){
   function txt(sel){ var e = document.querySelector(sel); return e ? e.textContent.trim() : ''; }
   function isMe(n){ return /^tom\s*la\s*zone$/i.test(String(n || '').replace(/[^a-z ]/gi, ' ').replace(/\s+/g, ' ').trim()); }
   function W(){ return window.innerWidth; } function H(){ return window.innerHeight; }
-  function sw(){ return Math.min(W() * 0.56, 300); } function shh(){ return sw() * 869 / 760; }
+  var BIG = false; function sw(){ return BIG ? Math.min(W() * 0.82, H() * 0.56 * 760 / 869, 560) : Math.min(W() * 0.56, 300); } function shh(){ return sw() * 869 / 760; }
   function restYou(){ return { x: W() * 0.31, y: H() * 0.295, r: -6 }; }
   function restOpp(){ return { x: W() * 0.69, y: H() * 0.71, r: 6 }; }
   function hit(){ return { x: W() * 0.5, y: H() * 0.54 }; }
@@ -15837,13 +15837,13 @@ window.joEngrave = (function(){
     var it = $i(); if (!it) return;
     ovr = pair && pair[1] ? pair[1] : null;
     var me = pair ? pair[0].name : (txt('#vsYou .vs-n') || 'Toi'), mySub = pair ? pair[0].sub : txt('#vsYou .vs-b');
-    it.classList.add('shm');
+    it.classList.add('shm'); BIG = !!solo && !searching;
     root = document.createElement('div'); root.className = 'vsh';
     cv = document.createElement('canvas'); cv.className = 'vsh-cv'; ctx = cv.getContext('2d');
     fl = document.createElement('div'); fl.className = 'vsh-fl';
     root.appendChild(cv); root.appendChild(fl); it.appendChild(root);
     if (!solo){ var vsg = document.createElement('div'); vsg.className = 'vsh-vs'; vsg.innerHTML = '<img alt="VS" src="' + VSG + '"><i></i>'; root.insertBefore(vsg, cv); setTimeout(function(){ vsg.classList.add('on'); }, searching ? 250 : 560); }
-    you = mkShield(me, RED); root.insertBefore(you, cv); fitName(you);
+    you = mkShield(me, RED); if (BIG) you.style.width = sw() + 'px'; root.insertBefore(you, cv); fitName(you);
     var ry = solo ? { x:W() * 0.5, y:H() * 0.47, r:0 } : restYou(), h = hit();
     var from = { x: -sw(), y: -shh() * .6, r: -40, s: .7 };
     if (solo && !searching){
