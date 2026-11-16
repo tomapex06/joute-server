@@ -60,6 +60,7 @@ main{padding:14px 16px 60px}
 .sect button.on{background:var(--ink);color:#fff}
 .sect .n{display:inline-block;min-width:20px;padding:1px 6px;border-radius:99px;background:var(--bad);color:#fff;font-size:11px;margin-left:6px}
 .pq{border-top:1px solid var(--line);padding:8px 0}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:1px;background:#bbb}.dot.g{background:#16c25a;box-shadow:0 0 6px rgba(22,194,90,.7)}.dot.r{background:#e0282e;box-shadow:0 0 6px rgba(224,40,46,.6)}
 .q .dt{font-size:12.5px;color:var(--mut);margin:-2px 0 8px}
 .tt{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:30px}.tt th,.tt td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right}.tt th:first-child,.tt td:first-child{text-align:left}.tt small{color:var(--mut)}.tt tr.low td{color:var(--bad)}.tt tr.gen td{color:var(--mut)}.tt tfoot td{font-weight:700;border-top:2px solid var(--ink)}
 .pq:first-of-type{border-top:0}
@@ -169,13 +170,13 @@ function devOf(r){
 function ago(x){if(!x)return '—';var m=(Date.now()-new Date(x))/60000;if(m<60)return 'il y a '+Math.max(1,Math.round(m))+' min';var h=m/60;if(h<24)return 'il y a '+Math.round(h)+' h';var d=h/24;return d<30?'il y a '+Math.round(d)+' j':new Date(x).toLocaleDateString('fr-FR')}
 function pllist(){
   $('pllist').innerHTML='<div class="empty">Chargement…</div>';
-  rpc('admin_players').then(function(rows){
+  var LV=0;Promise.all([rpc('admin_players'),fetch('/j/?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/web:'v(\d+)'/);return m?+m[1]:0}).catch(function(){return 0})]).then(function(a){var rows=a[0];LV=a[1];
     rows=rows||[];var now=Date.now(),act7=0,act1=0,ios=0,and=0,games=0;
     rows.forEach(function(r){var s=r.seen?now-new Date(r.seen):1e15;if(s<864e5)act1++;if(s<7*864e5)act7++;var o=devOf(r);r._o=o;if(/iPhone|iPad/.test(o.dev))ios++;else if(/Android/.test(o.dev))and++;games+=r.played||0});
     var h='<div class="stats" style="margin:14px 0"><div class="stat"><b>'+rows.length+'</b><span>comptes</span></div><div class="stat"><b>'+act1+'</b><span>actifs 24 h</span></div><div class="stat"><b>'+act7+'</b><span>actifs 7 j</span></div><div class="stat"><b>'+ios+' / '+and+'</b><span>iPhone / Android</span></div><div class="stat"><b>'+games+'</b><span>parties jouées</span></div></div>';
-    h+='<table class="tt"><thead><tr><th>Joueur</th><th>Appareil</th><th>Inscrit</th><th>Vu</th><th>Niv.</th><th>Parties</th><th>Victoires</th><th>Topics</th></tr></thead><tbody>';
+    h+=(LV?'<p style="margin:0 0 6px;font-size:13px"><span class="dot g"></span> à jour (v'+LV+')  <span class="dot r" style="margin-left:12px"></span> ancienne version</p>':'')+'<table class="tt"><thead><tr><th>Joueur</th><th>Appareil</th><th>Inscrit</th><th>Vu</th><th>Niv.</th><th>Parties</th><th>Victoires</th><th>Topics</th></tr></thead><tbody>';
     rows.forEach(function(r){var o=r._o,w=r.played?Math.round(100*r.wins/r.played):0;
-      h+='<tr><td style="text-align:left"><b>'+esc(r.pseudo||'?')+'</b>'+(r.country?' <small>'+esc(r.country)+'</small>':'')+(r.best?'<br><small>meilleur : '+esc(tn(r.best))+'</small>':'')+'</td><td style="text-align:left">'+esc(o.dev)+(o.app?' <small>· '+o.app+'</small>':'')+(r.ver?'<br><small>'+esc(r.ver)+'</small>':'')+'</td><td>'+(r.created?new Date(r.created).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'}):'—')+'</td><td>'+ago(r.seen)+'</td><td>'+(r.lv||1)+'</td><td>'+(r.played||0)+'</td><td>'+(r.wins||0)+(r.played?' <small>('+w+' %)</small>':'')+'</td><td>'+(r.themes||0)+'</td></tr>'});
+      var vn=(r.ver||'').match(/v(\d+)/),up=vn&&LV&&+vn[1]>=LV,tip=vn?('v'+vn[1]):'avant v590';h+='<tr><td style="text-align:left"><span class="dot '+(LV?(up?'g':'r'):'')+'" title="'+tip+'"></span><b>'+esc(r.pseudo||'?')+'</b>'+(r.country?' <small>'+esc(r.country)+'</small>':'')+(r.best?'<br><small>'+tip+' · meilleur : '+esc(tn(r.best))+'</small>':'')+'</td><td style="text-align:left">'+esc(o.dev)+(o.app?' <small>· '+o.app+'</small>':'')+(r.ver?'<br><small>'+esc(r.ver)+'</small>':'')+'</td><td>'+(r.created?new Date(r.created).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'}):'—')+'</td><td>'+ago(r.seen)+'</td><td>'+(r.lv||1)+'</td><td>'+(r.played||0)+'</td><td>'+(r.wins||0)+(r.played?' <small>('+w+' %)</small>':'')+'</td><td>'+(r.themes||0)+'</td></tr>'});
     h+='</tbody></table><p style="color:var(--mut);font-size:13px;margin-bottom:30px">Seuls les joueurs qui ont créé un compte apparaissent ici. Les téléchargements anonymes et les désinstallations ne sont visibles que dans la Play Console et App Store Connect (chiffres globaux). « Vu » = dernière activité synchronisée. La version de l’app apparaîtra à partir de la mise à jour v590.</p>';
     $('pllist').innerHTML=h;
   }).catch(function(e){$('pllist').innerHTML='<div class="empty">Erreur : '+esc(e.message)+'</div>'});
