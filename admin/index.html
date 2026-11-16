@@ -308,7 +308,7 @@ $('bioSet').onclick=function(){
   .then(function(prf){
     if(!prf){store('joute-admin-pk',JSON.stringify({id:credId,mode:'gate'}));store('joute-admin',tok);toast('Empreinte activée');bioUi();return}
     return aesKey(prf).then(function(k){var iv=crypto.getRandomValues(new Uint8Array(12));return crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,new TextEncoder().encode(tok)).then(function(ct){store('joute-admin-pk',JSON.stringify({id:credId,mode:'prf',salt:B64.e(salt),iv:B64.e(iv),ct:B64.e(ct)}));store('joute-admin',null);rpc('admin_pk_save',{p_id:credId,p_salt:B64.e(salt),p_iv:B64.e(iv),p_ct:B64.e(ct)}).catch(function(){});toast('Empreinte activée — plus besoin de la clé');bioUi()})});
-  }).catch(function(e){toast('Empreinte non activée'+(e&&e.name==='NotAllowedError'?' (annulé)':''))});
+  }).catch(function(e){var inapp=/FBAN|FBAV|Instagram|GSA\/|CriOS|FxiOS|Line\/|Snapchat|wv\)/.test(navigator.userAgent);toast('Empreinte non activée ('+(e&&e.name||'erreur')+')'+(inapp||(e&&e.name==='NotAllowedError')?' — ouvre joute.co/admin directement dans Safari':''))});
 };
 function bioUnlock(){
   var v;try{v=JSON.parse(load('joute-admin-pk'))}catch(e){}
