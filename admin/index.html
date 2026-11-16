@@ -60,6 +60,7 @@ main{padding:14px 16px 60px}
 .sect button.on{background:var(--ink);color:#fff}
 .sect .n{display:inline-block;min-width:20px;padding:1px 6px;border-radius:99px;background:var(--bad);color:#fff;font-size:11px;margin-left:6px}
 .pq{border-top:1px solid var(--line);padding:8px 0}
+.tt{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:30px}.tt th,.tt td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right}.tt th:first-child,.tt td:first-child{text-align:left}.tt small{color:var(--mut)}.tt tr.low td{color:var(--bad)}.tt tr.gen td{color:var(--mut)}.tt tfoot td{font-weight:700;border-top:2px solid var(--ink)}
 .pq:first-of-type{border-top:0}
 .pill.k{background:var(--ink);color:#fff}
 .pill.a{background:var(--ok);color:#fff}
@@ -84,7 +85,7 @@ main{padding:14px 16px 60px}
 <div id="app" hidden>
 <header><div class="wrap">
   <div style="display:flex;justify-content:space-between;align-items:center;gap:6px"><h1>Banque Joute</h1><span><button class="btn" id="bioSet" hidden>Activer l'empreinte</button> <button class="btn" id="out">Déconnexion</button></span></div>
-  <div class="sect"><button class="on" data-v="bank">Banque</button><button data-v="prop">Propositions<span class="n" id="pn" hidden></span></button><button data-v="rep">Joueurs<span class="n" id="rn" hidden></span></button></div>
+  <div class="sect"><button class="on" data-v="bank">Banque</button><button data-v="prop">Propositions<span class="n" id="pn" hidden></span></button><button data-v="rep">Joueurs<span class="n" id="rn" hidden></span></button><button data-v="top">Topics</button></div>
   <div id="bankBar">
   <div class="stats" id="stats"></div>
   <div class="tabs">
@@ -116,13 +117,13 @@ main{padding:14px 16px 60px}
   </div>
   </div>
 </div></header>
-<main><div class="wrap"><div id="bankView"><div id="list"></div><div class="pager" id="pager"></div></div><div id="propView" hidden><div id="plist"></div></div><div id="repView" hidden><div id="rlist"></div></div></div></main>
+<main><div class="wrap"><div id="bankView"><div id="list"></div><div class="pager" id="pager"></div></div><div id="propView" hidden><div id="plist"></div></div><div id="repView" hidden><div id="rlist"></div></div><div id="topView" hidden><div id="tlist"></div></div></div></main>
 </div>
 <div id="toast"></div>
 <script>
 (function(){
 var API='https://rukvvvtcmirkkykknzio.supabase.co/rest/v1/rpc/', KEY='sb_publishable_VviBAmGKmK6F3UuE3yyPZQ_zTcmD--t';
-var NAMES={afr:'Afrique',arc:'Architecture',cg:'Culture générale',chi:'Chimie',cin:'Cinéma',dis:'Disney',exp:'Expressions',gas:'Gastronomie',geo:'Géographie',his:'Histoire',hp:'Harry Potter',jv:'Tech & jeux vidéo',liv:'Livres',lng:'Langue française',mzk:'Musique',nat:'Animaux & nature',phy:'Physique',pnt:'Peinture',pok:'Pokémon',rmo:'Religions du monde',ser:'Séries & sagas',spo:'Sport'};
+var NAMES={l1:'Ligue 1',clu:'Clubs français',afr:'Afrique',arc:'Architecture',cg:'Culture générale',chi:'Chimie',cin:'Cinéma',dis:'Disney',exp:'Expressions',gas:'Gastronomie',geo:'Géographie',his:'Histoire',hp:'Harry Potter',jv:'Tech & jeux vidéo',liv:'Livres',lng:'Langue française',mzk:'Musique',nat:'Animaux & nature',phy:'Physique',pnt:'Peinture',pok:'Pokémon',rmo:'Religions du monde',ser:'Séries & sagas',spo:'Sport'};
 var DIFF={1:'Curieux',2:'Initié',3:'Érudit'};
 var tok='', st={status:'reported',theme:'',search:'',off:0,lim:50}, rows=[], total=0;
 function $(i){return document.getElementById(i)}
@@ -135,9 +136,24 @@ function load(k){try{return localStorage.getItem(k)||''}catch(e){return ''}}
 
 function login(t){tok=t;return rpc('admin_stats').then(function(s){if(!load('joute-admin-pk'))store('joute-admin',tok);bioUi();$('gate').hidden=true;$('app').hidden=false;stats(s);list();plist();rlist()})}
 function stats(s){
-  themeList=s.themes||[];
+  lastStats=s;themeList=s.themes||[];if($('topView')&&!$('topView').hidden)tlist();
   $('stats').innerHTML='<div class="stat"><b>'+s.total+'</b><span>Questions</span></div><div class="stat"><b>'+s.active+'</b><span>Actives</span></div><div class="stat"><b>'+(s.total-s.active)+'</b><span>Désactivées</span></div><div class="stat red"><b>'+s.reported+'</b><span>Signalées</span></div>';
   var sel=$('th'),cur=sel.value;sel.innerHTML='<option value="">Tous les thèmes</option>'+s.themes.slice().sort(function(a,b){return tn(a.theme).localeCompare(tn(b.theme))}).map(function(x){return '<option value="'+x.theme+'">'+esc(tn(x.theme))+' ('+x.active+(x.reported?' · '+x.reported+' ⚑':'')+')</option>'}).join('');sel.value=cur;
+}
+var APPTH=[{"id": "geo", "name": "Géographie", "app": 9, "kind": "questions"}, {"id": "lng", "name": "Langue française", "app": 0, "kind": "questions"}, {"id": "bib", "name": "Christianisme", "app": 0, "kind": "questions"}, {"id": "cor", "name": "Islam", "app": 0, "kind": "questions"}, {"id": "tor", "name": "Judaïsme", "app": 0, "kind": "questions"}, {"id": "rmo", "name": "Religions du monde", "app": 0, "kind": "questions"}, {"id": "act", "name": "Actualités", "app": 27, "kind": "questions"}, {"id": "his", "name": "Histoire", "app": 8, "kind": "questions"}, {"id": "sci", "name": "Sciences", "app": 8, "kind": "questions"}, {"id": "qua", "name": "Physique quantique", "app": 16, "kind": "questions"}, {"id": "arc", "name": "Architecture", "app": 16, "kind": "questions"}, {"id": "mat", "name": "Mathématiques", "app": 16, "kind": "questions"}, {"id": "bkb", "name": "Basket", "app": 16, "kind": "questions"}, {"id": "ast", "name": "Astronomie", "app": 15, "kind": "questions"}, {"id": "san", "name": "Santé", "app": 15, "kind": "questions"}, {"id": "crp", "name": "Corps humain", "app": 15, "kind": "questions"}, {"id": "phy", "name": "Physique", "app": 15, "kind": "questions"}, {"id": "myt", "name": "Mythologie", "app": 15, "kind": "questions"}, {"id": "pnt", "name": "Peinture", "app": 15, "kind": "questions"}, {"id": "spin", "name": "Roue de la fortune", "app": 0, "kind": "généré"}, {"id": "cin", "name": "Cinéma", "app": 8, "kind": "questions"}, {"id": "spo", "name": "Sport", "app": 8, "kind": "questions"}, {"id": "cap", "name": "Capitales", "app": 0, "kind": "généré"}, {"id": "aut", "name": "Automobiles", "app": 16, "kind": "questions"}, {"id": "log", "name": "Logos", "app": 0, "kind": "généré"}, {"id": "dis", "name": "Disney", "app": 24, "kind": "questions"}, {"id": "chi", "name": "Chimie", "app": 14, "kind": "questions"}, {"id": "cg", "name": "Culture générale", "app": 13, "kind": "questions"}, {"id": "hp", "name": "Harry Potter", "app": 13, "kind": "questions"}, {"id": "slo", "name": "Slogans", "app": 15, "kind": "questions"}, {"id": "afr", "name": "Afrique", "app": 13, "kind": "questions"}, {"id": "sim", "name": "Les Simpson", "app": 13, "kind": "questions"}, {"id": "gta", "name": "GTA", "app": 13, "kind": "questions"}, {"id": "clu", "name": "Clubs français", "app": 14, "kind": "questions"}, {"id": "des", "name": "Desserts", "app": 13, "kind": "questions"}, {"id": "sav", "name": "Savants", "app": 15, "kind": "questions"}, {"id": "jus", "name": "Justice & droit", "app": 16, "kind": "questions"}, {"id": "gas", "name": "Gastronomie", "app": 13, "kind": "questions"}, {"id": "exp", "name": "Expressions", "app": 14, "kind": "questions"}, {"id": "mus", "name": "Classique", "app": 14, "kind": "questions"}, {"id": "pok", "name": "Pokémon", "app": 14, "kind": "questions"}, {"id": "liv", "name": "Livres", "app": 15, "kind": "questions"}, {"id": "mon", "name": "Monnaies", "app": 15, "kind": "questions"}, {"id": "bio", "name": "Biologie", "app": 14, "kind": "questions"}, {"id": "a14", "name": "Année 2014", "app": 13, "kind": "questions"}, {"id": "ser", "name": "Séries & sagas", "app": 24, "kind": "questions"}, {"id": "mzk", "name": "Musique", "app": 24, "kind": "questions"}, {"id": "nat", "name": "Animaux & nature", "app": 24, "kind": "questions"}, {"id": "jv", "name": "Tech & jeux vidéo", "app": 24, "kind": "questions"}, {"id": "calc", "name": "Calcul mental", "app": 0, "kind": "généré"}, {"id": "mec", "name": "Mécanique auto", "app": 18, "kind": "questions"}, {"id": "ttt", "name": "Morpion", "app": 0, "kind": "généré"}, {"id": "c4", "name": "Puissance 4", "app": 0, "kind": "généré"}, {"id": "chess", "name": "Échecs", "app": 0, "kind": "généré"}, {"id": "flag", "name": "Drapeaux", "app": 0, "kind": "généré"}, {"id": "art", "name": "Art", "app": 0, "kind": "généré"}, {"id": "bt", "name": "Blind test", "app": 0, "kind": "généré"}, {"id": "l1", "name": "Ligue 1", "app": 19, "kind": "questions"}];
+var lastStats=null;
+function tlist(){
+  var bank={};(lastStats&&lastStats.themes||[]).forEach(function(x){bank[x.theme]=x});
+  var seen={},rows=APPTH.map(function(t){seen[t.id]=1;var b=bank[t.id]||{};return {id:t.id,name:t.name,app:t.app,gen:t.kind==='généré',bank:b.active||0,rep:b.reported||0}});
+  Object.keys(bank).forEach(function(k){if(!seen[k])rows.push({id:k,name:tn(k),app:0,gen:false,bank:bank[k].active||0,rep:bank[k].reported||0,orphan:true})});
+  rows.forEach(function(r){r.tot=r.app+r.bank});
+  rows.sort(function(a,b){return (a.gen-b.gen)||(a.tot-b.tot)});
+  var T=rows.reduce(function(a,r){a.app+=r.app;a.bank+=r.bank;return a},{app:0,bank:0});
+  var h='<p style="color:var(--mut);margin:12px 0">Questions par topic : intégrées dans l’app (v588) + banque en ligne (actives). Triés du plus petit au plus grand — en rouge, les topics à moins de 50 questions.</p>';
+  h+='<table class="tt"><thead><tr><th>Topic</th><th>App</th><th>Banque</th><th>Total</th><th>⚑</th></tr></thead><tbody>';
+  rows.forEach(function(r){h+='<tr class="'+(r.gen?'gen':(r.tot<50?'low':''))+'"><td>'+esc(r.name)+' <small>'+esc(r.id)+(r.orphan?' · hors app':'')+'</small></td><td>'+(r.gen?'—':r.app)+'</td><td>'+r.bank+'</td><td><b>'+(r.gen?'généré':r.tot)+'</b></td><td>'+(r.rep||'')+'</td></tr>'});
+  h+='</tbody><tfoot><tr><td>Total</td><td>'+T.app+'</td><td>'+T.bank+'</td><td><b>'+(T.app+T.bank)+'</b></td><td></td></tr></tfoot></table>';
+  $('tlist').innerHTML=h;
 }
 function refreshStats(){rpc('admin_stats').then(stats).catch(function(){})}
 function list(){
@@ -239,7 +255,7 @@ $('plist').addEventListener('click',function(e){
 });
 document.querySelectorAll('#pst .tab').forEach(function(t){t.onclick=function(){document.querySelectorAll('#pst .tab').forEach(function(x){x.classList.toggle('on',x===t)});ps.status=t.dataset.s;plist()}});
 $('pk').onchange=function(){ps.kind=this.value;plist()};
-function setView(vw){document.querySelectorAll('.sect button').forEach(function(x){x.classList.toggle('on',x.dataset.v===vw)});$('bankBar').hidden=vw!=='bank';$('bankView').hidden=vw!=='bank';$('propBar').hidden=vw!=='prop';$('propView').hidden=vw!=='prop';$('repBar').hidden=vw!=='rep';$('repView').hidden=vw!=='rep';if(vw==='prop')plist();if(vw==='rep')rlist()}
+function setView(vw){document.querySelectorAll('.sect button').forEach(function(x){x.classList.toggle('on',x.dataset.v===vw)});$('bankBar').hidden=vw!=='bank';$('bankView').hidden=vw!=='bank';$('propBar').hidden=vw!=='prop';$('propView').hidden=vw!=='prop';$('repBar').hidden=vw!=='rep';$('repView').hidden=vw!=='rep';$('topView').hidden=vw!=='top';if(vw==='top')tlist();if(vw==='prop')plist();if(vw==='rep')rlist()}
 /* ---------- Signalements de joueurs (v583) ---------- */
 var rs={status:'new'}, reps=[];
 var RSTN={new:'À traiter',done:'Traité',dismissed:'Ignoré'};
