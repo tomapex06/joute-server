@@ -3564,7 +3564,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v587', apk:160, ios:25 };
+    window.JO_BUILD = { web:'v588', apk:161, ios:26 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -4994,22 +4994,26 @@ var THEMES = [
     { id:'flag', name:'Drapeaux', blurb:'Devine le pays', img:true },
     { id:'art', name:'Art', blurb:'Devine le peintre du tableau', img:true },
     { id:'bt', name:'Blind test', blurb:'Reconnais le morceau à l’écoute', modes:true, music:true },
-    { id:'tir', name:'Tir sportif', blurb:'Règlement IPSC et scores', q:[
-      ["En IPSC, combien vaut un impact en zone Charlie en facteur Major ?", ["4", "3", "5", "2"]],
-      ["En IPSC, quelle pénalité coûte un impact sur un no-shoot ?", ["10 points", "5 points", "La disqualification", "Aucune"]],
-      ["En IPSC, quelle commande lance la mise en condition du tireur ?", ["Make ready", "Standby", "Are you ready", "Unload and show clear"]],
-      ["Comment s’appelle l’arbitre qui accompagne le tireur sur le stage ?", ["Le Range Officer (RO)", "Le Match Director", "Le Stats Officer", "Le Range Master"]],
-      ["En IPSC, quelle pénalité coûte une cible manquée (miss) ?", ["10 points", "5 points", "20 points", "Aucune"]],
-      ["Que demande la commande « Unload and show clear » ?", ["Décharger et montrer l’arme vide", "Recharger l’arme", "Viser la première cible", "Ranger l’arme dans l’étui"]],
-      ["Dans quelle division IPSC compensateurs et viseurs optiques sont-ils autorisés ?", ["Open", "Production", "Standard", "Classic"]],
-      ["Que signifie IPSC ?",["International Practical Shooting Confederation","International Pistol Sport Competition","Independent Precision Shooting Council","International Police Shooting Club"]],
-      ["Combien de points vaut un impact en zone Alpha ?",["5","3","1","10"]],
-      ["Combien de zones de score compte une cible IPSC classique ?",["3 (A, C et D)","2","4","5"]],
-      ["Quelle commande précède le signal sonore de départ ?",["Standby","Make ready","Stop","Are you ready"]],
-      ["Comment se calcule le facteur de touche (hit factor) ?",["Points divisés par le temps","Temps divisé par les points","Points multipliés par le temps","Points moins le temps"]],
-      ["Que désigne un no-shoot ?",["Une cible à ne pas toucher","Une cible hors de portée","Un tir sans munition","Une zone interdite au public"]],
-      ["Que signifie DNF ?",["Did Not Finish","Do Not Fire","Draw Not Fast","Disqualified Not Final"]],
-      ["Dans quelle direction le canon doit-il toujours pointer ?",["Dans une direction sûre","Vers le bas uniquement","Vers le tireur suivant","Vers le plafond"]]
+    { id:"l1", name:"Ligue 1", blurb:"Champions, buteurs et derbys", q:[
+      ["Quel club détient le record de titres de champion de France ?", ["Le Paris Saint-Germain", "L’AS Saint-Étienne", "L’Olympique de Marseille", "L’Olympique lyonnais"]],
+      ["Qui est le meilleur buteur de l’histoire du championnat de France ?", ["Delio Onnis", "Jean-Pierre Papin", "Kylian Mbappé", "Bernard Lacombe"]],
+      ["Combien de clubs disputent la Ligue 1 depuis la saison 2023-2024 ?", ["18", "20", "16", "22"]],
+      ["Avant 2002, comment s’appelait la Ligue 1 ?", ["La Division 1", "Le Championnat national", "La Première Ligue", "L’Élite"]],
+      ["Quel joueur de l’OM a fini meilleur buteur de D1 cinq saisons de suite (1988-1992) ?", ["Jean-Pierre Papin", "Didier Drogba", "Alen Bokšić", "Rudi Völler"]],
+      ["Quel club a été sacré champion de France en 2021 ?", ["Le LOSC Lille", "L’AS Monaco", "Le PSG", "L’Olympique lyonnais"]],
+      ["Quel club a été champion de France en 2017 ?", ["L’AS Monaco", "Le PSG", "L’OGC Nice", "L’Olympique lyonnais"]],
+      ["Quel club a créé la surprise en devenant champion de France en 2012 ?", ["Montpellier", "Lille", "Bordeaux", "Lyon"]],
+      ["Quel club a été champion de France en 2009 ?", ["Les Girondins de Bordeaux", "L’Olympique lyonnais", "L’Olympique de Marseille", "Le LOSC Lille"]],
+      ["Quel match est surnommé « le Classique » ?", ["PSG – OM", "OL – ASSE", "Nice – Monaco", "Lens – Lille"]],
+      ["Quels clubs s’affrontent dans le derby du Rhône ?", ["Lyon et Saint-Étienne", "Lyon et Grenoble", "Marseille et Nice", "Montpellier et Nîmes"]],
+      ["Quels clubs s’affrontent dans le derby du Nord ?", ["Lens et Lille", "Lille et Valenciennes", "Lens et Amiens", "Lille et Dunkerque"]],
+      ["Dans quel club Kylian Mbappé a-t-il débuté en professionnel ?", ["L’AS Monaco", "Le PSG", "Le Stade Malherbe de Caen", "Le Stade rennais"]],
+      ["Quel club joue au stade Geoffroy-Guichard ?", ["L’AS Saint-Étienne", "L’Olympique lyonnais", "Le FC Nantes", "Le RC Lens"]],
+      ["Quel club joue à l’Allianz Riviera ?", ["L’OGC Nice", "L’AS Monaco", "L’Olympique de Marseille", "Le Montpellier HSC"]],
+      ["Dans quel club français Zlatan Ibrahimović a-t-il joué ?", ["Le PSG", "L’Olympique de Marseille", "L’AS Monaco", "L’Olympique lyonnais"]],
+      ["Qui est le meilleur buteur de l’histoire du PSG ?", ["Kylian Mbappé", "Edinson Cavani", "Zlatan Ibrahimović", "Pauleta"]],
+      ["Comment s’appelle le trophée du meilleur joueur de la saison de Ligue 1 ?", ["Le trophée UNFP", "Le Ballon d’or", "Le Soulier d’or", "Le trophée Kopa"]],
+      ["Quel club joue au Matmut Atlantique ?", ["Les Girondins de Bordeaux", "Le FC Nantes", "Le Stade rennais", "Le Toulouse FC"]]
     ]}
   ];
 
@@ -6908,7 +6912,7 @@ var THEMES = [
     { name:'Monde', ids:['geo','cap','afr','flag','mon'] },
     { name:'Cinéma & pop culture', ids:['cin','dis','hp','sim','pok','gta','a14'] },
     { name:'Musique', ids:['bt','mus'] },
-    { name:'Sport', ids:['spo','bkb','clu','tir'] },
+    { name:'Sport', ids:['spo','l1','clu','bkb'] },
     { name:'Marques & auto', ids:['aut','log','slo','mec'] },
     { name:'Table & langage', ids:['lng','gas','des','exp'] },
     { name:'Roue & jeux', ids:['spin','ttt','c4','chess'] }
@@ -6919,7 +6923,7 @@ var THEMES = [
     var st = y === b ? '' : y > b ? 'win' : 'lose', sb = y === b ? '' : y > b ? 'lose' : 'win';
     [['sYou', st], ['sBot', sb], ['fYou', st], ['fBot', sb]].forEach(function(p){ var e = $(p[0]); if (e) e.setAttribute('data-lead', p[1]); });
   }
-  var GL_ORDER = ['tr-wk','tr-pok','tr-qua','tr-arc','tr-foot','dl','his','myt','cg','sav','jus','sci','qua','mat','ast','phy','chi','bio','san','crp','calc','arc','pnt','liv','art','geo','cap','afr','mon','flag','cin','dis','hp','sim','gta','pok','a14','mus','bt','bkb','spo','clu','tir','aut','log','slo','mec','des','gas','exp','spin','ttt','c4','chess'];
+  var GL_ORDER = ['tr-wk','tr-pok','tr-qua','tr-arc','tr-foot','dl','his','myt','cg','sav','jus','sci','qua','mat','ast','phy','chi','bio','san','crp','calc','arc','pnt','liv','art','geo','cap','afr','mon','flag','cin','dis','hp','sim','gta','pok','a14','mus','bt','bkb','spo','l1','clu','aut','log','slo','mec','des','gas','exp','spin','ttt','c4','chess'];
   function glyphAt(idx){
     var form = idx % 25, v = Math.floor(idx / 25) % 9, sd = idx * 7919 + 13;
     function rnd(){ sd = (sd + 0x6D2B79F5) | 0; var t = Math.imul(sd ^ sd >>> 15, 1 | sd); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }
@@ -7121,7 +7125,7 @@ var THEMES = [
   var PK = null;
 
   /* ---------- Mode roue : une catégorie tirée au sort par question ---------- */
-  var TEMO = {"act": "📰", "ser": "📺", "mzk": "🎵", "nat": "🌿", "jv": "🎮", "bib": "📖", "cor": "🕌", "tor": "✡️", "rmo": "🕉️", "lng": "✍️", "geo": "🌍", "his": "🏺", "sci": "🔬", "cin": "🎬", "spo": "⚽", "cap": "🏙️", "log": "🏷️", "tir": "🎯", "bt": "🎧", "dis": "🏰", "flag": "🏁", "art": "🖼️", "chi": "🧪", "cg": "🧠", "hp": "🪄", "slo": "📢", "afr": "🦁", "sim": "🍩", "gta": "🚗", "clu": "🏟️", "des": "🍰", "sav": "💡", "gas": "🥖", "exp": "💬", "mus": "🎻", "pok": "🔴", "liv": "📚", "mon": "💶", "bio": "🧬", "a14": "📅", "calc": "🧮", "mec": "🔧", "ttt": "❌", "c4": "🔴", "chess": "♟️", "qua": "⚛️", "arc": "🏛️", "mat": "🧮", "bkb": "🏀", "mjf": "👕", "mjb": "🎽", "ast": "🪐", "phy": "🧲", "myt": "🔱", "jus": "⚖️", "aut": "🚗", "san": "🩺", "crp": "🫀", "pnt": "🎨", "spin": "🎡"}, TCOL = {"act": "#E5484D", "ser": "#7B3FBF", "mzk": "#E0457B", "nat": "#2F9E5B", "jv": "#2B6CD4", "lng": "#D8567A", "geo": "#3BA7E0", "his": "#C98A3C", "sci": "#3FBF8A", "cin": "#8E6BD8", "spo": "#FF8A3D", "cap": "#F8545A", "log": "#FFB400", "tir": "#4F5B66", "bt": "#8E6BD8", "dis": "#3B6FE0", "flag": "#2FB26B", "art": "#D9534F", "chi": "#F26C8B", "cg": "#FFB400", "hp": "#2E8B57", "slo": "#14B8A6", "afr": "#E58A2B", "sim": "#FFD400", "gta": "#4F8F3A", "clu": "#2F6FE0", "des": "#EC6FA8", "sav": "#8E6BD8", "gas": "#C7773A", "exp": "#E8685A", "mus": "#2D7D6E", "pok": "#F2C230", "liv": "#B0573A", "mon": "#3C9D5D", "bio": "#46B06A", "a14": "#5B6B7B", "calc": "#2BB3C0", "mec": "#6B7A8F", "ttt": "#3BA7E0", "c4": "#3B6FE0", "chess": "#5B4A9E", "qua": "#7A5CFF", "arc": "#B58A5A", "mat": "#2F80ED", "bkb": "#E8742A", "mjf": "#1FA67A", "mjb": "#8E5BD9", "ast": "#3B4CCA", "phy": "#19A7CE", "myt": "#D4A017", "jus": "#2E5A7A", "aut": "#E0452B", "san": "#E04848", "crp": "#E86A8A", "pnt": "#E0589F", "spin": "#FF7A00"};
+  var TEMO = {"act": "📰", "ser": "📺", "mzk": "🎵", "nat": "🌿", "jv": "🎮", "bib": "📖", "cor": "🕌", "tor": "✡️", "rmo": "🕉️", "lng": "✍️", "geo": "🌍", "his": "🏺", "sci": "🔬", "cin": "🎬", "spo": "⚽", "cap": "🏙️", "log": "🏷️", "tir": "🎯", "l1": "⚽", "bt": "🎧", "dis": "🏰", "flag": "🏁", "art": "🖼️", "chi": "🧪", "cg": "🧠", "hp": "🪄", "slo": "📢", "afr": "🦁", "sim": "🍩", "gta": "🚗", "clu": "🏟️", "des": "🍰", "sav": "💡", "gas": "🥖", "exp": "💬", "mus": "🎻", "pok": "🔴", "liv": "📚", "mon": "💶", "bio": "🧬", "a14": "📅", "calc": "🧮", "mec": "🔧", "ttt": "❌", "c4": "🔴", "chess": "♟️", "qua": "⚛️", "arc": "🏛️", "mat": "🧮", "bkb": "🏀", "mjf": "👕", "mjb": "🎽", "ast": "🪐", "phy": "🧲", "myt": "🔱", "jus": "⚖️", "aut": "🚗", "san": "🩺", "crp": "🫀", "pnt": "🎨", "spin": "🎡"}, TCOL = {"act": "#E5484D", "ser": "#7B3FBF", "mzk": "#E0457B", "nat": "#2F9E5B", "jv": "#2B6CD4", "lng": "#D8567A", "geo": "#3BA7E0", "his": "#C98A3C", "sci": "#3FBF8A", "cin": "#8E6BD8", "spo": "#FF8A3D", "cap": "#F8545A", "log": "#FFB400", "tir": "#4F5B66", "l1": "#1D4ED8", "bt": "#8E6BD8", "dis": "#3B6FE0", "flag": "#2FB26B", "art": "#D9534F", "chi": "#F26C8B", "cg": "#FFB400", "hp": "#2E8B57", "slo": "#14B8A6", "afr": "#E58A2B", "sim": "#FFD400", "gta": "#4F8F3A", "clu": "#2F6FE0", "des": "#EC6FA8", "sav": "#8E6BD8", "gas": "#C7773A", "exp": "#E8685A", "mus": "#2D7D6E", "pok": "#F2C230", "liv": "#B0573A", "mon": "#3C9D5D", "bio": "#46B06A", "a14": "#5B6B7B", "calc": "#2BB3C0", "mec": "#6B7A8F", "ttt": "#3BA7E0", "c4": "#3B6FE0", "chess": "#5B4A9E", "qua": "#7A5CFF", "arc": "#B58A5A", "mat": "#2F80ED", "bkb": "#E8742A", "mjf": "#1FA67A", "mjb": "#8E5BD9", "ast": "#3B4CCA", "phy": "#19A7CE", "myt": "#D4A017", "jus": "#2E5A7A", "aut": "#E0452B", "san": "#E04848", "crp": "#E86A8A", "pnt": "#E0589F", "spin": "#FF7A00"};
   function tEmo(id){ return TEMO[id] || '❓'; }
   function tCol(id){ return TCOL[id] || '#F8545A'; }
   function spinQs(seed, d){
@@ -10859,7 +10863,7 @@ var THEMES = [
   /* ---------- Suivi & messagerie (joueurs fictifs : la messagerie est une maquette) ---------- */
   var MU = [
     { id:'lea', name:'Léa', av:[11,0], co:'France', ci:'Lyon', lv:14, w:212, pl:301, bio:'Fan de cinéma et de séries.', fb:1, th:['cin','sim','dis'] },
-    { id:'max', name:'Maxime', av:[13,3], co:'Suisse', ci:'Lausanne', lv:9, w:98, pl:170, bio:'Toujours là pour un duel de sport.', fb:1, th:['spo','clu','tir'] },
+    { id:'max', name:'Maxime', av:[13,3], co:'Suisse', ci:'Lausanne', lv:9, w:98, pl:170, bio:'Toujours là pour un duel de sport.', fb:1, th:['spo','clu','l1'] },
     { id:'ines', name:'Inès', av:[21,5], co:'Belgique', ci:'Bruxelles', lv:21, w:340, pl:452, bio:'Histoire & géo, c’est ma vie.', fb:0, th:['his','geo','cap'] },
     { id:'tom2', name:'Théo', av:[2,4], co:'France', ci:'Paris', lv:6, w:41, pl:88, bio:'Je révise mes Pokémon.', fb:1, th:['pok','hp','gta'] },
     { id:'sara', name:'Sara', av:[27,7], co:'Maroc', ci:'Casablanca', lv:17, w:188, pl:260, bio:'Sciences et musique.', fb:0, th:['sci','mus','qua'] },
