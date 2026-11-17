@@ -3564,7 +3564,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v591', apk:162, ios:27 };
+    window.JO_BUILD = { web:'v591', apk:162, ios:28 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -18777,7 +18777,7 @@ html body #intro .vsh-s.vsh-wood img{object-fit:fill}
         '<path id="ribArcB" d="' + arc(338, 2.15e-4, 600) + '"/>' +
         '<linearGradient id="ribInk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2a1c"/><stop offset=".55" stop-color="#140d07"/><stop offset="1" stop-color="#000"/></linearGradient>' +
         '<linearGradient id="ribRed" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2402f"/><stop offset="1" stop-color="#8e1209"/></linearGradient>' +
-        '<filter id="ribEmb" x="-5%" y="-30%" width="110%" height="160%">' +
+        '<filter id="ribEmb" filterUnits="userSpaceOnUse" x="0" y="0" width="2062" height="683">' /* v591 : zone du relief = tout le bandeau, le gain (+29) n'est plus rogné à droite */ +
           '<feGaussianBlur in="SourceAlpha" stdDeviation="2.2" result="b"/>' +
           '<feOffset in="b" dx="0" dy="5" result="o"/><feFlood flood-color="#5a3d1c" flood-opacity=".55"/><feComposite in2="o" operator="in" result="sh"/>' +
           '<feOffset in="SourceAlpha" dx="0" dy="-2.5" result="hl0"/><feFlood flood-color="#fffaf0" flood-opacity=".95"/><feComposite in2="hl0" operator="in" result="hl"/>' +
