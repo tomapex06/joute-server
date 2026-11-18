@@ -3564,7 +3564,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v599', apk:162, ios:28 };
+    window.JO_BUILD = { web:'v600', apk:162, ios:28 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -7783,6 +7783,11 @@ var THEMES = [
         if (who.length){ var tg2 = b.querySelector('.tag'); tg2.hidden = false; tg2.textContent = who.length > 3 ? who.slice(0, 3).join(', ') + ' +' + (who.length - 3) : who.join(', '); if (i !== q.ans) b.classList.add('wrong'); }
       }
     });
+    /* v600 : drapeaux — après le marquage habituel, la tuile se retourne de haut en bas et devient verte ou rouge */
+    if (g.theme && g.theme.id === 'flag'){
+      var fbs = $('opts').children, flipT = function(b, cls){ if (!b) return; b.classList.add('jfl'); setTimeout(function(){ if (G === g) b.classList.add(cls); }, 270); };
+      setTimeout(function(){ if (G !== g) return; if (r.youOk) flipT(fbs[q.ans], 'jfg'); else { if (r.choice >= 0) flipT(fbs[r.choice], 'jfr'); setTimeout(function(){ if (G === g) flipT(fbs[q.ans], 'jfg'); }, r.choice >= 0 ? 380 : 0); } }, 750);
+    }
     $('sYou').textContent = fmt(g.you); $('sBot').textContent = fmt(g.bot); leadMark(g.you, g.bot);
     if (!g.sd && !g.solo) voxReact(g, r);
     $('pYou').children[g.i].classList.add(r.youOk ? 'ok' : 'ko');
@@ -7815,7 +7820,7 @@ var THEMES = [
     if (g.sd) sdSettle(g, r);
     $('after').hidden = false;
     g.revealed[g.i] = true;
-    g.adv = setTimeout(advance, qv.hidden ? 2800 : 4500);
+    g.adv = setTimeout(advance, (qv.hidden ? 2800 : 4500) + (g.theme && g.theme.id === 'flag' ? 1000 : 0)); /* v600 : le temps de voir la tuile retournée */
   }
 
   function advance(){
@@ -16038,6 +16043,11 @@ body.in-duel #duel .duelfoot{padding-bottom:max(26px, calc(env(safe-area-inset-b
 .frsc-x{position:absolute;top:calc(16px + env(safe-area-inset-top,0px));right:16px;width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:22px;cursor:pointer}
 #duel .thtag .pqs,#thTag .pqs{font-weight:800;color:var(--ink,#111)}
 html body #duel.noq .qimg svg.flag{width:min(88vw,640px)!important;height:auto!important;max-height:42vh}
+@keyframes jFlip{0%{transform:perspective(800px) rotateX(0)}49.9%{transform:perspective(800px) rotateX(90deg)}50%{transform:perspective(800px) rotateX(-90deg)}100%{transform:perspective(800px) rotateX(0)}}
+html body #duel .opts .opt.jfl{animation:jFlip .55s cubic-bezier(.3,.7,.3,1) both}
+html body #duel .opts .opt.jfg{background:#16A34A!important;background-image:none!important;color:#fff!important;border-color:#16A34A!important;text-decoration:none!important}
+html body #duel .opts .opt.jfr{background:#DC2626!important;background-image:none!important;color:#fff!important;border-color:#DC2626!important;text-decoration:none!important}
+html body #duel .opts .opt.jfg *,html body #duel .opts .opt.jfr *{color:#fff!important;text-decoration:none!important}
 html body #duel.noq #thTag{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
 </style><script id="qrGenLib">if(typeof window.qrcode!=="function"){//---------------------------------------------------------------------
 //
