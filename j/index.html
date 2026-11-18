@@ -3564,7 +3564,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v597', apk:162, ios:28 };
+    window.JO_BUILD = { web:'v598', apk:162, ios:28 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -7647,8 +7647,8 @@ var THEMES = [
     $('qText').textContent = q.q;
     $('thTag').textContent = (g.spin && q.cat ? tEmo(q.cat.id) + ' ' + q.cat.name : g.tag) + (q.ctx ? ' · ' + q.ctx : '');
     /* v595 : quiz photo — la question est toujours la même : on la met dans le bandeau du thème et la photo prend sa place */
-    var PQS = { 'Dans quelle ville se trouve ce bâtiment ?':'Quelle ville ?', 'Quelle est cette construction ?':'Quel monument ?', 'Qui a peint ce tableau ?':'Quel peintre ?', 'Quel est ce modèle ?':'Quel modèle ?', 'Quel est cet animal ?':'Quel animal ?', 'Quelle est cette fleur ?':'Quelle fleur ?', 'Quel est cet arbre ?':'Quel arbre ?', 'Quel est ce phénomène ?':'Quel phénomène ?', 'Quel est ce site naturel ?':'Quel site ?' };
-    var pqs = q.img && !q.img.svg && PQS[q.q];
+    var PQS = { 'Dans quelle ville se trouve ce bâtiment ?':'Quelle ville ?', 'Quelle est cette construction ?':'Quel monument ?', 'Qui a peint ce tableau ?':'Quel peintre ?', 'Quel est ce modèle ?':'Quel modèle ?', 'Quel est cet animal ?':'Quel animal ?', 'Quelle est cette fleur ?':'Quelle fleur ?', 'Quel est cet arbre ?':'Quel arbre ?', 'Quel est ce phénomène ?':'Quel phénomène ?', 'Quel est ce site naturel ?':'Quel site ?', 'À quel pays appartient ce drapeau ?':'Quel pays ?' };
+    var pqs = q.img && PQS[q.q];
     $('qText').hidden = !!pqs; $('duel').classList.toggle('noq', !!pqs);
     if (pqs){ var tt = $('thTag'), pqw = document.createElement('span'), pqb = document.createElement('b'); pqw.textContent = tt.textContent + ' '; pqb.className = 'pqs'; pqb.textContent = '· ' + pqs; pqw.appendChild(pqb); tt.textContent = ''; tt.appendChild(pqw); }
     var qi = $('qImg'); qi.innerHTML = '';
@@ -16034,6 +16034,7 @@ body.in-duel #duel .duelfoot{padding-bottom:max(26px, calc(env(safe-area-inset-b
 .frsc-t{position:absolute;left:16px;right:16px;bottom:calc(60px + env(safe-area-inset-bottom,0px));text-align:center;color:#fff;font:600 16px/1.35 system-ui,Arial,sans-serif;text-shadow:0 1px 4px rgba(0,0,0,.8)}
 .frsc-x{position:absolute;top:calc(16px + env(safe-area-inset-top,0px));right:16px;width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:22px;cursor:pointer}
 #duel .thtag .pqs,#thTag .pqs{font-weight:800;color:var(--ink,#111)}
+html body #duel.noq .qimg svg.flag{width:min(88vw,640px)!important;height:auto!important;max-height:42vh}
 html body #duel.noq #thTag{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
 </style><script id="qrGenLib">if(typeof window.qrcode!=="function"){//---------------------------------------------------------------------
 //
