@@ -3564,7 +3564,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v598', apk:162, ios:28 };
+    window.JO_BUILD = { web:'v599', apk:162, ios:28 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -15977,9 +15977,12 @@ body.in-duel #duel .duelfoot{padding-bottom:max(26px, calc(env(safe-area-inset-b
     var d = document.getElementById('duel');
     if (!d || d.hidden || !document.body.classList.contains('in-duel')) return;
     busy = true;
-    var H = window.innerHeight, img = d.querySelector('.qimg img'), photo = !!(img && img.offsetParent);
+    var H = window.innerHeight, img = d.querySelector('.qimg img'), photo = !!(img && img.offsetParent), flg = d.querySelector('.qimg svg.flag');
+    if (flg && flg.getBoundingClientRect().width > 0 && d.classList.contains('noq')) photo = true; /* v599 : drapeaux en tuiles 2 x 2 comme les quiz photo */
     var s = d.style;
-    if (d.classList.contains('phq') !== photo) d.classList.toggle('phq', photo);
+    /* v599 : réponses en tuiles 2 x 2 aussi sans image, si elles sont assez courtes */
+    var tiles = photo; if (!tiles){ var ot = d.querySelectorAll('.opts .opt .txt'); tiles = ot.length === 4 && Array.prototype.every.call(ot, function(x){ return (x.textContent || '').length <= 24; }); }
+    if (d.classList.contains('phq') !== tiles) d.classList.toggle('phq', tiles);
     var v = photo ? { imgH: Math.min(560, H * 0.5), optH: 64, optF: 18, qF: 22, ptsF: 92 }
                   : { imgH: 0, optH: 76, optF: 22, qF: 30, ptsF: 112 };
     /* v567 : tablette (iPad) — tout est plus grand pour remplir l'écran, la boucle ci-dessous réduit si ça déborde */
