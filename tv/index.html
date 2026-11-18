@@ -18812,8 +18812,8 @@ html body.tvgame #opts .opt:nth-child(odd){margin-right:3%!important}
 <script id="tvOptsRv">setInterval(function(){try{var o=document.getElementById("opts");if(!o)return;var r=!!o.querySelector(".correct");if(r!==(o.className.indexOf("rv")>=0)){if(r)o.className+=" rv";else o.className=o.className.replace(/\s*rv/g,"");}}catch(e){}},200);</script>
 <style id="tvPhotoQ">/* 18 nov : drapeaux et quiz photo sur la télé */
 html body.tvgame #duel .qimg svg.flag,html body[data-skin] .qimg svg.flag{filter:none!important;-webkit-filter:none!important}
-html body.tvgame #duel.tvnoq .qimg svg.flag{width:60vh!important;height:40vh!important}
-html body.tvgame #duel.tvnoq .qimg img{max-height:46vh!important;height:auto!important;width:auto!important;max-width:80vw!important}
+html body.tvgame #duel.tvnoq .qimg svg.flag{width:51vh!important;height:34vh!important}
+html body.tvgame #duel.tvnoq .qimg img{max-height:40vh!important;height:auto!important;width:auto!important;max-width:80vw!important}
 html body.tvgame #duel .tvpq{font-weight:800}
 </style>
 <script id="tvPhotoQJs">(function(){
@@ -18827,6 +18827,24 @@ var sp=tg.querySelector('.tvpq');if(on&&!sp){sp=document.createElement('span');s
 }finally{busy=false;}}
 function boot(){var t=document.getElementById('qText'),im=document.getElementById('qImg'),tg=document.getElementById('thTag');if(!t||!im||!tg||!window.MutationObserver){return setTimeout(boot,500);}
 var mo=new MutationObserver(function(){setTimeout(sync,0);});mo.observe(t,{childList:true,characterData:true,subtree:true});mo.observe(im,{attributes:true,attributeFilter:['hidden'],childList:true});mo.observe(tg,{childList:true});sync();}
+
+/* 18 nov soir : tout doit tenir dans l'écran de la télé, quelle que soit sa taille : on réduit l'image jusqu'à ce que les réponses tiennent */
+function tvFit(){try{
+var d=document.getElementById('duel');if(!d||d.offsetParent===null&&!d.getClientRects().length)return;
+var im=document.getElementById('qImg');if(!im||im.hidden)return;
+var f=im.querySelector('svg.flag')||im.querySelector('img');if(!f)return;
+f.style.removeProperty('height');f.style.removeProperty('width');f.style.removeProperty('max-height');
+var H=window.innerHeight,ops=d.querySelectorAll('.opt'),bot=0,i,r;
+for(i=0;i<ops.length;i++){r=ops[i].getBoundingClientRect();if(r.height>0&&r.bottom>bot)bot=r.bottom;}
+var over=bot-(H-H*0.03);if(over<=0)return;
+var fr=f.getBoundingClientRect(),h=Math.max(H*0.16,fr.height-over-4);
+if(f.tagName.toLowerCase()==='svg'){f.style.setProperty('height',h+'px','important');f.style.setProperty('width',(h*1.5)+'px','important');}
+else{f.style.setProperty('max-height',h+'px','important');}
+}catch(e){}}
+function tvFitSoon(){setTimeout(tvFit,30);setTimeout(tvFit,250);setTimeout(tvFit,800);}
+window.addEventListener('resize',tvFitSoon);
+(function hook(){var im=document.getElementById('qImg');if(!im||!window.MutationObserver)return setTimeout(hook,500);
+new MutationObserver(tvFitSoon).observe(im,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden','src']});tvFitSoon();})();
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();</script>
 </body></html>
