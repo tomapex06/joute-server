@@ -3564,7 +3564,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v593', apk:162, ios:28 };
+    window.JO_BUILD = { web:'v594', apk:162, ios:28 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -5931,6 +5931,8 @@ var THEMES = [
     if (T.modes && !(mode === '' || mode === 'mix' || T.id === 'spo')) return res;
     if (res.some(function(q){ return !q || q.img || q.art || q.bt || !q.opts || q.opts.length !== 4; })) return res;
     var rows = bankRows(T.id), rnd = mulberry32((seed | 0) + 4241), d = diff === 2 || diff === 3 ? diff : 1;
+    /* v594 : Sport → Football = seulement les questions de foot de la banque ; Sport général = pas de foot */
+    if (T.id === 'spo' && (mode === 'foot' || mode === 'gen')){ var FT = /foot|barcelone|russia/i; rows = rows.filter(function(r){ return mode === 'foot' ? FT.test(r[6] || '') : !FT.test(r[6] || ''); }); if (rows.length < 8) return res; }
     var nb = Math.min(res.length, Math.max(1, res.length - 2));
     var pref = rows.filter(function(r){ return d === 1 ? r[5] === 1 : d === 2 ? r[5] <= 2 : r[5] >= 2; }); if (pref.length < nb * 4) pref = rows;
     if (FRESH){ var freshN = pref.filter(function(r){ return seenAge(r[2]) >= SEEN_DAYS; }).length, freshS = res.filter(function(q){ return seenAge(q.q) >= SEEN_DAYS; }).length;
