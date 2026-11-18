@@ -3564,7 +3564,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v594', apk:162, ios:28 };
+    window.JO_BUILD = { web:'v595', apk:162, ios:28 };
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
@@ -7650,6 +7650,11 @@ var THEMES = [
     $('qLab').textContent = 'Question ' + (g.i + 1) + ' sur ' + N + (g.i === N - 1 ? ' · compte double' : '');
     $('qText').textContent = q.q;
     $('thTag').textContent = (g.spin && q.cat ? tEmo(q.cat.id) + ' ' + q.cat.name : g.tag) + (q.ctx ? ' · ' + q.ctx : '');
+    /* v595 : quiz photo — la question est toujours la même : on la met dans le bandeau du thème et la photo prend sa place */
+    var PQS = { 'Dans quelle ville se trouve ce bâtiment ?':'Quelle ville ?', 'Quelle est cette construction ?':'Quel monument ?', 'Qui a peint ce tableau ?':'Quel peintre ?', 'Quel est ce modèle ?':'Quel modèle ?' };
+    var pqs = q.img && !q.img.svg && PQS[q.q];
+    $('qText').hidden = !!pqs; $('duel').classList.toggle('noq', !!pqs);
+    if (pqs){ var tt = $('thTag'), pqw = document.createElement('span'), pqb = document.createElement('b'); pqw.textContent = tt.textContent + ' '; pqb.className = 'pqs'; pqb.textContent = '· ' + pqs; pqw.appendChild(pqb); tt.textContent = ''; tt.appendChild(pqw); }
     var qi = $('qImg'); qi.innerHTML = '';
     if (q.img){
       if (q.img.svg) qi.innerHTML = q.img.svg;
@@ -15983,6 +15988,7 @@ body.in-duel #duel .duelfoot{padding-bottom:max(26px, calc(env(safe-area-inset-b
                   : { imgH: 0, optH: 76, optF: 22, qF: 30, ptsF: 112 };
     /* v567 : tablette (iPad) — tout est plus grand pour remplir l'écran, la boucle ci-dessous réduit si ça déborde */
     if (window.innerWidth >= 600 && H >= 860){ var tk = Math.min(1.75, H / 700); v.optH = Math.round(v.optH * tk); v.optF = Math.round(v.optF * tk); v.qF = Math.round(v.qF * tk); v.ptsF = Math.round(v.ptsF * tk); if (photo) v.imgH = Math.min(Math.round(H * 0.45), 760); }
+    if (photo && d.classList.contains('noq')) v.imgH = Math.min(Math.round(H * 0.6), 980); /* v595 : sans la phrase de question, la photo grandit */
     /* le score ne doit jamais déborder : taille selon le nombre de chiffres (chaque côté a la moitié de la largeur) */
     try { var sy = document.getElementById('sYou'), sbt = document.getElementById('sBot'), nch = Math.max(String(sy && sy.textContent || '').trim().length, String(sbt && sbt.textContent || '').trim().length, 1); var half = (d.clientWidth || window.innerWidth) / 2 - 8; v.ptsF = Math.max(36, Math.min(v.ptsF, Math.floor(half / (nch * 0.62 + 0.15)))); } catch(e){}
     function apply(){ s.setProperty('--imgH', px(v.imgH)); s.setProperty('--optH', px(v.optH)); s.setProperty('--optF', px(v.optF)); s.setProperty('--qF', px(v.qF)); s.setProperty('--ptsF', px(v.ptsF)); }
@@ -16031,6 +16037,8 @@ body.in-duel #duel .duelfoot{padding-bottom:max(26px, calc(env(safe-area-inset-b
 @keyframes frscP{50%{outline-color:#fff}}
 .frsc-t{position:absolute;left:16px;right:16px;bottom:calc(60px + env(safe-area-inset-bottom,0px));text-align:center;color:#fff;font:600 16px/1.35 system-ui,Arial,sans-serif;text-shadow:0 1px 4px rgba(0,0,0,.8)}
 .frsc-x{position:absolute;top:calc(16px + env(safe-area-inset-top,0px));right:16px;width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:22px;cursor:pointer}
+#duel .thtag .pqs,#thTag .pqs{font-weight:800;color:var(--ink,#111)}
+html body #duel.noq #thTag{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
 </style><script id="qrGenLib">if(typeof window.qrcode!=="function"){//---------------------------------------------------------------------
 //
 // QR Code Generator for JavaScript
