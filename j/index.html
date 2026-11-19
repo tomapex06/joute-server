@@ -16,7 +16,95 @@
 .rsh-blk{background:transparent!important;color:#F8545A!important;box-shadow:inset 0 0 0 1.5px #F8545A}
 .rsh-bh{margin-top:8px}
 .rsh-x{align-self:center!important;margin-top:10px;color:rgba(255,255,255,.6)}
-</style></head><body>
+</style><style id="joThemes">
+/* v611 : skins « New Wave » (A3) et « Riso » (C1), choisis dans Paramètres → Interface.
+   Ils se posent par-dessus Clean girl (data-skin="max") via body[data-theme]. */
+
+/* ---------- NEW WAVE : gris, noir, orange signal, Inter Tight + JetBrains Mono ---------- */
+body[data-skin="max"][data-theme="nw"]{
+  --paper:#E4E4E0; --paper2:#D6D6D2; --ink:#111; --muted:#55554F; --rule:#111;
+  --ink1:#111; --on-ink1:#E4E4E0; --ink2:#FF4F00; --on-ink2:#111;
+  --ok:#FF4F00; --on-ok:#111; --hatch:rgba(17,17,17,.35);
+  --gothic:'Inter Tight','Helvetica Neue',Arial,sans-serif; --grot:'Inter Tight','Helvetica Neue',Arial,sans-serif;
+  --serif:'Inter Tight','Helvetica Neue',Arial,sans-serif; --disp:'Inter Tight','Helvetica Neue',Arial,sans-serif;
+  --pix:'JetBrains Mono',ui-monospace,monospace;
+  background:var(--paper);
+}
+body[data-skin="max"][data-theme="nw"] h1{font:900 clamp(44px,13vw,64px)/.86 var(--disp);letter-spacing:-.065em}
+body[data-skin="max"][data-theme="nw"] .mark{font:900 17px/1 var(--disp);letter-spacing:-.04em;text-transform:lowercase}
+body[data-skin="max"][data-theme="nw"] .lab,
+body[data-skin="max"][data-theme="nw"] .side .who,body[data-skin="max"][data-theme="nw"] #qLab,
+body[data-skin="max"][data-theme="nw"] .final .who,body[data-skin="max"][data-theme="nw"] .theme-tag{font:700 10px/1.2 var(--pix);letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+body[data-skin="max"][data-theme="nw"] .lab::after{border-top:2px solid var(--ink)}
+body[data-skin="max"][data-theme="nw"] .btn{font:900 15px/1 var(--disp);letter-spacing:-.02em;text-transform:none;border:2px solid var(--ink);border-radius:0}
+body[data-skin="max"][data-theme="nw"] .btn.primary,body[data-skin="max"][data-theme="nw"] .btn:hover{background:#FF4F00;color:#111;border-color:#FF4F00}
+body[data-skin="max"][data-theme="nw"] .theme .nm,body[data-skin="max"][data-theme="nw"] .mode .mn{font:900 17px/1.02 var(--disp);letter-spacing:-.04em;text-transform:none}
+body[data-skin="max"][data-theme="nw"] .grp:nth-child(even) .theme .nm{font-style:italic}
+body[data-skin="max"][data-theme="nw"] .theme .bs{font:700 18px/1 var(--pix)}
+body[data-skin="max"][data-theme="nw"] .theme:not(:disabled):hover{box-shadow:inset 6px 0 0 #FF4F00}
+body[data-skin="max"][data-theme="nw"] .opts{gap:8px}
+body[data-skin="max"][data-theme="nw"] .opt{border:0;background:#fff;font:900 20px/1.15 var(--disp);letter-spacing:-.035em;padding:16px 12px}
+body[data-skin="max"][data-theme="nw"] .opt:nth-child(even){margin-left:18px;font-style:italic}
+body[data-skin="max"][data-theme="nw"] .opt .ltr{font:700 11px/1 var(--pix);color:#55554F}
+body[data-skin="max"][data-theme="nw"] .opt:not(:disabled):hover{box-shadow:inset 6px 0 0 #FF4F00}
+body[data-skin="max"][data-theme="nw"] .opt.picked,body[data-skin="max"][data-theme="nw"] .opt.picked:disabled{background:#111;color:#E4E4E0}
+body[data-skin="max"][data-theme="nw"] .side .pts,body[data-skin="max"][data-theme="nw"] .final b{font-family:var(--disp);font-weight:900;letter-spacing:-.07em}
+body[data-skin="max"][data-theme="nw"] .side.bot .pts{color:#C23A00;font-style:italic}
+body[data-skin="max"][data-theme="nw"] .verdict{font:900 clamp(56px,18vw,96px)/.8 var(--disp);letter-spacing:-.08em;font-style:italic}
+body[data-skin="max"][data-theme="nw"] .verdict.win{background:none;-webkit-text-fill-color:#FF4F00;color:#FF4F00;animation:none}
+body[data-skin="max"][data-theme="nw"] .seg{border:2px solid #111;border-radius:0}
+body[data-skin="max"][data-theme="nw"] .seg > button[aria-pressed="true"]{background:#FF4F00;color:#111}
+body[data-skin="max"][data-theme="nw"] .inp{border-bottom:2px solid #111;font-family:var(--disp);font-weight:700}
+body[data-skin="max"][data-theme="nw"] .lny-rope{stroke:#FF4F00}
+body[data-skin="max"][data-theme="nw"] .app::before{content:"";position:fixed;top:70px;right:-90px;width:300px;height:300px;background-image:radial-gradient(#111 1.6px,transparent 1.8px);background-size:9px 9px;transform:rotate(-12deg);opacity:.16;pointer-events:none;z-index:-1}
+
+/* ---------- RISO : papier, bleu et rose fluo en surimpression, Anton + Courier Prime ---------- */
+body[data-skin="max"][data-theme="riso"]{
+  --paper:#FAF8F3; --paper2:#F1EDE4; --ink:#0B3A8C; --muted:#4F6A9A; --rule:#0078BF;
+  --ink1:#0078BF; --on-ink1:#FAF8F3; --ink2:#FF48B0; --on-ink2:#0B3A8C;
+  --ok:#0078BF; --on-ok:#FAF8F3; --hatch:rgba(255,72,176,.4);
+  --gothic:'Anton',Impact,sans-serif; --disp:'Anton',Impact,sans-serif;
+  --grot:'Courier Prime','Courier New',monospace; --serif:'Courier Prime','Courier New',monospace;
+  --pix:'Anton',Impact,sans-serif;
+  background:var(--paper); color:var(--ink);
+}
+body[data-skin="max"][data-theme="riso"] h1,
+body[data-skin="max"][data-theme="riso"] .verdict,
+body[data-skin="max"][data-theme="riso"] .side .pts,
+body[data-skin="max"][data-theme="riso"] .final b{font-family:var(--disp);font-weight:400;letter-spacing:0;text-transform:uppercase;color:#0078BF;text-shadow:3px 3px 0 rgba(255,72,176,.8)}
+body[data-skin="max"][data-theme="riso"] h1{font-size:clamp(46px,14vw,68px);line-height:.9}
+body[data-skin="max"][data-theme="riso"] .verdict{font-size:clamp(60px,20vw,104px);line-height:.85}
+body[data-skin="max"][data-theme="riso"] .verdict.win{background:none;-webkit-text-fill-color:#0078BF;animation:none;transform:rotate(-3deg)}
+body[data-skin="max"][data-theme="riso"] .side.bot .pts{color:#E0218A;text-shadow:3px 3px 0 rgba(0,120,191,.55)}
+body[data-skin="max"][data-theme="riso"] .mark{font:400 22px/1 var(--disp);letter-spacing:.02em;color:#0078BF;text-shadow:2px 2px 0 rgba(255,72,176,.8)}
+body[data-skin="max"][data-theme="riso"] .lab,
+body[data-skin="max"][data-theme="riso"] .side .who,body[data-skin="max"][data-theme="riso"] #qLab,
+body[data-skin="max"][data-theme="riso"] .final .who,body[data-skin="max"][data-theme="riso"] .theme-tag{font:700 11px/1.2 var(--grot);letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+body[data-skin="max"][data-theme="riso"] .lab::after{border-top:2px solid #0078BF}
+body[data-skin="max"][data-theme="riso"] .btn{font:400 17px/1 var(--disp);letter-spacing:.02em;text-transform:uppercase;border:2px solid #0078BF;border-radius:0;color:#0B3A8C}
+body[data-skin="max"][data-theme="riso"] .btn.primary,body[data-skin="max"][data-theme="riso"] .btn:hover{background:#FF48B0;color:#0B3A8C;border-color:#FF48B0;box-shadow:4px 4px 0 #0078BF}
+body[data-skin="max"][data-theme="riso"] .theme .nm,body[data-skin="max"][data-theme="riso"] .mode .mn{font:400 19px/1 var(--disp);letter-spacing:.01em;text-transform:uppercase;color:#0B3A8C}
+body[data-skin="max"][data-theme="riso"] .theme .bl,body[data-skin="max"][data-theme="riso"] .lede,body[data-skin="max"][data-theme="riso"] .hint{font-family:var(--grot);color:var(--muted)}
+body[data-skin="max"][data-theme="riso"] .theme:not(:disabled):hover{box-shadow:inset 6px 0 0 #FF48B0}
+body[data-skin="max"][data-theme="riso"] .opts{gap:10px}
+body[data-skin="max"][data-theme="riso"] .opt{border:2px solid #0078BF;background:#FAF8F3;font:400 21px/1.1 var(--disp);letter-spacing:.01em;text-transform:uppercase;padding:15px 12px;color:#0B3A8C}
+body[data-skin="max"][data-theme="riso"] .opt .ltr{font:700 11px/1 var(--grot);color:#B0136B}
+body[data-skin="max"][data-theme="riso"] .opt:not(:disabled):hover{box-shadow:4px 4px 0 #FF48B0}
+body[data-skin="max"][data-theme="riso"] .opt.picked,body[data-skin="max"][data-theme="riso"] .opt.picked:disabled{background:#0078BF;color:#FAF8F3;box-shadow:4px 4px 0 #FF48B0}
+body[data-skin="max"][data-theme="riso"] .seg{border:2px solid #0078BF;border-radius:0}
+body[data-skin="max"][data-theme="riso"] .seg > button[aria-pressed="true"]{background:#FF48B0;color:#0B3A8C}
+body[data-skin="max"][data-theme="riso"] .inp{border-bottom:2px solid #0078BF;font-family:var(--grot);font-weight:700;color:#0B3A8C}
+body[data-skin="max"][data-theme="riso"] .lny-rope{stroke:#FF48B0}
+body[data-skin="max"][data-theme="riso"] .app::before{content:"";position:fixed;top:60px;right:-110px;width:320px;height:320px;border-radius:50%;background-image:radial-gradient(#FF48B0 3px,transparent 3.4px);background-size:10px 10px;opacity:.28;pointer-events:none;z-index:-1}
+
+body[data-skin="max"][data-theme="nw"] .gh{font:700 11px/1.2 var(--pix);letter-spacing:.06em;text-transform:uppercase;color:#111}
+body[data-skin="max"][data-theme="riso"] .gh{font:400 20px/1 var(--disp);letter-spacing:.02em;text-transform:uppercase;color:#0078BF;text-shadow:2px 2px 0 rgba(255,72,176,.7)}
+/* Aperçus du sélecteur d'interface */
+#sTheme > button b{font-family:inherit}
+#sTheme > button[data-t="nw"] b{font-family:'Inter Tight',sans-serif;font-weight:900;font-style:italic;letter-spacing:-.03em}
+#sTheme > button[data-t="riso"] b{font-family:'Anton',Impact,sans-serif;font-weight:400;letter-spacing:.03em;text-transform:uppercase}
+</style>
+</head><body>
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* Lanyard */
 .ph.lny-on{overflow:hidden;padding:0!important;min-height:0!important;margin:-4px -12px 0;color:var(--ink,#111)!important;border-bottom:0!important}
 .ph.lny-on .ph-bg,.ph.lny-on::after{display:none!important}
@@ -3564,7 +3652,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v610', apk:162, ios:28 };
+    window.JO_BUILD = { web:'v611', apk:162, ios:28 };
 /* v604 : MODE VIDÉO (TikTok / YouTube) — UNIQUEMENT sur la page web joute.co/j?video, jamais dans les apps du store :
    3 questions en solo, pas d'écran bouclier, et « Abandonner / Couper le son / +points / Continuer » cachés. */
 window.__JOVID = (function(){ try {
@@ -4007,6 +4095,10 @@ if (window.__JOVID) document.addEventListener('DOMContentLoaded', function(){ do
         <div class="frq-t"><b>Mon QR code</b><small>Fais-le scanner par un ami : tu es ajouté à ses amis.</small><span class="frq-k">Code <b id="frCode"></b></span>
           <button type="button" class="btn primary" id="frScan">Scanner un QR code</button><small id="frCount"></small></div>
       </div>
+    </div>
+    <div>
+      <div class="lab">Interface</div>
+      <div class="seg" id="sTheme" role="group" aria-label="Interface"><button type="button" data-t="clean" aria-pressed="true"><b>Clean girl</b></button><button type="button" data-t="nw" aria-pressed="false"><b>New Wave</b></button><button type="button" data-t="riso" aria-pressed="false"><b>Riso</b></button></div>
     </div>
     <div>
       <div class="lab">Fond animé</div>
@@ -19202,4 +19294,43 @@ var st=document.createElement('style');st.textContent='#openApp{position:fixed;z
 document.head.appendChild(st);document.body.appendChild(a);
 if(and){try{if(!sessionStorage.getItem('joTry'+c)){sessionStorage.setItem('joTry'+c,'1');location.href='intent://j/'+c+'#Intent;scheme=joute;package=app.joute.quiz;S.browser_fallback_url='+encodeURIComponent(location.href)+';end';}}catch(e){}}
 }catch(e){}})();</script>
+<script id="joThemesJs">/* v611 : choix d'interface Clean girl / New Wave / Riso (Paramètres → Interface), gardé dans localStorage joute_theme */
+(function(){
+  var K = 'joute_theme';
+  var FT = {
+    nw: 'https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,700;0,900;1,400;1,900&family=JetBrains+Mono:wght@400;700&display=swap',
+    riso: 'https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:wght@400;700&display=swap'
+  };
+  function font(t){
+    if (!FT[t] || document.getElementById('jtf-' + t)) return;
+    var l = document.createElement('link'); l.id = 'jtf-' + t; l.rel = 'stylesheet'; l.href = FT[t];
+    document.head.appendChild(l);
+  }
+  function get(){ try { return localStorage.getItem(K) || 'clean'; } catch(e){ return 'clean'; } }
+  function mark(t){
+    var g = document.getElementById('sTheme'); if (!g) return;
+    Array.prototype.forEach.call(g.querySelectorAll('button[data-t]'), function(b){
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-t') === t));
+    });
+  }
+  function apply(t){
+    if (!FT[t]) t = 'clean';
+    if (t === 'clean') document.body.removeAttribute('data-theme');
+    else { font(t); document.body.setAttribute('data-theme', t); }
+    try { localStorage.setItem(K, t); } catch(e){}
+    mark(t);
+  }
+  window.joTheme = apply;
+  function init(){
+    font('nw'); font('riso');
+    apply(get());
+    var g = document.getElementById('sTheme');
+    if (g) g.addEventListener('click', function(e){
+      var b = e.target && e.target.closest ? e.target.closest('button[data-t]') : null;
+      if (b) apply(b.getAttribute('data-t'));
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();</script>
+
 </body></html>
