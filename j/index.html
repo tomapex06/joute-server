@@ -3564,7 +3564,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v604', apk:162, ios:28 };
+    window.JO_BUILD = { web:'v605', apk:162, ios:28 };
 /* v604 : MODE VIDÉO (TikTok / YouTube) — UNIQUEMENT sur la page web joute.co/j?video, jamais dans les apps du store :
    3 questions en solo, pas d'écran bouclier, et « Abandonner / Couper le son / +points / Continuer » cachés. */
 window.__JOVID = (function(){ try {
@@ -12736,7 +12736,7 @@ void main() {
 
 /* Choix du fond animé (Réglages) */
 (function(){
-  function mode(){ try { var o = JSON.parse(localStorage.getItem('joute-v1') || '{}'); return (o.set && o.set.bg) || 'prism'; } catch(e){ return 'prism'; } }
+  function mode(){ if (window.__JOVID) return 'lines'; /* mode vidéo : toujours le fond Lignes */ try { var o = JSON.parse(localStorage.getItem('joute-v1') || '{}'); return (o.set && o.set.bg) || 'prism'; } catch(e){ return 'prism'; } }
   window.joBg = function(m){
     if (window.__bgPrism) (m === 'prism' ? window.__bgPrism.on : window.__bgPrism.off)();
     if (window.__bgLines) (m === 'lines' ? window.__bgLines.on : window.__bgLines.off)();
