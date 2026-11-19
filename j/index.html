@@ -3564,7 +3564,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v607', apk:162, ios:28 };
+    window.JO_BUILD = { web:'v608', apk:162, ios:28 };
 /* v604 : MODE VIDÉO (TikTok / YouTube) — UNIQUEMENT sur la page web joute.co/j?video, jamais dans les apps du store :
    3 questions en solo, pas d'écran bouclier, et « Abandonner / Couper le son / +points / Continuer » cachés. */
 window.__JOVID = (function(){ try {
@@ -3579,7 +3579,7 @@ if (window.__JOVID) window.addEventListener('load', function(){ setTimeout(funct
   document.body.insertBefore(d, document.body.firstChild);
   var st = document.createElement('style'); st.textContent = 'body.in-duel #lwFb{-webkit-mask-image:radial-gradient(ellipse 80% 70% at 100% 100%,#000 0%,rgba(0,0,0,.55) 35%,rgba(0,0,0,.12) 75%);mask-image:radial-gradient(ellipse 80% 70% at 100% 100%,#000 0%,rgba(0,0,0,.55) 35%,rgba(0,0,0,.12) 75%)}'; document.head.appendChild(st);
 } catch(e){} }, 1500); });
-if (window.__JOVID) document.addEventListener('DOMContentLoaded', function(){ document.body.classList.add('jovid'); var st = document.createElement('style'); st.textContent = 'html body.jovid #duel .duelfoot{display:none!important}html body.jovid #duel .status{visibility:hidden!important}html body.jovid #duel,html body.jovid #wheel{zoom:.82!important;padding-left:9vw!important;padding-right:9vw!important;box-sizing:border-box!important}'; document.head.appendChild(st); });
+if (window.__JOVID) document.addEventListener('DOMContentLoaded', function(){ document.body.classList.add('jovid'); var st = document.createElement('style'); st.textContent = 'html body.jovid #duel .duelfoot{display:none!important}html body.jovid #duel .status{visibility:hidden!important}html body.jovid #duel,html body.jovid #wheel{zoom:.82!important;padding-left:9vw!important;padding-right:9vw!important;box-sizing:border-box!important}html body.jovid #wheel .wh-card{transform:translateY(-11vh)}'; document.head.appendChild(st); });
     (function(){ try { var B = window.JO_BUILD, pf = (window.Capacitor && Capacitor.getPlatform) ? Capacitor.getPlatform() : 'web';
       var t = 'Version ' + B.web + ' · ' + (pf === 'android' ? 'APK ' + B.apk : pf === 'ios' ? 'build iOS ' + B.ios : 'web') ;
       document.getElementById('joVer').textContent = t; } catch(e){} })();</script>
