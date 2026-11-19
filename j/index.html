@@ -3564,7 +3564,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v608', apk:162, ios:28 };
+    window.JO_BUILD = { web:'v609', apk:162, ios:28 };
 /* v604 : MODE VIDÉO (TikTok / YouTube) — UNIQUEMENT sur la page web joute.co/j?video, jamais dans les apps du store :
    3 questions en solo, pas d'écran bouclier, et « Abandonner / Couper le son / +points / Continuer » cachés. */
 window.__JOVID = (function(){ try {
@@ -5532,7 +5532,7 @@ var THEMES = [
   function launch(T, mode, seed, kind, extra, guard, diff){
     if (!(extra && (extra.sd || extra.cr))) N = 7; if (window.__JOVID && kind === 'bot') N = 3;
     if (T.id === 'spin' && !window.__pieSpin){
-      var rr = mulberry32(seed), pl = THEMES.filter(function(X){ return Array.isArray(X.q) && !X.img && !X.game && !X.rnd && X.id !== 'spin'; }), W = pickN(pl, 8, rr), kk = Math.floor(rr() * 8), tk0 = ++launchTok;
+      var rr = mulberry32(seed), pl = THEMES.filter(function(X){ return Array.isArray(X.q) && !X.img && !X.game && !X.rnd && X.id !== 'spin'; }), W = pickN(pl, 8, rr), kk = Math.floor(rr() * 8), tk0 = ++launchTok; if (window.__JOVID){ var rq = (location.search.match(/[?&]roue=([^&]+)/) || [])[1]; if (rq){ /* v609 : mode vidéo — roue truquée sur un thème libre (ex. ?video&roue=007), sans lancer de partie */ rq = decodeURIComponent(rq); var fake = themeById(rq) ? { id:rq, name:themeById(rq).name } : { id:'vfake', name:rq }; var W2 = W.filter(function(X){ return X.id !== fake.id; }).slice(0, 7).map(function(X){ return { id:X.id, name:X.name }; }); var k2 = Math.floor(rr() * 8); W2.splice(k2, 0, fake); return spinThen({ free:true, vhold:true, i:0, wheel:W2, qs:[{ cat:{ id:fake.id, name:fake.name, k:k2 } }] }, function(){}); } }
       var fg = { free:true, i:0, wheel:W.map(function(X){ return { id:X.id, name:X.name }; }), qs:[{ cat:{ id:W[kk].id, name:W[kk].name, k:kk } }], sync:((kind === 'vs' && V) || (kind === 'party' && PT)) && extra && extra.id ? extra.id : null };
       return spinThen(fg, function(){ if (tk0 !== launchTok || (guard && !guard())) return; launch(W[kk], '', seed, kind, extra, guard, diff); });
     }
@@ -7083,6 +7083,7 @@ var THEMES = [
   maxGlyph.n = 0;
   function maxGlyph(key){
     key = String(key);
+    if (key === 'vfake'){ var nm = ((location.search.match(/[?&]roue=([^&]+)/) || [])[1] || '?'); nm = decodeURIComponent(nm).slice(0, 4).replace(/[<&]/g, ''); return '<svg class="g-sym" viewBox="0 0 64 64"><text x="32" y="41" text-anchor="middle" font-size="' + (nm.length > 3 ? 18 : 24) + '" font-weight="800" fill="currentColor" font-family="Archivo, Arial, sans-serif">' + nm + '</text></svg>'; }
     if (key.indexOf('tr-') === 0 && SYMG[key.slice(3)]) key = key.slice(3);
     if (SYMG[key]){ var sg = SYMG[key]; if (sg.indexOf('id="') >= 0){ var uq = '_' + (++maxGlyph.n); sg = sg.replace(/id="([^"]+)"/g, 'id="$1' + uq + '"').replace(/url\(#([^)]+)\)/g, 'url(#$1' + uq + ')'); } return '<svg class="g-sym" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' + sg + '</svg>'; }
     if (!(key in glMap)){ var i = GL_ORDER.indexOf(key); glMap[key] = i >= 0 ? i : glNext++; }
@@ -7237,7 +7238,7 @@ var THEMES = [
       if (!g.free && (G !== g || g.over)) { box.hidden = true; return; }
       var hn2 = box.querySelector('.wz-hint'); if (hn2) hn2.textContent = 'C’est parti !'; var lc = '#FF1744'; res.innerHTML = '<span class="wh-chip" style="--c:' + lc + '"><span class="wh-cg">' + maxGlyph(q.cat.id) + '</span>' + esc(q.cat.name) + '</span>';
       snd('start');
-      setTimeout(function(){ if (!g.free && G !== g) { box.hidden = true; return; } box.hidden = true; done(); }, 1100);
+      setTimeout(function(){ if (g.vhold) return; /* mode vidéo : la roue reste affichée */ if (!g.free && G !== g) { box.hidden = true; return; } box.hidden = true; done(); }, 1100);
     }
     if (g.sync){
       res.textContent = 'Le premier qui tourne la lance pour vous deux';
