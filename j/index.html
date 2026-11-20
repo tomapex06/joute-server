@@ -3564,7 +3564,7 @@ html body.logo-inq .mark .o .pie.go{opacity:1!important}
     <p class="foot" id="stats" style="text-align:center"></p>
     <p id="joVer" style="text-align:center;font:500 10px/1.4 Unbounded,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin:18px 0 calc(18px + env(safe-area-inset-bottom,0px))"></p>
     <script>/* Numéro de version affiché en bas de l'accueil (mis à jour à chaque envoi) */
-    window.JO_BUILD = { web:'v610', apk:162, ios:28 };
+    window.JO_BUILD = { web:'v612', apk:162, ios:28 };
 /* v604 : MODE VIDÉO (TikTok / YouTube) — UNIQUEMENT sur la page web joute.co/j?video, jamais dans les apps du store :
    3 questions en solo, pas d'écran bouclier, et « Abandonner / Couper le son / +points / Continuer » cachés. */
 window.__JOVID = (function(){ try {
@@ -5537,9 +5537,14 @@ var THEMES = [
         var VQ = { '007':[
           { q:'Qui a été le premier acteur à incarner James Bond dans la saga officielle ?', opts:['Roger Moore','Sean Connery','Timothy Dalton','Pierce Brosnan'], ans:1, ctx:'James Bond' },
           { q:'Comment James Bond aime-t-il son vodka martini ?', opts:['Avec des glaçons','À la cuillère, pas au shaker','Au shaker, pas à la cuillère','Sans olive'], ans:2, ctx:'James Bond' },
-          { q:'Quelle actrice joue Vesper Lynd dans Casino Royale (2006) ?', opts:['Léa Seydoux','Sophie Marceau','Halle Berry','Eva Green'], ans:3, ctx:'James Bond' } ] };
+          { q:'Quelle actrice joue Vesper Lynd dans Casino Royale (2006) ?', opts:['Léa Seydoux','Sophie Marceau','Halle Berry','Eva Green'], ans:3, ctx:'James Bond' } ],
+          /* v612 : roue truquée sur Langue française (?video&roue=lng) */
+          'lng':[
+          { q:'Quelle est la bonne orthographe ?', opts:['Dilemne','Dilemme','Dilême','Dillemme'], ans:1, ctx:'Langue française' },
+          { q:'Quel est le participe passé du verbe « résoudre » ?', opts:['Résout','Résoudu','Résolu','Résolé'], ans:2, ctx:'Langue française' },
+          { q:'Lequel de ces mots est féminin ?', opts:['Pétale','Tentacule','Effluve','Orbite'], ans:3, ctx:'Langue française' } ] };
         var vq = VQ[rq] || VQ[String(rq).toLowerCase()];
-        if (!vq || themeById(rq)) return spinThen({ free:true, vhold:!vq, i:0, wheel:W2, qs:[{ cat:{ id:fake.id, name:fake.name, k:k2 } }] }, function(){ if (themeById(rq) && tk0 === launchTok) launch(themeById(rq), '', seed, kind, extra, guard, diff); });
+        if (!vq) return spinThen({ free:true, vhold:!vq, i:0, wheel:W2, qs:[{ cat:{ id:fake.id, name:fake.name, k:k2 } }] }, function(){ if (themeById(rq) && tk0 === launchTok) launch(themeById(rq), '', seed, kind, extra, guard, diff); });
         var fT = Object.assign({}, themeById('ser') || THEMES[0], { id:'vfake', name:fake.name, modes:false, q:vq.map(function(x){ return [x.q, [x.opts[x.ans]].concat(x.opts.filter(function(o, j){ return j !== x.ans; }))]; }) });
         return spinThen({ free:true, i:0, wheel:W2, qs:[{ cat:{ id:fake.id, name:fake.name, k:k2 } }] }, function(){ if (tk0 !== launchTok) return; launch(fT, '', seed, kind, Object.assign({}, extra, { qx:vq }), guard, diff); }); } }
       var fg = { free:true, i:0, wheel:W.map(function(X){ return { id:X.id, name:X.name }; }), qs:[{ cat:{ id:W[kk].id, name:W[kk].name, k:kk } }], sync:((kind === 'vs' && V) || (kind === 'party' && PT)) && extra && extra.id ? extra.id : null };
